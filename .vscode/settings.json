@@ -1,3 +1,7 @@
 {
-    "go.inferGopath": false
+    "go.inferGopath": false,
+    "cSpell.words": [
+        "gofeed",
+        "mmcdole"
+    ]
 }

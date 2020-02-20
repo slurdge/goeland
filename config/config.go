@@ -1,8 +1,10 @@
 package config
 
 import (
+	"fmt"
 	"time"
 
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
@@ -25,6 +27,7 @@ type Provider interface {
 	GetTime(key string) time.Time
 	InConfig(key string) bool
 	IsSet(key string) bool
+	BindPFlag(key string, flag *pflag.Flag) error
 }
 
 var defaultConfig *viper.Viper
@@ -49,10 +52,19 @@ func readViperConfig(appName string) *viper.Viper {
 	v.AutomaticEnv()
 
 	// global defaults
-	
+
 	v.SetDefault("json_logs", false)
 	v.SetDefault("loglevel", "debug")
-	
+	v.SetDefault("dry_run", false)
+
+	v.SetConfigName("config")
+	v.SetConfigType("toml")
+	v.AddConfigPath("$HOME/.indigo")
+	v.AddConfigPath(".")
+	err := v.ReadInConfig()
+	if err != nil {
+		panic(fmt.Errorf("fatal error config file: %s", err))
+	}
 
 	return v
 }

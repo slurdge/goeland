@@ -1,128 +1,110 @@
 package cmd
 
 import (
-	"crypto/sha256"
 	"fmt"
-	"os"
-	"time"
+	"net/smtp"
+	"strings"
 
-	"github.com/mmcdole/gofeed"
+	"github.com/jordan-wright/email"
 	"github.com/slurdge/indigo/config"
+	"github.com/slurdge/indigo/internal/indigo"
 	"github.com/slurdge/indigo/log"
 	"github.com/spf13/cobra"
+	"jaytaylor.com/html2text"
 )
 
 const tmpURL = "https://www.nextinpact.com/rss/lebrief.xml"
 
-// Entry This represent an entry produced by a source
-type Entry struct {
-	UID     string
-	Title   string
-	Content string
-	Date    time.Time
-}
-
-// Source ...
-type Source struct {
-	Title   string
-	Entries []Entry
-}
-
-func fetchFeed(feedLocation string, isFile bool) (Source, error) {
-	var source Source
-	fp := gofeed.NewParser()
-	var feed *gofeed.Feed
-	var err error
-	if isFile {
-		//todo : handle error
-		file, err := os.Open(feedLocation)
-		if err != nil {
-			return source, fmt.Errorf("cannot open: %s", feedLocation)
-		}
-		defer file.Close()
-		feed, err = fp.Parse(file)
-		if err != nil {
-			return source, fmt.Errorf("cannot parse file: %s", feedLocation)
-		}
-	} else {
-		feed, err = fp.ParseURL(feedLocation)
-		if err != nil {
-			return source, fmt.Errorf("cannot open or parse url: %s", feedLocation)
-		}
-	}
-	for _, item := range feed.Items {
-		entry := Entry{}
-		entry.Title = item.Title
-		entry.Content = item.Description
-		fmt.Println(entry.Title, item.Description)
-		entry.UID = item.GUID
-		entry.Date = *item.PublishedParsed
-		source.Entries = append(source.Entries, entry)
-	}
-	source.Title = feed.Title
-	return source, nil
-}
-
-func filterAll(source Source) Source {
-	return source
-}
-
-func filterNone(source Source) Source {
-	source.Entries = nil
-	return source
-}
-
-func filterToday(source Source) Source {
-	var current int
-	for _, entry := range source.Entries {
-		if entry.Date.Day() != time.Now().Day() {
-			continue
-		}
-		source.Entries[current] = entry
-		current++
-	}
-	source.Entries = source.Entries[:current]
-	return source
-}
-
-func filterDigest(source Source) Source {
-	digest := Entry{}
-	digest.Title = fmt.Sprintf("Digest for %s", source.Title)
-	content := ""
-	for _, entry := range source.Entries {
-		content += fmt.Sprintf("<h1>%s</h1><br>", entry.Title)
-		content += entry.Content
-	}
-	h := sha256.New()
-	h.Write([]byte(content))
-	digest.UID = fmt.Sprintf("%x", h.Sum(nil))
-	digest.Date = time.Now()
-	digest.Content = content
-	source.Entries = []Entry{digest}
-	return source
+func createEmailPool(config config.Provider) (*email.Pool, error) {
+	host := config.GetString("email.host")
+	port := config.GetInt("email.port")
+	user := config.GetString("email.username")
+	pass := config.GetString("email.password")
+	auth := smtp.PlainAuth("", user, pass, host)
+	return email.NewPool(fmt.Sprintf("%s:%v", host, port), 8, auth)
 }
 
 func run(cmd *cobra.Command, args []string) {
 	log.Debugln("Running...")
-	defaultConfig := config.Config()
+	config := config.Config()
 
-	// todo: remove this line
-	fmt.Println(defaultConfig.GetBool("main.dry-run"))
-
-	feeds := defaultConfig.GetStringMapString("sources")
-	for feedname := range feeds {
-		filename := defaultConfig.GetString(fmt.Sprintf("sources.%s.url", feedname))
-		content, err := fetchFeed(filename, true)
-		if err != nil {
-			log.Errorf("Cannot retrieve feed: %s error: %v", feedname, err)
-		}
-		log.Infof("Retrieved %v feeds\n", len(content.Entries))
-		content = filterToday(content)
-		content = filterDigest(content)
-		log.Infof("Today we have %v feeds\n", len(content.Entries))
-		log.Infof("%v", content)
+	getSubString := func(root string, key string, tail string) string {
+		return config.GetString(fmt.Sprintf("%s.%s.%s", root, key, tail))
 	}
 
+	dry_run := config.GetBool("dry-run")
+
+	var pool *email.Pool
+	var err error
+
+	pipes := config.GetStringMapString("pipes")
+	for pipe := range pipes {
+		log.Infof("Executing pipe named: %v", pipe)
+		sourceName := getSubString("pipes", pipe, "source")
+		destinationName := getSubString("pipes", pipe, "destination")
+		if !config.IsSet(fmt.Sprintf("sources.%s", sourceName)) {
+			log.Errorf("cannot find source: %s", sourceName)
+			continue
+		}
+		if !config.IsSet(fmt.Sprintf("destinations.%s", destinationName)) {
+			log.Errorf("cannot find destination: %s", destinationName)
+			continue
+		}
+		source, _ := indigo.GetSource(config, sourceName)
+		log.Infof("Retrieved %v feeds", len(source.Entries))
+		filters := strings.Split(getSubString("pipes", pipe, "filters"), ",")
+		for i := range filters {
+			filters[i] = strings.TrimSpace(filters[i])
+		}
+		for _, filter := range filters {
+			switch filter {
+			case "all":
+				source.FilterAll()
+			case "today":
+				source.FilterToday()
+			case "lebrief":
+				source.FilterLeBrief()
+			case "digest":
+				source.FilterDigest()
+			default:
+				log.Errorf("unknown filter: %s\n", filter)
+			}
+			log.Infof("After %s: %v feeds", filter, len(source.Entries))
+		}
+		if dry_run {
+			log.Infoln("Dry run has been specified, not outputting...")
+			continue
+		}
+		if getSubString("destinations", destinationName, "type") == "email" {
+			if pool == nil {
+				pool, err = createEmailPool(config)
+				if err != nil {
+					log.Errorf("cannot create email pool: %v")
+					continue
+				}
+			}
+			for _, entry := range source.Entries {
+				email := email.NewEmail()
+				email.From = getSubString("destinations", destinationName, "email_from")
+				email.To = []string{getSubString("destinations", destinationName, "email_to")}
+				email.Subject = entry.Title
+				html := entry.Content
+				text, _ := html2text.FromString(html)
+				email.Text = []byte(text)
+				email.HTML = []byte(html)
+				err := pool.Send(email, -1)
+				if err != nil {
+					fmt.Errorf("%v", err)
+				}
+			}
+		} else {
+			fmt.Printf("**%s**\n", source.Title)
+			for _, entry := range source.Entries {
+				text, _ := html2text.FromString(entry.Content, html2text.Options{})
+				fmt.Printf("*%s*\n%s\n%s", entry.Title, entry.Date, text)
+			}
+		}
+	}
 }
 
 // versionCmd represents the version command
@@ -134,6 +116,6 @@ var runCmd = &cobra.Command{
 
 func init() {
 	runCmd.Flags().Bool("dry-run", false, "Do only a dry-run")
-	config.Config().BindPFlag("main.dry-run", runCmd.Flags().Lookup("dry-run"))
+	config.Config().BindPFlag("dry-run", runCmd.Flags().Lookup("dry-run"))
 	rootCmd.AddCommand(runCmd)
 }

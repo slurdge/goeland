@@ -32,7 +32,7 @@ func run(cmd *cobra.Command, args []string) {
 		return config.GetString(fmt.Sprintf("%s.%s.%s", root, key, tail))
 	}
 
-	dry_run := config.GetBool("dry-run")
+	dryRun := config.GetBool("dry-run")
 
 	var pool *email.Pool
 	var err error
@@ -71,7 +71,7 @@ func run(cmd *cobra.Command, args []string) {
 			}
 			log.Infof("After %s: %v feeds", filter, len(source.Entries))
 		}
-		if dry_run {
+		if dryRun {
 			log.Infoln("Dry run has been specified, not outputting...")
 			continue
 		}

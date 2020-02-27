@@ -41,13 +41,8 @@ func run(cmd *cobra.Command, args []string) {
 	for pipe := range pipes {
 		log.Infof("Executing pipe named: %v", pipe)
 		sourceName := getSubString("pipes", pipe, "source")
-		destinationName := getSubString("pipes", pipe, "destination")
 		if !config.IsSet(fmt.Sprintf("sources.%s", sourceName)) {
 			log.Errorf("cannot find source: %s", sourceName)
-			continue
-		}
-		if !config.IsSet(fmt.Sprintf("destinations.%s", destinationName)) {
-			log.Errorf("cannot find destination: %s", destinationName)
 			continue
 		}
 		source, _ := indigo.GetSource(config, sourceName)
@@ -80,7 +75,7 @@ func run(cmd *cobra.Command, args []string) {
 			log.Infoln("Dry run has been specified, not outputting...")
 			continue
 		}
-		if getSubString("destinations", destinationName, "type") == "email" {
+		if getSubString("pipes", pipe, "destination") == "email" {
 			if pool == nil {
 				pool, err = createEmailPool(config)
 				if err != nil {
@@ -90,8 +85,8 @@ func run(cmd *cobra.Command, args []string) {
 			}
 			for _, entry := range source.Entries {
 				email := email.NewEmail()
-				email.From = getSubString("destinations", destinationName, "email_from")
-				email.To = []string{getSubString("destinations", destinationName, "email_to")}
+				email.From = getSubString("pipes", pipe, "email_from")
+				email.To = []string{getSubString("pipes", pipe, "email_to")}
 				email.Subject = entry.Title
 				html := entry.Content
 				text, _ := html2text.FromString(html)

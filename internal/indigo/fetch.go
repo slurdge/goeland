@@ -3,9 +3,13 @@ package indigo
 import (
 	"fmt"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/mmcdole/gofeed"
 )
+
+const minContentLen = 10
 
 func fetchFeed(feedLocation string, isFile bool) (*Source, error) {
 	source := new(Source)
@@ -29,11 +33,19 @@ func fetchFeed(feedLocation string, isFile bool) (*Source, error) {
 		}
 	}
 	for _, item := range feed.Items {
+
 		entry := Entry{}
 		entry.Title = item.Title
 		entry.Content = item.Description
+		if len(strings.TrimSpace(entry.Content)) < minContentLen {
+			entry.Content = item.Content
+		}
 		entry.UID = item.GUID
-		entry.Date = *item.PublishedParsed
+		if item.PublishedParsed != nil {
+			entry.Date = *item.PublishedParsed
+		} else {
+			entry.Date = time.Now()
+		}
 		source.Entries = append(source.Entries, entry)
 	}
 	source.Title = feed.Title

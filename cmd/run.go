@@ -66,10 +66,15 @@ func run(cmd *cobra.Command, args []string) {
 				source.FilterLeBrief()
 			case "digest":
 				source.FilterDigest()
+			case "wikipedia":
+				source.FilterWikipedia()
+			case "links":
+				source.FilterRelativeLinks()
 			default:
 				log.Errorf("unknown filter: %s\n", filter)
 			}
 			log.Infof("After %s: %v feeds", filter, len(source.Entries))
+			log.Debugf("After %s: %v", filter, source.Entries)
 		}
 		if dryRun {
 			log.Infoln("Dry run has been specified, not outputting...")

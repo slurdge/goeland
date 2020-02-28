@@ -42,24 +42,23 @@ func init() {
 	defaultLogger = newLogrusLogger(config.Config())
 }
 
-
 // NewLogger returns a configured logrus instance
 func NewLogger(cfg config.Provider) *logrus.Logger {
 	return newLogrusLogger(cfg)
 }
 
-
-
 func newLogrusLogger(cfg config.Provider) *logrus.Logger {
 
 	l := logrus.New()
-	
+
 	if cfg.GetBool("json_logs") {
 		l.Formatter = new(logrus.JSONFormatter)
 	}
 	l.Out = os.Stderr
 
 	switch cfg.GetString("loglevel") {
+	case "error":
+		l.Level = logrus.ErrorLevel
 	case "debug":
 		l.Level = logrus.DebugLevel
 	case "warning":
@@ -67,9 +66,9 @@ func newLogrusLogger(cfg config.Provider) *logrus.Logger {
 	case "info":
 		l.Level = logrus.InfoLevel
 	default:
-		l.Level = logrus.DebugLevel
+		l.Level = logrus.PanicLevel
 	}
-	
+
 	return l
 }
 

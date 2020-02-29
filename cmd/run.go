@@ -1,9 +1,12 @@
 package cmd
 
 import (
+	"bytes"
 	"fmt"
 	"net/smtp"
 	"strings"
+	"text/template"
+	"time"
 
 	"github.com/jordan-wright/email"
 	"github.com/slurdge/indigo/config"
@@ -18,15 +21,21 @@ const tmpURL = "https://www.nextinpact.com/rss/lebrief.xml"
 func createEmailPool(config config.Provider) (*email.Pool, error) {
 	host := config.GetString("email.host")
 	port := config.GetInt("email.port")
+	if port == 0 {
+		port = 587
+	}
+	fullhost := fmt.Sprintf("%s:%v", host, port)
 	user := config.GetString("email.username")
 	pass := config.GetString("email.password")
 	auth := smtp.PlainAuth("", user, pass, host)
-	return email.NewPool(fmt.Sprintf("%s:%v", host, port), 8, auth)
+	return email.NewPool(fullhost, 8, auth)
 }
 
 func run(cmd *cobra.Command, args []string) {
 	log.Debugln("Running...")
 	config := config.Config()
+
+	emailTimeoutInMs := time.Duration(config.GetInt64("email_timeout_ms"))
 
 	getSubString := func(root string, key string, tail string) string {
 		return config.GetString(fmt.Sprintf("%s.%s.%s", root, key, tail))
@@ -35,41 +44,18 @@ func run(cmd *cobra.Command, args []string) {
 	dryRun := config.GetBool("dry-run")
 
 	var pool *email.Pool
-	var err error
-
 	pipes := config.GetStringMapString("pipes")
 	for pipe := range pipes {
-		log.Infof("Executing pipe named: %v", pipe)
-		sourceName := getSubString("pipes", pipe, "source")
-		if !config.IsSet(fmt.Sprintf("sources.%s", sourceName)) {
-			log.Errorf("cannot find source: %s", sourceName)
+		disabled := config.GetBool(fmt.Sprintf("pipes.%s.disabled", pipe))
+		if disabled {
+			log.Infof("Skipping disabled pipe: %s", pipe)
 			continue
 		}
-		source, _ := indigo.GetSource(config, sourceName)
-		log.Infof("Retrieved %v feeds", len(source.Entries))
-		filters := strings.Split(getSubString("pipes", pipe, "filters"), ",")
-		for i := range filters {
-			filters[i] = strings.TrimSpace(filters[i])
-		}
-		for _, filter := range filters {
-			switch filter {
-			case "all":
-				source.FilterAll()
-			case "today":
-				source.FilterToday()
-			case "lebrief":
-				source.FilterLeBrief()
-			case "digest":
-				source.FilterDigest()
-			case "wikipedia":
-				source.FilterWikipedia()
-			case "links":
-				source.FilterRelativeLinks()
-			default:
-				log.Errorf("unknown filter: %s\n", filter)
-			}
-			log.Infof("After %s: %v feeds", filter, len(source.Entries))
-			log.Debugf("After %s: %v", filter, source.Entries)
+		log.Infof("Executing pipe named: %s", pipe)
+		sourceName := getSubString("pipes", pipe, "source")
+		source, err := indigo.GetSource(config, sourceName)
+		if err != nil {
+			log.Errorf("Error getting source: %s", sourceName)
 		}
 		if dryRun {
 			log.Infoln("Dry run has been specified, not outputting...")
@@ -79,22 +65,38 @@ func run(cmd *cobra.Command, args []string) {
 			if pool == nil {
 				pool, err = createEmailPool(config)
 				if err != nil {
-					log.Errorf("cannot create email pool: %v")
+					log.Errorf("cannot create email pool: %v", err)
 					continue
 				}
 			}
 			for _, entry := range source.Entries {
 				email := email.NewEmail()
 				email.From = getSubString("pipes", pipe, "email_from")
-				email.To = []string{getSubString("pipes", pipe, "email_to")}
-				email.Subject = entry.Title
+				email.To = indigo.SplitAndTrimString(getSubString("pipes", pipe, "email_to"))
+				data := struct {
+					EntryTitle  string
+					SourceTitle string
+					SourceName  string
+				}{EntryTitle: entry.Title, SourceTitle: source.Title, SourceName: source.Name}
+				var output bytes.Buffer
+				templateString := getSubString("pipes", pipe, "email_title")
+				if strings.TrimSpace(templateString) == "" {
+					templateString = `{{.EntryTitle}}`
+				}
+				tpl := template.Must(template.New("title").Parse(templateString))
+				tpl.Execute(&output, data)
+				email.Subject = output.String()
 				html := entry.Content
-				text, _ := html2text.FromString(html)
-				email.Text = []byte(text)
+				text, err := html2text.FromString(html)
+				if err == nil {
+					email.Text = []byte(text)
+				} else {
+					email.Text = []byte("There was an error converting HTML content to text")
+				}
 				email.HTML = []byte(html)
-				err := pool.Send(email, -1)
+				err = pool.Send(email, emailTimeoutInMs*1000*1000)
 				if err != nil {
-					fmt.Errorf("%v", err)
+					log.Errorf("error sending email: %v", err)
 				}
 			}
 		} else {
@@ -115,7 +117,7 @@ var runCmd = &cobra.Command{
 }
 
 func init() {
-	runCmd.Flags().Bool("dry-run", false, "Do only a dry-run")
+	runCmd.Flags().Bool("dry-run", false, "Do not output anything, just fetch and filter the content")
 	config.Config().BindPFlag("dry-run", runCmd.Flags().Lookup("dry-run"))
 	rootCmd.AddCommand(runCmd)
 }

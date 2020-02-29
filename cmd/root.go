@@ -11,14 +11,24 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "generated code example",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Use:   "indigo run",
+	Short: "Indigo is a simple rss to email program.",
+	Long: `Indigo is a simple rss to email program.
+	
+It was inspired by rss2email, but is an alternative with some cool features, such as filters.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+The simple way to use it is to copy the provided config.toml.sample file and customize it.
+
+The filters available are:
+	- all: default, include all entries
+	- none: include no entries
+	- today: only includes entries with are today
+	- digest: combines all the entries into one
+	- digest2: combines all the entires into one, but with one less level (<h2> instead of <h1>)
+	- combine: like digest, but use the first item as the title of the digest,
+	- links: rewrite src="// and href="// to have an https:// prefix
+	- lebrief: fetch full articles for LeBrief by NextINpact
+	- wikipedia: remove unnecessary text from wikipedia entries`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//      Run: func(cmd *cobra.Command, args []string) { },

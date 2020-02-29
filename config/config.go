@@ -56,6 +56,7 @@ func readViperConfig(appName string) *viper.Viper {
 	v.SetDefault("json_logs", false)
 	v.SetDefault("loglevel", "debug")
 	v.SetDefault("dry_run", false)
+	v.SetDefault("email_timeout_ms", 1000)
 
 	v.SetConfigName("config")
 	v.SetConfigType("toml")

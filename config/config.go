@@ -30,42 +30,23 @@ type Provider interface {
 	BindPFlag(key string, flag *pflag.Flag) error
 }
 
-var defaultConfig *viper.Viper
-
-// Config returns a default config providers
-func Config() Provider {
-	return defaultConfig
-}
-
-// LoadConfigProvider returns a configured viper instance
-func LoadConfigProvider(appName string) Provider {
-	return readViperConfig(appName)
-}
-
-func init() {
-	defaultConfig = readViperConfig("goeland")
-}
-
-func readViperConfig(appName string) *viper.Viper {
-	v := viper.New()
-	v.SetEnvPrefix(appName)
-	v.AutomaticEnv()
+// ReadDefaultConfig reads the configuration file
+func ReadDefaultConfig(appName string, configName string) {
+	viper.SetEnvPrefix(appName)
+	viper.AutomaticEnv()
 
 	// global defaults
 
-	v.SetDefault("json_logs", false)
-	v.SetDefault("loglevel", "debug")
-	v.SetDefault("dry_run", false)
-	v.SetDefault("email_timeout_ms", 1000)
+	viper.SetDefault("json_logs", false)
+	viper.SetDefault("loglevel", "debug")
+	viper.SetDefault("dry_run", false)
+	viper.SetDefault("email_timeout_ms", 5000)
 
-	v.SetConfigName("config")
-	v.SetConfigType("toml")
-	v.AddConfigPath("$HOME/.goeland")
-	v.AddConfigPath(".")
-	err := v.ReadInConfig()
+	viper.SetConfigFile(configName)
+	viper.AddConfigPath("$HOME/.goeland")
+	viper.AddConfigPath(".")
+	err := viper.ReadInConfig()
 	if err != nil {
 		panic(fmt.Errorf("fatal error config file: %s", err))
 	}
-
-	return v
 }

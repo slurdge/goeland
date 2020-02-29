@@ -4,7 +4,12 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/markbates/pkger"
+	"github.com/markbates/pkger/pkging"
+	"github.com/slurdge/goeland/config"
+	"github.com/slurdge/goeland/log"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var cfgFile string
@@ -34,20 +39,46 @@ The filters available are:
 	//      Run: func(cmd *cobra.Command, args []string) { },
 }
 
+func fatalErr(err error) {
+	fmt.Println(err)
+	os.Exit(1)
+}
+
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		fatalErr(err)
 	}
 }
 
+func createDefaultConfig(cfgFile string) {
+	if _, err := os.Stat(cfgFile); os.IsNotExist(err) {
+		var configDefault pkging.File
+		if configDefault, err = pkger.Open("/config.default.toml"); err != nil {
+			fatalErr(fmt.Errorf("no config.toml and no default file present"))
+		}
+		info, err := configDefault.Stat()
+		if err != nil {
+			fatalErr(fmt.Errorf("cannot get default file stats"))
+		}
+		var configFile *os.File
+		if configFile, err = os.Create(cfgFile); err != nil {
+			fatalErr(fmt.Errorf("cannot open config.toml for writing"))
+		}
+		content := make([]byte, info.Size())
+		configDefault.Read(content)
+		configFile.Write(content)
+	}
+}
+
+func initConfig() {
+	createDefaultConfig(cfgFile)
+	config.ReadDefaultConfig("goeland", cfgFile)
+	log.SetDefaultLogger(log.NewLogger(viper.GetViper()))
+}
+
 func init() {
-	cobra.OnInitialize()
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
+	cobra.OnInitialize(initConfig)
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "config.toml", "config file (default is config.toml)")
 }

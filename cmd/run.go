@@ -13,6 +13,7 @@ import (
 	"github.com/slurdge/goeland/internal/goeland"
 	"github.com/slurdge/goeland/log"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"jaytaylor.com/html2text"
 )
 
@@ -33,7 +34,7 @@ func createEmailPool(config config.Provider) (*email.Pool, error) {
 
 func run(cmd *cobra.Command, args []string) {
 	log.Debugln("Running...")
-	config := config.Config()
+	config := viper.GetViper()
 
 	emailTimeoutInMs := time.Duration(config.GetInt64("email_timeout_ms"))
 
@@ -118,6 +119,6 @@ var runCmd = &cobra.Command{
 
 func init() {
 	runCmd.Flags().Bool("dry-run", false, "Do not output anything, just fetch and filter the content")
-	config.Config().BindPFlag("dry-run", runCmd.Flags().Lookup("dry-run"))
+	viper.GetViper().BindPFlag("dry-run", runCmd.Flags().Lookup("dry-run"))
 	rootCmd.AddCommand(runCmd)
 }

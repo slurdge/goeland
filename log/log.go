@@ -38,8 +38,9 @@ type Logger interface {
 
 var defaultLogger *logrus.Logger
 
-func init() {
-	defaultLogger = newLogrusLogger(config.Config())
+// SetDefaultLogger populates the default logger instance
+func SetDefaultLogger(logger *logrus.Logger) {
+	defaultLogger = logger
 }
 
 // NewLogger returns a configured logrus instance

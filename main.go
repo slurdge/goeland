@@ -1,13 +1,11 @@
 package main
 
 import (
-	
-	"github.com/slurdge/indigo/cmd"
+	"github.com/slurdge/goeland/cmd"
 )
 
 func main() {
 
-    
-    cmd.Execute()
-	
+	cmd.Execute()
+
 }

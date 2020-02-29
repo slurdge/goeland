@@ -1,4 +1,4 @@
-# indigo
+# goeland
 
 A RSS to email, ala rss2email written in Go
 
@@ -10,7 +10,7 @@ Running it then should be as simple as:
 
 ```console
 $ make
-$ ./bin/indigo
+$ ./bin/goeland
 ```
 
 ### Testing

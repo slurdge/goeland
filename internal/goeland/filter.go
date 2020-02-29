@@ -1,4 +1,4 @@
-package indigo
+package goeland
 
 import (
 	"crypto/sha256"
@@ -6,8 +6,8 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/slurdge/indigo/config"
-	"github.com/slurdge/indigo/log"
+	"github.com/slurdge/goeland/config"
+	"github.com/slurdge/goeland/log"
 )
 
 func (source *Source) filterAll() {

@@ -43,7 +43,7 @@ func LoadConfigProvider(appName string) Provider {
 }
 
 func init() {
-	defaultConfig = readViperConfig("INDIGO")
+	defaultConfig = readViperConfig("goeland")
 }
 
 func readViperConfig(appName string) *viper.Viper {
@@ -60,7 +60,7 @@ func readViperConfig(appName string) *viper.Viper {
 
 	v.SetConfigName("config")
 	v.SetConfigType("toml")
-	v.AddConfigPath("$HOME/.indigo")
+	v.AddConfigPath("$HOME/.goeland")
 	v.AddConfigPath(".")
 	err := v.ReadInConfig()
 	if err != nil {

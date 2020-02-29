@@ -11,9 +11,9 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "indigo run",
-	Short: "Indigo is a simple rss to email program.",
-	Long: `Indigo is a simple rss to email program.
+	Use:   "goeland run",
+	Short: "goeland is a simple rss to email program.",
+	Long: `goeland is a simple rss to email program.
 	
 It was inspired by rss2email, but is an alternative with some cool features, such as filters.
 

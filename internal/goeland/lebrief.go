@@ -1,4 +1,4 @@
-package indigo
+package goeland
 
 import (
 	"regexp"

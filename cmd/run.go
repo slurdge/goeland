@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/jordan-wright/email"
-	"github.com/slurdge/indigo/config"
-	"github.com/slurdge/indigo/internal/indigo"
-	"github.com/slurdge/indigo/log"
+	"github.com/slurdge/goeland/config"
+	"github.com/slurdge/goeland/internal/goeland"
+	"github.com/slurdge/goeland/log"
 	"github.com/spf13/cobra"
 	"jaytaylor.com/html2text"
 )
@@ -53,7 +53,7 @@ func run(cmd *cobra.Command, args []string) {
 		}
 		log.Infof("Executing pipe named: %s", pipe)
 		sourceName := getSubString("pipes", pipe, "source")
-		source, err := indigo.GetSource(config, sourceName)
+		source, err := goeland.GetSource(config, sourceName)
 		if err != nil {
 			log.Errorf("Error getting source: %s", sourceName)
 		}
@@ -72,7 +72,7 @@ func run(cmd *cobra.Command, args []string) {
 			for _, entry := range source.Entries {
 				email := email.NewEmail()
 				email.From = getSubString("pipes", pipe, "email_from")
-				email.To = indigo.SplitAndTrimString(getSubString("pipes", pipe, "email_to"))
+				email.To = goeland.SplitAndTrimString(getSubString("pipes", pipe, "email_to"))
 				data := struct {
 					EntryTitle  string
 					SourceTitle string

@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/slurdge/indigo/version"
+	"github.com/slurdge/goeland/version"
 	"github.com/spf13/cobra"
 )
 

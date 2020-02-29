@@ -1,12 +1,12 @@
-package indigo
+package goeland
 
 import (
 	"fmt"
 	"strings"
 	"time"
 
-	"github.com/slurdge/indigo/config"
-	"github.com/slurdge/indigo/log"
+	"github.com/slurdge/goeland/config"
+	"github.com/slurdge/goeland/log"
 )
 
 // Entry This represent an entry produced by a source

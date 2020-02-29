@@ -1,9 +1,0 @@
-[main]
-
-#dry-run = true
-
-[feeds]
-
-[feeds.lebrief]
-url = "https://www.nextinpact.com/rss/lebrief.xml"
-filename = "lebrief.xml"

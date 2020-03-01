@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/markbates/pkger"
-	"github.com/markbates/pkger/pkging"
 	"github.com/slurdge/goeland/config"
 	"github.com/slurdge/goeland/log"
 	"github.com/spf13/cobra"
@@ -54,21 +52,11 @@ func Execute() {
 
 func createDefaultConfig(cfgFile string) {
 	if _, err := os.Stat(cfgFile); os.IsNotExist(err) {
-		var configDefault pkging.File
-		if configDefault, err = pkger.Open("/config.default.toml"); err != nil {
-			fatalErr(fmt.Errorf("no config.toml and no default file present"))
-		}
-		info, err := configDefault.Stat()
-		if err != nil {
-			fatalErr(fmt.Errorf("cannot get default file stats"))
-		}
 		var configFile *os.File
 		if configFile, err = os.Create(cfgFile); err != nil {
 			fatalErr(fmt.Errorf("cannot open config.toml for writing"))
 		}
-		content := make([]byte, info.Size())
-		configDefault.Read(content)
-		configFile.Write(content)
+		configFile.Write([]byte(DefaultConfig))
 	}
 }
 

@@ -1,4 +1,9 @@
- language: go
+language: go
+
+addons:
+  apt:
+    packages:
+    - upx-ucl
 
 go:
   - master
@@ -19,7 +24,8 @@ script:
   - export CGO_ENABLED="0"
 
 before_deploy:
-    - gox -osarch="linux/386 linux/amd64 linux/arm darwin/amd64 windows/amd64 windows/386" -output "build/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags "-X github.com/slurdge/goeland/version.GitCommit=${GIT_COMMIT}${GIT_DIRTY} -X github.com/slurdge/goeland/version.BuildDate=${BUILD_DATE} -s -w"
+  - gox -osarch="linux/386 linux/amd64 linux/arm darwin/amd64 windows/amd64 windows/386" -output "build/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags "-X github.com/slurdge/goeland/version.GitCommit=${GIT_COMMIT}${GIT_DIRTY} -X github.com/slurdge/goeland/version.BuildDate=${BUILD_DATE} -s -w"
+  - upx -9 ./build/*
 
 deploy:
   provider: releases
@@ -27,7 +33,8 @@ deploy:
   file: build/*
   file_glob: true
   skip_cleanup: true
-
+  on:
+    tags: true
 
 notifications:
   email:

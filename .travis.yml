@@ -14,6 +14,7 @@ install:
   - export BUILD_DATE=$(date +'%Y%m%d%H%M%S')
   - export GIT_COMMIT=$(shell git rev-parse HEAD)
   - export GIT_DIRTY=$(shell test -n "`git status --porcelain`" && echo "+CHANGES" || true)
+  - export CGO_ENABLED="0"
  
 script:
   - gox -os="linux darwin windows" -arch="amd64 arm 386" -output "build/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags "-X github.com/slurdge/goeland/version.GitCommit=${GIT_COMMIT}${GIT_DIRTY} -X github.com/slurdge/goeland/version.BuildDate=${BUILD_DATE} -s -w"

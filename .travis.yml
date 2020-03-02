@@ -1,9 +1,13 @@
 language: go
 
 go:
-  - 1.8.x
   - master
 
+before_install:
+  - go get github.com/mitchellh/gox
+
 install:
-  - go get -v github.com/Masterminds/glide 
-  - make get-deps
+  - go get -v ./...
+  
+script:
+  - gox -os="linux darwin windows" -arch="amd64"

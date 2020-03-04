@@ -19,19 +19,9 @@ var rootCmd = &cobra.Command{
 	Long: `goeland is a simple rss to email program.
 	
 It was inspired by rss2email, but is an alternative with some cool features, such as filters.
+The simple way to use it is to type goeland run, then customize the create config.toml file.
+To obtain a list of all the filter, type: goeland help run`,
 
-The simple way to use it is to copy the provided config.toml.sample file and customize it.
-
-The filters available are:
-	- all: default, include all entries
-	- none: include no entries
-	- today: only includes entries with are today
-	- digest: combines all the entries into one
-	- digest2: combines all the entires into one, but with one less level (<h2> instead of <h1>)
-	- combine: like digest, but use the first item as the title of the digest,
-	- links: rewrite src="// and href="// to have an https:// prefix
-	- lebrief: fetch full articles for LeBrief by NextINpact
-	- wikipedia: remove unnecessary text from wikipedia entries`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//      Run: func(cmd *cobra.Command, args []string) { },

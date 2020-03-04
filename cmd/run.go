@@ -73,7 +73,7 @@ func run(cmd *cobra.Command, args []string) {
 			for _, entry := range source.Entries {
 				email := email.NewEmail()
 				email.From = getSubString("pipes", pipe, "email_from")
-				email.To = goeland.SplitAndTrimString(getSubString("pipes", pipe, "email_to"))
+				email.To = config.GetStringSlice(fmt.Sprintf("pipes.%s.email_to", pipe))
 				data := struct {
 					EntryTitle  string
 					SourceTitle string
@@ -114,7 +114,13 @@ func run(cmd *cobra.Command, args []string) {
 var runCmd = &cobra.Command{
 	Use:   "run",
 	Short: "Fetch the RSS and emails it",
-	Run:   run,
+	Long: strings.Join([]string{
+		`Take one or more RSS feeds and transform them into a proper email format.
+		
+The available filters are as follow:`,
+		goeland.GetFiltersHelp(),
+	}, "\n"),
+	Run: run,
 }
 
 func init() {

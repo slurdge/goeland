@@ -42,7 +42,7 @@ func GetSource(config config.Provider, sourceName string) (*Source, error) {
 			return source, err
 		}
 	case "merge":
-		subSourceNames := SplitAndTrimString(config.GetString(fmt.Sprintf("sources.%s.sources", sourceName)))
+		subSourceNames := config.GetStringSlice(fmt.Sprintf("sources.%s.sources", sourceName))
 		for _, subSourceName := range subSourceNames {
 			currentSource, err := GetSource(config, subSourceName)
 			if source == nil {

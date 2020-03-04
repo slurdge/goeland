@@ -13,7 +13,7 @@ password = "pass"
 url = "https://hnrss.org/newest"
 type = "feed"
 # See doc for available filters
-filters = ""
+filters = ["all", "today"]
 
 [pipes]
 

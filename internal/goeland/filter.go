@@ -33,9 +33,10 @@ var filters = map[string]filter{
 	"combine": filter{"Combine all the entries into one source and use the first entry title as source title. Useful for merge sources", filterCombine},
 	"links":   filter{`Rewrite relative links src="// and href="// to have an https:// prefix`, filterRelativeLinks},
 	"replace": filter{`Replace a string with another. Use with an argument like this: replace(myreplace) and define
-[replace.myreplace]
-from="A string"
-to="Another string"`, filterReplace},
+		[replace.myreplace]
+		from="A string"
+		to="Another string"
+	  in your config file.`, filterReplace},
 	"language": filter{"Keep only the specified languages (best effort detection), use like this: language(en,de)", filterLanguage},
 	"lebrief":  filter{"Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
 }

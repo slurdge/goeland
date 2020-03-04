@@ -111,3 +111,4 @@ $RECYCLE.BIN/
 lebrief.xml
 config.toml
 build/
+config.*

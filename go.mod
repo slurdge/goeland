@@ -27,4 +27,4 @@ require (
 	jaytaylor.com/html2text v0.0.0-20200220170450-61d9dc4d7195
 )
 
-go 1.13
+go 1.14

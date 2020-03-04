@@ -9,14 +9,15 @@ import (
 
 func stringInSlice(a string, list []string) bool {
     for _, b := range list {
-        if strings.ToLower(strings.TrimSpace(b)) == strings.ToLower(strings.TrimSpace(a)) {
+        if strings.ToLower(b) == strings.ToLower(a) {
             return true
         }
     }
     return false
 }
 
-func filterLanguage(source *Source, languages []string) {
+func filterLanguage(source *Source, params *filterParams) {
+	languages := params.args
 	var current int
 	for _, entry := range source.Entries {
 		text, err := html2text.FromString(entry.Content, html2text.Options{OmitLinks: true})

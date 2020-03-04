@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -13,7 +14,12 @@ import (
 
 type filter struct {
 	help       string
-	filterFunc func(source *Source)
+	filterFunc func(source *Source, params *filterParams)
+}
+
+type filterParams struct {
+	args   []string
+	config config.Provider
 }
 
 var filters = map[string]filter{
@@ -23,8 +29,15 @@ var filters = map[string]filter{
 	"last":    filter{"Keep only the last entry", filterLast},
 	"reverse": filter{"Reverse the order of the entries", filterReverse},
 	"today":   filter{"Keep only the entries for today", filterToday},
+	"digest":  filter{"Make a digest of all entries (optional heading level, default is 1)", filterDigest},
+	"combine": filter{"Combine all the entries into one source and use the first entry title as source title. Useful for merge sources", filterCombine},
 	"links":   filter{`Rewrite relative links src="// and href="// to have an https:// prefix`, filterRelativeLinks},
-	"lebrief": filter{"Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
+	"replace": filter{`Replace a string with another. Use with an argument like this: replace(myreplace) and define
+[replace.myreplace]
+from="A string"
+to="Another string"`, filterReplace},
+	"language": filter{"Keep only the specified languages (best effort detection), use like this: language(en,de)", filterLanguage},
+	"lebrief":  filter{"Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
 }
 
 func GetFiltersHelp() string {
@@ -36,29 +49,29 @@ func GetFiltersHelp() string {
 	return strings.Join(lines, "\n")
 }
 
-func filterAll(source *Source) {
+func filterAll(source *Source, params *filterParams) {
 
 }
 
-func filterNone(source *Source) {
+func filterNone(source *Source, params *filterParams) {
 	source.Entries = nil
 }
 
-func filterFirst(source *Source) {
+func filterFirst(source *Source, params *filterParams) {
 	source.Entries = source.Entries[:1]
 }
 
-func filterLast(source *Source) {
+func filterLast(source *Source, params *filterParams) {
 	source.Entries = source.Entries[len(source.Entries)-1:]
 }
 
-func filterReverse(source *Source) {
+func filterReverse(source *Source, params *filterParams) {
 	for i, j := 0, len(source.Entries)-1; i < j; i, j = i+1, j-1 {
 		source.Entries[i], source.Entries[j] = source.Entries[j], source.Entries[i]
 	}
 }
 
-func filterToday(source *Source) {
+func filterToday(source *Source, params *filterParams) {
 	var current int
 	for _, entry := range source.Entries {
 		if entry.Date.Day() != time.Now().Day() {
@@ -70,7 +83,7 @@ func filterToday(source *Source) {
 	source.Entries = source.Entries[:current]
 }
 
-func filterDigest(source *Source, level int, useFirstEntryTitle bool) {
+func filterDigestGeneric(source *Source, level int, useFirstEntryTitle bool) {
 	if len(source.Entries) <= 1 {
 		return
 	}
@@ -92,7 +105,20 @@ func filterDigest(source *Source, level int, useFirstEntryTitle bool) {
 	source.Entries = []Entry{digest}
 }
 
-func filterRelativeLinks(source *Source) {
+func filterDigest(source *Source, params *filterParams) {
+	args := params.args
+	level := 1
+	if len(args) > 0 {
+		level, _ = strconv.Atoi(args[0])
+	}
+	filterDigestGeneric(source, level, false)
+}
+
+func filterCombine(source *Source, params *filterParams) {
+	filterDigestGeneric(source, 1, true)
+}
+
+func filterRelativeLinks(source *Source, params *filterParams) {
 	re := regexp.MustCompile(`(src|href)\s*=('|")\/\/`)
 	for i, entry := range source.Entries {
 		entry.Content = re.ReplaceAllString(entry.Content, "${1}=${2}https://")
@@ -100,7 +126,9 @@ func filterRelativeLinks(source *Source) {
 	}
 }
 
-func filterReplace(source *Source, key string, config config.Provider) {
+func filterReplace(source *Source, params *filterParams) {
+	key := params.args[0]
+	config := params.config
 	from := config.GetString(fmt.Sprintf("replace.%s.from", key))
 	to := config.GetString(fmt.Sprintf("replace.%s.to", key))
 	for i, entry := range source.Entries {
@@ -109,48 +137,27 @@ func filterReplace(source *Source, key string, config config.Provider) {
 	}
 }
 
-func filterSource(config config.Provider, source *Source) {
+func filterSource(source *Source, config config.Provider) {
 	log.Infof("Retrieved %v feeds", len(source.Entries))
-	filters := config.GetStringSlice(fmt.Sprintf("sources.%s.filters", source.Name))
-	for _, filter := range filters {
-		filterShort := filter
-		filterParams := []string{}
-		if strings.Contains(filter, "(") {
-			filterShort = strings.Split(filter, "(")[0]
-			filterParams = strings.Split(strings.ReplaceAll(strings.Split(filter, "(")[1], ")", ""), ",")
+	filterNames := config.GetStringSlice(fmt.Sprintf("sources.%s.filters", source.Name))
+	for _, filterName := range filterNames {
+		filterShort := filterName
+		args := []string{}
+		if strings.Contains(filterName, "(") {
+			filterShort = strings.Split(filterName, "(")[0]
+			args = strings.Split(strings.ReplaceAll(strings.Split(filterName, "(")[1], ")", ""), ",")
+			for i, arg := range args {
+				args[i] = strings.TrimSpace(arg)
+			}
 		}
-		log.Infof("Executing %s filter with params: %v", filterShort, filterParams)
-		switch filterShort {
-		case "all":
-			filterAll(source)
-		case "today":
-			filterToday(source)
-		case "lebrief":
-			filterLeBrief(source)
-		case "digest":
-			filterDigest(source, 1, false)
-		case "digest2":
-			filterDigest(source, 2, false)
-		case "combine":
-			filterDigest(source, 1, true)
-		case "reverse":
-			filterReverse(source)
-		case "wikipedia":
-			filterWikipedia(source)
-		case "links":
-			filterRelativeLinks(source)
-		case "first":
-			filterFirst(source)
-		case "last":
-			filterLast(source)
-		case "replace":
-			filterReplace(source, filterParams[0], config)
-		case "language":
-			filterLanguage(source, filterParams)
-		default:
-			log.Errorf("unknown filter: %s\n", filter)
+		if filter, found := filters[filterShort]; found {
+			log.Debugf("Executing %s filter with args: %v", filterShort, args)
+			params := filterParams{args: args, config: config}
+			filter.filterFunc(source, &params)
+		} else {
+			log.Errorf("unknown filter: %s\n", filterName)
 		}
-		log.Infof("After %s: %v feeds", filter, len(source.Entries))
-		log.Debugf("After %s: %+v", filter, source.Entries)
+		log.Infof("After %s: %v feeds", filterName, len(source.Entries))
+		log.Debugf("After %s: %+v", filterName, source.Entries)
 	}
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func (source *Source) filterLeBrief() {
+func filterLeBrief(source *Source) {
 	for index, entry := range source.Entries {
 		re := regexp.MustCompile(`<a href="([^"]+)">Lire la suite</a>`)
 		link := re.FindStringSubmatch(entry.Content)[1]

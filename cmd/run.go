@@ -17,8 +17,6 @@ import (
 	"jaytaylor.com/html2text"
 )
 
-const tmpURL = "https://www.nextinpact.com/rss/lebrief.xml"
-
 func createEmailPool(config config.Provider) (*email.Pool, error) {
 	host := config.GetString("email.host")
 	port := config.GetInt("email.port")
@@ -104,7 +102,7 @@ func run(cmd *cobra.Command, args []string) {
 			fmt.Printf("**%s**\n", source.Title)
 			for _, entry := range source.Entries {
 				text, _ := html2text.FromString(entry.Content, html2text.Options{})
-				fmt.Printf("*%s*\n%s\n%s", entry.Title, entry.Date, text)
+				fmt.Printf("*%s*\n%s\n%s\n", entry.Title, entry.Date, text)
 			}
 		}
 	}

@@ -46,6 +46,7 @@ func fetchFeed(feedLocation string, isFile bool) (*Source, error) {
 		} else {
 			entry.Date = time.Now()
 		}
+		entry.URL = item.Link
 		source.Entries = append(source.Entries, entry)
 	}
 	source.Title = feed.Title

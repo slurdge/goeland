@@ -37,8 +37,9 @@ var filters = map[string]filter{
 		from="A string"
 		to="Another string"
 	  in your config file.`, filterReplace},
-	"language": filter{"Keep only the specified languages (best effort detection), use like this: language(en,de)", filterLanguage},
-	"lebrief":  filter{"Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
+	"includelink": filter{"Include the link of entries in the digest form", filterIncludeLink},
+	"language":    filter{"Keep only the specified languages (best effort detection), use like this: language(en,de)", filterLanguage},
+	"lebrief":     filter{"Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
 }
 
 func GetFiltersHelp() string {
@@ -95,7 +96,11 @@ func filterDigestGeneric(source *Source, level int, useFirstEntryTitle bool) {
 	}
 	content := ""
 	for _, entry := range source.Entries {
-		content += fmt.Sprintf("<h%d>%s</h%d>", level, entry.Title, level)
+		if entry.IncludeLink {
+			content += fmt.Sprintf(`<h%d><a href="%s">%s</a></h%d>`, level, entry.URL, entry.Title, level)
+		} else {
+			content += fmt.Sprintf("<h%d>%s</h%d>", level, entry.Title, level)
+		}
 		content += entry.Content
 	}
 	h := sha256.New()
@@ -135,6 +140,12 @@ func filterReplace(source *Source, params *filterParams) {
 	for i, entry := range source.Entries {
 		entry.Content = strings.ReplaceAll(entry.Content, from, to)
 		source.Entries[i] = entry
+	}
+}
+
+func filterIncludeLink(source *Source, params *filterParams) {
+	for i, _ := range source.Entries {
+		source.Entries[i].IncludeLink = true
 	}
 }
 

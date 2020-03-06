@@ -3,6 +3,7 @@ package goeland
 import (
 	"crypto/sha256"
 	"fmt"
+	"math/rand"
 	"regexp"
 	"strconv"
 	"strings"
@@ -27,6 +28,7 @@ var filters = map[string]filter{
 	"none":    filter{"Removes all entries", filterNone},
 	"first":   filter{"Keep only the first entry", filterFirst},
 	"last":    filter{"Keep only the last entry", filterLast},
+	"random":  filter{"Keep 1 or more random entries. Use either 'random' or 'random(5)' for example.", filterRandom},
 	"reverse": filter{"Reverse the order of the entries", filterReverse},
 	"today":   filter{"Keep only the entries for today", filterToday},
 	"digest":  filter{"Make a digest of all entries (optional heading level, default is 1)", filterDigest},
@@ -65,6 +67,23 @@ func filterFirst(source *Source, params *filterParams) {
 
 func filterLast(source *Source, params *filterParams) {
 	source.Entries = source.Entries[len(source.Entries)-1:]
+}
+
+func filterRandom(source *Source, params *filterParams) {
+	number := 1
+	if len(params.args) > 0 {
+		number, _ = strconv.Atoi(params.args[0])
+	}
+	if number <= 0 {
+		number = 1
+	}
+	if number > len(source.Entries) {
+		number = len(source.Entries)
+	}
+	rand.Shuffle(len(source.Entries), func(i, j int) {
+		source.Entries[i], source.Entries[j] = source.Entries[j], source.Entries[i]
+	})
+	source.Entries = source.Entries[:number]
 }
 
 func filterReverse(source *Source, params *filterParams) {

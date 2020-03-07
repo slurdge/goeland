@@ -31,16 +31,23 @@ func GetSource(config config.Provider, sourceName string) (*Source, error) {
 	if !config.IsSet(fmt.Sprintf("sources.%s", sourceName)) {
 		return nil, fmt.Errorf("cannot find source: %s", sourceName)
 	}
-	url := config.GetString(fmt.Sprintf("sources.%s.url", sourceName))
 	sourceType := config.GetString(fmt.Sprintf("sources.%s.type", sourceName))
 	log.Debugf("Fetching source: %s of type %s", sourceName, sourceType)
 	var source *Source
 	var err error
 	switch sourceType {
 	case "feed":
+		url := config.GetString(fmt.Sprintf("sources.%s.url", sourceName))
 		source, err = fetchFeed(url, !strings.HasPrefix(url, "http"))
 		if err != nil {
-			log.Errorf("Cannot retrieve feed: %s error: %v", sourceName, err)
+			log.Errorf("Cannot retrieve feed: %s error: %v", url, err)
+			return source, err
+		}
+	case "imgur":
+		tag := config.GetString(fmt.Sprintf("sources.%s.tag", sourceName))
+		source, err = fetchImgurTag(tag)
+		if err != nil {
+			log.Errorf("Cannot retrieve imgur tag: %s error: %v", tag, err)
 			return source, err
 		}
 	case "merge":

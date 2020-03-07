@@ -112,3 +112,4 @@ lebrief.xml
 config.toml
 build/
 config.*
+data/

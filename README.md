@@ -8,11 +8,14 @@ The available filters are as follow:
 - all: Default, include all entries
 - last: Keep only the last entry
 - links: Rewrite relative links src="// and href="// to have an https:// prefix
-- replace: Replace a string with another. Use with an argument like this: replace(myreplace) and define
-        [replace.myreplace]
-        from="A string"
-        to="Another string"
-    in your config file.
+- replace: Replace a string with another. 
+  Use with an argument like this: replace(myreplace) and define
+```     
+[replace.myreplace]
+    from="A string"
+    to="Another string"
+``` 
+in your config file.
 - none: Removes all entries
 - first: Keep only the first entry
 - reverse: Reverse the order of the entries

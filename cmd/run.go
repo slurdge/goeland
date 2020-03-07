@@ -34,7 +34,7 @@ func run(cmd *cobra.Command, args []string) {
 	log.Debugln("Running...")
 	config := viper.GetViper()
 
-	emailTimeoutInMs := time.Duration(config.GetInt64("email_timeout_ms"))
+	emailTimeoutInNs := time.Duration(config.GetInt64("email_timeout_ms") * 1000 * 1000)
 
 	getSubString := func(root string, key string, tail string) string {
 		return config.GetString(fmt.Sprintf("%s.%s.%s", root, key, tail))
@@ -93,7 +93,7 @@ func run(cmd *cobra.Command, args []string) {
 					email.Text = []byte("There was an error converting HTML content to text")
 				}
 				email.HTML = []byte(html)
-				err = pool.Send(email, emailTimeoutInMs*1000*1000)
+				err = pool.Send(email, emailTimeoutInNs)
 				if err != nil {
 					log.Errorf("error sending email: %v", err)
 				}

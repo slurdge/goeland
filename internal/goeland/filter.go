@@ -169,7 +169,7 @@ func filterIncludeLink(source *Source, params *filterParams) {
 }
 
 func filterSource(source *Source, config config.Provider) {
-	log.Infof("Retrieved %v feeds", len(source.Entries))
+	log.Infof("Retrieved %v feeds for source %v", len(source.Entries), source.Name)
 	filterNames := config.GetStringSlice(fmt.Sprintf("sources.%s.filters", source.Name))
 	for _, filterName := range filterNames {
 		filterShort := filterName

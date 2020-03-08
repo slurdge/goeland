@@ -15,8 +15,7 @@ cache:
     - $HOME/.cache/go-build
     - $HOME/gopath/pkg/mod
 
-before_install:
-  - go get github.com/mitchellh/gox
+before_install: true
 
 git:
   depth: 1

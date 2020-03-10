@@ -69,7 +69,6 @@ func GetSource(config config.Provider, sourceName string) (*Source, error) {
 	}
 	if source != nil {
 		source.Name = sourceName
-		filterSource(source, config)
 	}
 	log.Debugf("%v", source)
 	return source, nil

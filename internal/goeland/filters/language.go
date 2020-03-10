@@ -1,22 +1,23 @@
-package goeland
+package filters
 
 import (
 	"strings"
 
 	"github.com/abadojack/whatlanggo"
+	"github.com/slurdge/goeland/internal/goeland"
 	"jaytaylor.com/html2text"
 )
 
 func stringInSlice(a string, list []string) bool {
-    for _, b := range list {
-        if strings.ToLower(b) == strings.ToLower(a) {
-            return true
-        }
-    }
-    return false
+	for _, b := range list {
+		if strings.ToLower(b) == strings.ToLower(a) {
+			return true
+		}
+	}
+	return false
 }
 
-func filterLanguage(source *Source, params *filterParams) {
+func filterLanguage(source *goeland.Source, params *filterParams) {
 	languages := params.args
 	var current int
 	for _, entry := range source.Entries {

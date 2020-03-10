@@ -1,4 +1,4 @@
-package goeland
+package filters
 
 import (
 	"crypto/sha256"
@@ -10,12 +10,13 @@ import (
 	"time"
 
 	"github.com/slurdge/goeland/config"
+	"github.com/slurdge/goeland/internal/goeland"
 	"github.com/slurdge/goeland/log"
 )
 
 type filter struct {
 	help       string
-	filterFunc func(source *Source, params *filterParams)
+	filterFunc func(source *goeland.Source, params *filterParams)
 }
 
 type filterParams struct {
@@ -53,23 +54,23 @@ func GetFiltersHelp() string {
 	return strings.Join(lines, "\n")
 }
 
-func filterAll(source *Source, params *filterParams) {
+func filterAll(source *goeland.Source, params *filterParams) {
 
 }
 
-func filterNone(source *Source, params *filterParams) {
+func filterNone(source *goeland.Source, params *filterParams) {
 	source.Entries = nil
 }
 
-func filterFirst(source *Source, params *filterParams) {
+func filterFirst(source *goeland.Source, params *filterParams) {
 	source.Entries = source.Entries[:1]
 }
 
-func filterLast(source *Source, params *filterParams) {
+func filterLast(source *goeland.Source, params *filterParams) {
 	source.Entries = source.Entries[len(source.Entries)-1:]
 }
 
-func filterRandom(source *Source, params *filterParams) {
+func filterRandom(source *goeland.Source, params *filterParams) {
 	number := 1
 	if len(params.args) > 0 {
 		number, _ = strconv.Atoi(params.args[0])
@@ -86,13 +87,13 @@ func filterRandom(source *Source, params *filterParams) {
 	source.Entries = source.Entries[:number]
 }
 
-func filterReverse(source *Source, params *filterParams) {
+func filterReverse(source *goeland.Source, params *filterParams) {
 	for i, j := 0, len(source.Entries)-1; i < j; i, j = i+1, j-1 {
 		source.Entries[i], source.Entries[j] = source.Entries[j], source.Entries[i]
 	}
 }
 
-func filterToday(source *Source, params *filterParams) {
+func filterToday(source *goeland.Source, params *filterParams) {
 	var current int
 	for _, entry := range source.Entries {
 		if entry.Date.Day() != time.Now().Day() {
@@ -104,11 +105,11 @@ func filterToday(source *Source, params *filterParams) {
 	source.Entries = source.Entries[:current]
 }
 
-func filterDigestGeneric(source *Source, level int, useFirstEntryTitle bool) {
+func filterDigestGeneric(source *goeland.Source, level int, useFirstEntryTitle bool) {
 	if len(source.Entries) <= 1 {
 		return
 	}
-	digest := Entry{}
+	digest := goeland.Entry{}
 	digest.Title = fmt.Sprintf("Digest for %s", source.Title)
 	if useFirstEntryTitle && len(source.Entries) > 0 {
 		digest.Title = source.Entries[0].Title
@@ -127,10 +128,10 @@ func filterDigestGeneric(source *Source, level int, useFirstEntryTitle bool) {
 	digest.UID = fmt.Sprintf("%x", h.Sum(nil))
 	digest.Date = time.Now()
 	digest.Content = content
-	source.Entries = []Entry{digest}
+	source.Entries = []goeland.Entry{digest}
 }
 
-func filterDigest(source *Source, params *filterParams) {
+func filterDigest(source *goeland.Source, params *filterParams) {
 	args := params.args
 	level := 1
 	if len(args) > 0 {
@@ -139,11 +140,11 @@ func filterDigest(source *Source, params *filterParams) {
 	filterDigestGeneric(source, level, false)
 }
 
-func filterCombine(source *Source, params *filterParams) {
+func filterCombine(source *goeland.Source, params *filterParams) {
 	filterDigestGeneric(source, 1, true)
 }
 
-func filterRelativeLinks(source *Source, params *filterParams) {
+func filterRelativeLinks(source *goeland.Source, params *filterParams) {
 	re := regexp.MustCompile(`(src|href)\s*=('|")\/\/`)
 	for i, entry := range source.Entries {
 		entry.Content = re.ReplaceAllString(entry.Content, "${1}=${2}https://")
@@ -151,7 +152,7 @@ func filterRelativeLinks(source *Source, params *filterParams) {
 	}
 }
 
-func filterReplace(source *Source, params *filterParams) {
+func filterReplace(source *goeland.Source, params *filterParams) {
 	key := params.args[0]
 	config := params.config
 	from := config.GetString(fmt.Sprintf("replace.%s.from", key))
@@ -162,13 +163,14 @@ func filterReplace(source *Source, params *filterParams) {
 	}
 }
 
-func filterIncludeLink(source *Source, params *filterParams) {
+func filterIncludeLink(source *goeland.Source, params *filterParams) {
 	for i, _ := range source.Entries {
 		source.Entries[i].IncludeLink = true
 	}
 }
 
-func filterSource(source *Source, config config.Provider) {
+// FilterSource filters a source according to the config
+func FilterSource(source *goeland.Source, config config.Provider) {
 	log.Infof("Retrieved %v feeds for source %v", len(source.Entries), source.Name)
 	filterNames := config.GetStringSlice(fmt.Sprintf("sources.%s.filters", source.Name))
 	for _, filterName := range filterNames {

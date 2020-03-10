@@ -1,12 +1,13 @@
-package goeland
+package filters
 
 import (
 	"regexp"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/slurdge/goeland/internal/goeland"
 )
 
-func filterLeBrief(source *Source, params *filterParams) {
+func filterLeBrief(source *goeland.Source, params *filterParams) {
 	for index, entry := range source.Entries {
 		re := regexp.MustCompile(`<a href="([^"]+)">Lire la suite</a>`)
 		link := re.FindStringSubmatch(entry.Content)[1]

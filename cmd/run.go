@@ -11,6 +11,7 @@ import (
 	"github.com/jordan-wright/email"
 	"github.com/slurdge/goeland/config"
 	"github.com/slurdge/goeland/internal/goeland"
+	"github.com/slurdge/goeland/internal/goeland/filters"
 	"github.com/slurdge/goeland/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -56,6 +57,7 @@ func run(cmd *cobra.Command, args []string) {
 		if err != nil {
 			log.Errorf("Error getting source: %s", sourceName)
 		}
+		filters.FilterSource(source, config)
 		if dryRun {
 			log.Infoln("Dry run has been specified, not outputting...")
 			continue
@@ -116,7 +118,7 @@ var runCmd = &cobra.Command{
 		`Take one or more RSS feeds and transform them into a proper email format.
 		
 The available filters are as follow:`,
-		goeland.GetFiltersHelp(),
+		filters.GetFiltersHelp(),
 	}, "\n"),
 	Run: run,
 }

@@ -42,6 +42,7 @@ var filters = map[string]filter{
 	  in your config file.`, filterReplace},
 	"includelink": filter{"Include the link of entries in the digest form", filterIncludeLink},
 	"language":    filter{"Keep only the specified languages (best effort detection), use like this: language(en,de)", filterLanguage},
+	"unseen":      filter{"Keep only unseen entry", filterUnSeen},
 	"lebrief":     filter{"Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
 }
 

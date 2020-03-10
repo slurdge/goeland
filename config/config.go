@@ -2,6 +2,8 @@ package config
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/spf13/pflag"
@@ -45,6 +47,10 @@ func ReadDefaultConfig(appName string, configName string) {
 	viper.SetConfigFile(configName)
 	viper.AddConfigPath("$HOME/.goeland")
 	viper.AddConfigPath(".")
+	if ex, err := os.Executable(); err == nil {
+		exPath := filepath.Dir(ex)
+		viper.AddConfigPath(exPath)
+	}
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic(fmt.Errorf("fatal error config file: %s", err))

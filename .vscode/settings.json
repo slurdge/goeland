@@ -5,6 +5,9 @@
         "Infof",
         "goeland",
         "gofeed",
-        "mmcdole"
+        "gopath",
+        "ldflags",
+        "mmcdole",
+        "osarch"
     ]
 }

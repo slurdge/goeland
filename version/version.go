@@ -9,7 +9,12 @@ import (
 var GitCommit string
 
 // Version returns the main version number that is being run at the moment.
-const Version = "0.3.2"
+// Given a version number MAJOR.MINOR.PATCH, increment the:
+//     MAJOR version when you make incompatible API changes,
+//     MINOR version when you add functionality in a backwards compatible manner, and
+//     PATCH version when you make backwards compatible bug fixes.
+// Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
+const Version = "0.4.0"
 
 // BuildDate returns the date the binary was built
 var BuildDate = ""

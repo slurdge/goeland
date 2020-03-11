@@ -30,33 +30,37 @@ func openDatabase(config config.Provider) (*bolt.DB, error) {
 	return database, err
 }
 
-func purgeUnSeen(source *goeland.Source, config config.Provider) {
+//PurgeUnseen will remove all the entries for this source
+func PurgeUnseen(config config.Provider, sourceName string) error {
 	database, err := openDatabase(config)
 	if err != nil {
-		log.Errorf("cannot open database: %v", err)
-		return
+		return fmt.Errorf("cannot open database: %v", err)
 	}
 	defer database.Close()
 	err = database.Update(func(tx *bolt.Tx) error {
-		bucket, err := tx.CreateBucketIfNotExists([]byte(source.Name))
+		log.Infof("Purging source: %s...", sourceName)
+		bucket, err := tx.CreateBucketIfNotExists([]byte(sourceName))
 		if err != nil {
 			return fmt.Errorf("create bucket: %v", err)
 		}
-		prefix := []byte(source.Name + "/")
+		prefix := []byte(sourceName + "/")
 		cursor := bucket.Cursor()
+		numPurged := 0
 		for k, v := cursor.Seek(prefix); k != nil && bytes.HasPrefix(k, prefix); k, v = cursor.Next() {
 			date := new(time.Time)
 			date.UnmarshalText(v)
 			if date.Before(time.Now().AddDate(0, 0, 15)) {
+				numPurged++
 				cursor.Delete()
 			}
 		}
-
+		log.Infof("Purged %d entries", numPurged)
 		return nil
 	})
 	if err != nil {
-		log.Debugf("error in updating the database: %v", err)
+		return fmt.Errorf("error in updating the database: %v", err)
 	}
+	return nil
 }
 
 func filterUnSeen(source *goeland.Source, params *filterParams) {

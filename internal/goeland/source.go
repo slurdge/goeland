@@ -26,7 +26,7 @@ type Source struct {
 	Entries []Entry
 }
 
-// GetSource ...
+// GetSource retrieves a source from either a feed, imgur or other sub-sources
 func GetSource(config config.Provider, sourceName string) (*Source, error) {
 	if !config.IsSet(fmt.Sprintf("sources.%s", sourceName)) {
 		return nil, fmt.Errorf("cannot find source: %s", sourceName)

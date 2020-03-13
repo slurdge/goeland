@@ -54,7 +54,6 @@ func GetFiltersHelp() string {
 	}
 	return strings.Join(lines, "\n")
 }
-
 func filterAll(source *goeland.Source, params *filterParams) {
 
 }

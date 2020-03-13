@@ -31,7 +31,7 @@ func openDatabase(config config.Provider) (*bolt.DB, error) {
 }
 
 //PurgeUnseen will remove all the entries for this source
-func PurgeUnseen(config config.Provider, sourceName string) error {
+func PurgeUnseen(config config.Provider, sourceName string, numOfDays int) error {
 	database, err := openDatabase(config)
 	if err != nil {
 		return fmt.Errorf("cannot open database: %v", err)
@@ -49,7 +49,7 @@ func PurgeUnseen(config config.Provider, sourceName string) error {
 		for k, v := cursor.Seek(prefix); k != nil && bytes.HasPrefix(k, prefix); k, v = cursor.Next() {
 			date := new(time.Time)
 			date.UnmarshalText(v)
-			if date.Before(time.Now().AddDate(0, 0, 15)) {
+			if date.Before(time.Now().AddDate(0, 0, -numOfDays)) {
 				numPurged++
 				cursor.Delete()
 			}

@@ -11,8 +11,12 @@ func purge(cmd *cobra.Command, args []string) {
 	log.Debugln("Purging...")
 	config := viper.GetViper()
 	sources := config.GetStringMapString("sources")
+	numOfDays := config.GetInt("purge-days")
+	if numOfDays < 0 {
+		numOfDays = 0
+	}
 	for source := range sources {
-		filters.PurgeUnseen(config, source)
+		filters.PurgeUnseen(config, source, numOfDays)
 	}
 }
 
@@ -24,5 +28,8 @@ var purgeCmd = &cobra.Command{
 }
 
 func init() {
+	purgeCmd.Flags().Int("purge-days", 15, "Number of days to keep for the purge command")
+	viper.GetViper().BindPFlag("purge-days", purgeCmd.Flags().Lookup("purge-days"))
+	viper.SetDefault("purge-days", 15)
 	rootCmd.AddCommand(purgeCmd)
 }

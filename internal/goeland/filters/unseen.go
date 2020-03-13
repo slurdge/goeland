@@ -22,7 +22,6 @@ func openDatabase(config config.Provider) (*bolt.DB, error) {
 			databaseName = filepath.Join(exPath, databaseName)
 		}
 	}
-	fmt.Println(databaseName)
 	database, err := bolt.Open(databaseName, 0600, &bolt.Options{Timeout: 1 * time.Second})
 	if err != nil {
 		return nil, fmt.Errorf("error opening seen database %s: %v", databaseName, err)

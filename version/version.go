@@ -14,7 +14,7 @@ var GitCommit string
 //     MINOR version when you add functionality in a backwards compatible manner, and
 //     PATCH version when you make backwards compatible bug fixes.
 // Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
-const Version = "0.4.0"
+const Version = "0.4.1"
 
 // BuildDate returns the date the binary was built
 var BuildDate = ""

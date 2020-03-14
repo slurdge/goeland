@@ -1,10 +1,13 @@
-package goeland
+package fetch
 
 import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"time"
+
+	"github.com/slurdge/goeland/internal/goeland"
+	"github.com/spf13/viper"
 )
 
 type imgurImage struct {
@@ -33,30 +36,34 @@ type imgurRoot struct {
 
 var clientID = ""
 
-func fetchImgurTag(tag string) (*Source, error) {
-	source := new(Source)
+func fetchImgurTag(source *goeland.Source, tag string) error {
 	url := "https://api.imgur.com/3/gallery/t/" + tag + "/top/0/day"
 	client := http.Client{Timeout: time.Second * 3}
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		return source, err
+		return err
+	}
+
+	if clientID == "" {
+		config := viper.GetViper()
+		clientID = config.GetString("imgur-cid")
 	}
 
 	req.Header.Set("Authorization", "Client-ID "+clientID)
 
 	res, err := client.Do(req)
 	if err != nil {
-		return source, err
+		return err
 	}
 
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return source, err
+		return err
 	}
 	imgurData := new(imgurRoot)
 	if err := json.Unmarshal(data, imgurData); err != nil {
-		return source, err
+		return err
 	}
 	for _, item := range imgurData.Data.Items {
 		if len(item.Images) < 1 {
@@ -66,7 +73,7 @@ func fetchImgurTag(tag string) (*Source, error) {
 		if image.Animated {
 			continue
 		}
-		entry := Entry{}
+		entry := goeland.Entry{}
 		entry.Title = item.Title
 		entry.Content = `<a href="` + item.Link + `"><img src="` + image.Link + `"></a><br>` + image.Description
 		entry.UID = item.ID
@@ -75,5 +82,5 @@ func fetchImgurTag(tag string) (*Source, error) {
 		source.Entries = append(source.Entries, entry)
 	}
 	source.Title = "Imgur pictures for tag #" + tag
-	return source, nil
+	return nil
 }

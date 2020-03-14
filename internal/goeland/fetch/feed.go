@@ -1,4 +1,4 @@
-package goeland
+package fetch
 
 import (
 	"fmt"
@@ -7,34 +7,34 @@ import (
 	"time"
 
 	"github.com/mmcdole/gofeed"
+	"github.com/slurdge/goeland/internal/goeland"
 )
 
 const minContentLen = 10
 
-func fetchFeed(feedLocation string, isFile bool) (*Source, error) {
-	source := new(Source)
+func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 	fp := gofeed.NewParser()
 	var feed *gofeed.Feed
 	var err error
 	if isFile {
 		file, err := os.Open(feedLocation)
 		if err != nil {
-			return source, fmt.Errorf("cannot open: %s", feedLocation)
+			return fmt.Errorf("cannot open: %s", feedLocation)
 		}
 		defer file.Close()
 		feed, err = fp.Parse(file)
 		if err != nil {
-			return source, fmt.Errorf("cannot parse file: %s", feedLocation)
+			return fmt.Errorf("cannot parse file: %s", feedLocation)
 		}
 	} else {
 		feed, err = fp.ParseURL(feedLocation)
 		if err != nil {
-			return source, fmt.Errorf("cannot open or parse url: %s", feedLocation)
+			return fmt.Errorf("cannot open or parse url: %s", feedLocation)
 		}
 	}
 	for _, item := range feed.Items {
 
-		entry := Entry{}
+		entry := goeland.Entry{}
 		entry.Title = item.Title
 		entry.Content = item.Description
 		if len(strings.TrimSpace(entry.Content)) < minContentLen {
@@ -50,5 +50,5 @@ func fetchFeed(feedLocation string, isFile bool) (*Source, error) {
 		source.Entries = append(source.Entries, entry)
 	}
 	source.Title = feed.Title
-	return source, nil
+	return nil
 }

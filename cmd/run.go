@@ -10,7 +10,7 @@ import (
 
 	"github.com/jordan-wright/email"
 	"github.com/slurdge/goeland/config"
-	"github.com/slurdge/goeland/internal/goeland"
+	"github.com/slurdge/goeland/internal/goeland/fetch"
 	"github.com/slurdge/goeland/internal/goeland/filters"
 	"github.com/slurdge/goeland/log"
 	"github.com/spf13/cobra"
@@ -53,16 +53,17 @@ func run(cmd *cobra.Command, args []string) {
 		}
 		log.Infof("Executing pipe named: %s", pipe)
 		sourceName := getSubString("pipes", pipe, "source")
-		source, err := goeland.GetSource(config, sourceName)
+		source, err := fetch.FetchSource(config, sourceName)
 		if err != nil {
 			log.Errorf("Error getting source: %s", sourceName)
 		}
-		filters.FilterSource(source, config)
 		if dryRun {
 			log.Infoln("Dry run has been specified, not outputting...")
 			continue
 		}
-		if getSubString("pipes", pipe, "destination") == "email" {
+		destination := getSubString("pipes", pipe, "destination")
+		switch destination {
+		case "email":
 			if pool == nil {
 				pool, err = createEmailPool(config)
 				if err != nil {
@@ -100,12 +101,16 @@ func run(cmd *cobra.Command, args []string) {
 					log.Errorf("error sending email: %v", err)
 				}
 			}
-		} else {
+		case "terminal":
 			fmt.Printf("**%s**\n", source.Title)
 			for _, entry := range source.Entries {
 				text, _ := html2text.FromString(entry.Content, html2text.Options{})
 				fmt.Printf("*%s*\n%s\n%s\n", entry.Title, entry.Date, text)
 			}
+		case "null":
+		case "none":
+		default:
+			log.Infof("unknown destination type: %s", destination)
 		}
 	}
 }

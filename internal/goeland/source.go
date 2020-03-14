@@ -1,12 +1,7 @@
 package goeland
 
 import (
-	"fmt"
-	"strings"
 	"time"
-
-	"github.com/slurdge/goeland/config"
-	"github.com/slurdge/goeland/log"
 )
 
 // Entry This represent an entry produced by a source
@@ -24,52 +19,4 @@ type Source struct {
 	Name    string
 	Title   string
 	Entries []Entry
-}
-
-// GetSource retrieves a source from either a feed, imgur or other sub-sources
-func GetSource(config config.Provider, sourceName string) (*Source, error) {
-	if !config.IsSet(fmt.Sprintf("sources.%s", sourceName)) {
-		return nil, fmt.Errorf("cannot find source: %s", sourceName)
-	}
-	sourceType := config.GetString(fmt.Sprintf("sources.%s.type", sourceName))
-	log.Debugf("Fetching source: %s of type %s", sourceName, sourceType)
-	var source *Source
-	var err error
-	switch sourceType {
-	case "feed":
-		url := config.GetString(fmt.Sprintf("sources.%s.url", sourceName))
-		source, err = fetchFeed(url, !strings.HasPrefix(url, "http"))
-		if err != nil {
-			log.Errorf("Cannot retrieve feed: %s error: %v", url, err)
-			return source, err
-		}
-	case "imgur":
-		tag := config.GetString(fmt.Sprintf("sources.%s.tag", sourceName))
-		source, err = fetchImgurTag(tag)
-		if err != nil {
-			log.Errorf("Cannot retrieve imgur tag: %s error: %v", tag, err)
-			return source, err
-		}
-	case "merge":
-		subSourceNames := config.GetStringSlice(fmt.Sprintf("sources.%s.sources", sourceName))
-		for _, subSourceName := range subSourceNames {
-			currentSource, err := GetSource(config, subSourceName)
-			if source == nil {
-				source = currentSource
-			} else {
-				source.Entries = append(source.Entries, currentSource.Entries...)
-			}
-			if err != nil {
-				log.Errorf("cannot fetch source: %s (%v)", subSourceName, err)
-				continue
-			}
-		}
-	default:
-		return nil, fmt.Errorf("cannot understand source type: %s", sourceType)
-	}
-	if source != nil {
-		source.Name = sourceName
-	}
-	log.Debugf("%v", source)
-	return source, nil
 }

@@ -112,9 +112,7 @@ func run(cmd *cobra.Command, args []string) {
 				text, _ := html2text.FromString(entry.Content, html2text.Options{})
 				fmt.Printf("*%s*\n%s\n%s\n", entry.Title, entry.Date, text)
 			}
-		case "null":
-			fallthrough
-		case "none":
+		case "null", "none":
 		default:
 			log.Infof("unknown destination type: %s", destination)
 		}

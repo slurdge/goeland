@@ -119,6 +119,9 @@ func run(cmd *cobra.Command, args []string) {
 			log.Infof("unknown destination type: %s", destination)
 		}
 	}
+	if config.GetBool("auto-purge") {
+		purge(nil, nil)
+	}
 }
 
 // versionCmd represents the version command

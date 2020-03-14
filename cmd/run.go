@@ -10,6 +10,7 @@ import (
 
 	"github.com/jordan-wright/email"
 	"github.com/slurdge/goeland/config"
+	"github.com/slurdge/goeland/internal/goeland"
 	"github.com/slurdge/goeland/internal/goeland/fetch"
 	"github.com/slurdge/goeland/internal/goeland/filters"
 	"github.com/slurdge/goeland/log"
@@ -31,6 +32,22 @@ func createEmailPool(config config.Provider) (*email.Pool, error) {
 	return email.NewPool(fullhost, 8, auth)
 }
 
+func formatEmailSubject(source *goeland.Source, entry *goeland.Entry, templateString string) string {
+	data := struct {
+		EntryTitle  string
+		SourceTitle string
+		SourceName  string
+		Today       time.Time
+	}{EntryTitle: entry.Title, SourceTitle: source.Title, SourceName: source.Name, Today: time.Now()}
+	var output bytes.Buffer
+	if strings.TrimSpace(templateString) == "" {
+		templateString = `{{.EntryTitle}}`
+	}
+	tpl := template.Must(template.New("title").Parse(templateString))
+	tpl.Execute(&output, data)
+	return output.String()
+}
+
 func run(cmd *cobra.Command, args []string) {
 	log.Debugln("Running...")
 	config := viper.GetViper()
@@ -43,7 +60,10 @@ func run(cmd *cobra.Command, args []string) {
 
 	dryRun := config.GetBool("dry-run")
 
-	var pool *email.Pool
+	pool, err := createEmailPool(config)
+	if err != nil {
+		log.Errorf("cannot create email pool: %v", err)
+	}
 	pipes := config.GetStringMapString("pipes")
 	for pipe := range pipes {
 		disabled := config.GetBool(fmt.Sprintf("pipes.%s.disabled", pipe))
@@ -65,30 +85,14 @@ func run(cmd *cobra.Command, args []string) {
 		switch destination {
 		case "email":
 			if pool == nil {
-				pool, err = createEmailPool(config)
-				if err != nil {
-					log.Errorf("cannot create email pool: %v", err)
-					continue
-				}
+				log.Errorf("cannot send email: no pool created")
 			}
 			for _, entry := range source.Entries {
 				email := email.NewEmail()
 				email.From = getSubString("pipes", pipe, "email_from")
 				email.To = config.GetStringSlice(fmt.Sprintf("pipes.%s.email_to", pipe))
-				data := struct {
-					EntryTitle  string
-					SourceTitle string
-					SourceName  string
-					Today       time.Time
-				}{EntryTitle: entry.Title, SourceTitle: source.Title, SourceName: source.Name, Today: time.Now()}
-				var output bytes.Buffer
 				templateString := getSubString("pipes", pipe, "email_title")
-				if strings.TrimSpace(templateString) == "" {
-					templateString = `{{.EntryTitle}}`
-				}
-				tpl := template.Must(template.New("title").Parse(templateString))
-				tpl.Execute(&output, data)
-				email.Subject = output.String()
+				email.Subject = formatEmailSubject(source, &entry, templateString)
 				html := entry.Content
 				text, err := html2text.FromString(html)
 				if err == nil {

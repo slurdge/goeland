@@ -79,7 +79,8 @@ func run(cmd *cobra.Command, args []string) {
 					EntryTitle  string
 					SourceTitle string
 					SourceName  string
-				}{EntryTitle: entry.Title, SourceTitle: source.Title, SourceName: source.Name}
+					Today       time.Time
+				}{EntryTitle: entry.Title, SourceTitle: source.Title, SourceName: source.Name, Today: time.Now()}
 				var output bytes.Buffer
 				templateString := getSubString("pipes", pipe, "email_title")
 				if strings.TrimSpace(templateString) == "" {

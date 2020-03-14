@@ -52,7 +52,7 @@ func newLogrusLogger(cfg config.Provider) *logrus.Logger {
 
 	l := logrus.New()
 
-	if cfg.GetBool("json_logs") {
+	if cfg.GetBool("json-logs") {
 		l.Formatter = new(logrus.JSONFormatter)
 	}
 	l.Out = os.Stderr

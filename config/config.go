@@ -39,10 +39,11 @@ func ReadDefaultConfig(appName string, configName string) {
 
 	// global defaults
 
-	viper.SetDefault("json_logs", false)
-	viper.SetDefault("loglevel", "debug")
-	viper.SetDefault("dry_run", false)
-	viper.SetDefault("email_timeout_ms", 5000)
+	viper.SetDefault("json-logs", false)
+	viper.SetDefault("loglevel", "none")
+	viper.SetDefault("dry-run", false)
+	viper.SetDefault("email-timeout-ms", 5000)
+	viper.SetDefault("purge-days", 15)
 
 	viper.SetConfigFile(configName)
 	viper.AddConfigPath("$HOME/.goeland")

@@ -35,7 +35,7 @@ func run(cmd *cobra.Command, args []string) {
 	log.Debugln("Running...")
 	config := viper.GetViper()
 
-	emailTimeoutInNs := time.Duration(config.GetInt64("email_timeout_ms") * 1000 * 1000)
+	emailTimeoutInNs := time.Duration(config.GetInt64("email-timeout-ms") * 1000 * 1000)
 
 	getSubString := func(root string, key string, tail string) string {
 		return config.GetString(fmt.Sprintf("%s.%s.%s", root, key, tail))
@@ -108,6 +108,7 @@ func run(cmd *cobra.Command, args []string) {
 				fmt.Printf("*%s*\n%s\n%s\n", entry.Title, entry.Date, text)
 			}
 		case "null":
+			fallthrough
 		case "none":
 		default:
 			log.Infof("unknown destination type: %s", destination)

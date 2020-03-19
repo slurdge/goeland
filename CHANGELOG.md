@@ -1,6 +1,26 @@
 Changelog
 =========
 
+v0.4.4
+-------
+
+- Actual fix for v0.4.3
+
+v0.4.3
+------
+
+- Fix the imgur clientID not being correctly provisionned
+
+v0.4.2
+------
+
+- Fix the sub sources not properly being filtered
+
+v0.4.1
+------
+
+- Fix the purge command
+
 v0.4.0
 ------
 

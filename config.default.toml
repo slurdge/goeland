@@ -1,5 +1,6 @@
 loglevel = "none"
 dry-run = false
+purge-days = 15 #number of days to keep the entries for
 
 [email]
 host = "smtp.exmaple.com"

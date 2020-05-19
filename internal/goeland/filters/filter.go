@@ -24,6 +24,8 @@ type filterParams struct {
 	config config.Provider
 }
 
+const defaultHeaderLevel = 2
+
 var filters = map[string]filter{
 	"all":     filter{"Default, include all entries", filterAll},
 	"none":    filter{"Removes all entries", filterNone},
@@ -32,7 +34,7 @@ var filters = map[string]filter{
 	"random":  filter{"Keep 1 or more random entries. Use either 'random' or 'random(5)' for example.", filterRandom},
 	"reverse": filter{"Reverse the order of the entries", filterReverse},
 	"today":   filter{"Keep only the entries for today", filterToday},
-	"digest":  filter{"Make a digest of all entries (optional heading level, default is 1)", filterDigest},
+	"digest":  filter{"Make a digest of all entries (optional heading level, default is " + string(defaultHeaderLevel) + ")", filterDigest},
 	"combine": filter{"Combine all the entries into one source and use the first entry title as source title. Useful for merge sources", filterCombine},
 	"links":   filter{`Rewrite relative links src="// and href="// to have an https:// prefix`, filterRelativeLinks},
 	"replace": filter{`Replace a string with another. Use with an argument like this: replace(myreplace) and define
@@ -106,7 +108,7 @@ func filterToday(source *goeland.Source, params *filterParams) {
 }
 
 func filterDigestGeneric(source *goeland.Source, level int, useFirstEntryTitle bool) {
-	if len(source.Entries) <= 1 {
+	if len(source.Entries) < 1 {
 		return
 	}
 	digest := goeland.Entry{}
@@ -133,7 +135,7 @@ func filterDigestGeneric(source *goeland.Source, level int, useFirstEntryTitle b
 
 func filterDigest(source *goeland.Source, params *filterParams) {
 	args := params.args
-	level := 1
+	level := defaultHeaderLevel
 	if len(args) > 0 {
 		level, _ = strconv.Atoi(args[0])
 	}
@@ -141,7 +143,12 @@ func filterDigest(source *goeland.Source, params *filterParams) {
 }
 
 func filterCombine(source *goeland.Source, params *filterParams) {
-	filterDigestGeneric(source, 1, true)
+	args := params.args
+	level := defaultHeaderLevel
+	if len(args) > 0 {
+		level, _ = strconv.Atoi(args[0])
+	}
+	filterDigestGeneric(source, level, true)
 }
 
 func filterRelativeLinks(source *goeland.Source, params *filterParams) {

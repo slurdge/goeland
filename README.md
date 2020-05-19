@@ -1,4 +1,6 @@
-# goeland 📧
+# goeland
+
+![goeland](asset/goeland.svg)
 
 A RSS to email, ala rss2email written in Go.
 Take one or more RSS feeds and transform them into a proper email format.

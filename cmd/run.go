@@ -3,12 +3,14 @@ package cmd
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"net/smtp"
+	"net/textproto"
 	"strings"
 	"text/template"
 	"time"
 
-	"github.com/jordan-wright/email"
+	"github.com/slurdge/go-email"
 	"github.com/slurdge/goeland/config"
 	"github.com/slurdge/goeland/internal/goeland"
 	"github.com/slurdge/goeland/internal/goeland/fetch"
@@ -16,8 +18,29 @@ import (
 	"github.com/slurdge/goeland/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/tdewolff/minify/v2"
+	"github.com/tdewolff/minify/v2/html"
 	"jaytaylor.com/html2text"
 )
+
+const logoAttachmentName = "logo.png"
+
+func createEmailTemplate(_ config.Provider) (*template.Template, error) {
+	minifier := minify.New()
+	minifier.Add("text/html", &html.Minifier{
+		KeepConditionalComments: true,
+	})
+	emailBytes, err := Asset("asset/email.default.html")
+	if err != nil {
+		return nil, err
+	}
+	minified, err := minifier.Bytes("text/html", emailBytes)
+	if err != nil {
+		return nil, err
+	}
+	tpl := template.Must(template.New("email").Parse(string(minified)))
+	return tpl, nil
+}
 
 func createEmailPool(config config.Provider) (*email.Pool, error) {
 	host := config.GetString("email.host")
@@ -43,9 +66,49 @@ func formatEmailSubject(source *goeland.Source, entry *goeland.Entry, templateSt
 	if strings.TrimSpace(templateString) == "" {
 		templateString = `{{.EntryTitle}}`
 	}
-	tpl := template.Must(template.New("title").Parse(templateString))
+	tpl := template.Must(template.New("email_title").Parse(templateString))
 	tpl.Execute(&output, data)
 	return output.String()
+}
+
+func formatHTMLEmail(entry *goeland.Entry, tpl *template.Template) string {
+	data := struct {
+		EntryTitle    string
+		EntryContent  string
+		IncludeHeader bool
+		IncludeFooter bool
+		ContentID     string
+	}{EntryTitle: entry.Title,
+		EntryContent:  entry.Content,
+		IncludeHeader: true,
+		IncludeFooter: true,
+		ContentID:     logoAttachmentName,
+	}
+	var output bytes.Buffer
+	tpl.Execute(&output, data)
+	return output.String()
+}
+
+func inlineImage(e *email.Email, r io.Reader, filename string, c string) (a *email.Attachment, err error) {
+	var buffer bytes.Buffer
+	if _, err = io.Copy(&buffer, r); err != nil {
+		return
+	}
+	at := &email.Attachment{
+		Filename: filename,
+		Header:   textproto.MIMEHeader{},
+		Content:  buffer.Bytes(),
+	}
+	if c != "" {
+		at.Header.Set("Content-Type", c)
+	} else {
+		at.Header.Set("Content-Type", "application/octet-stream")
+	}
+	at.Header.Set("Content-Disposition", fmt.Sprintf("inline;\r\n filename=\"%s\"", filename))
+	at.Header.Set("Content-ID", fmt.Sprintf("<%s>", filename))
+	at.Header.Set("Content-Transfer-Encoding", "base64")
+	e.Attachments = append(e.Attachments, at)
+	return at, nil
 }
 
 func run(cmd *cobra.Command, args []string) {
@@ -63,6 +126,14 @@ func run(cmd *cobra.Command, args []string) {
 	pool, err := createEmailPool(config)
 	if err != nil {
 		log.Errorf("cannot create email pool: %v", err)
+	}
+	tpl, err := createEmailTemplate(config)
+	if err != nil {
+		log.Errorf("cannot create email template: %v", err)
+	}
+	logoBytes, err := Asset("asset/goeland.png")
+	if err != nil {
+		log.Errorf("cannot create email logo: %v", err)
 	}
 	pipes := config.GetStringMapString("pipes")
 	for pipe := range pipes {
@@ -93,13 +164,16 @@ func run(cmd *cobra.Command, args []string) {
 				email.To = config.GetStringSlice(fmt.Sprintf("pipes.%s.email_to", pipe))
 				templateString := getSubString("pipes", pipe, "email_title")
 				email.Subject = formatEmailSubject(source, &entry, templateString)
-				html := entry.Content
-				text, err := html2text.FromString(html)
+				text, err := html2text.FromString(entry.Content)
 				if err == nil {
 					email.Text = []byte(text)
 				} else {
 					email.Text = []byte("There was an error converting HTML content to text")
 				}
+				//at, _ := inlineImage(email, bytes.NewReader(logoBytes), logoAttachmentName, "image/png")
+				at, _ := email.Attach(bytes.NewReader(logoBytes), logoAttachmentName, "image/png")
+				at.HTMLRelated = true
+				html := formatHTMLEmail(&entry, tpl)
 				email.HTML = []byte(html)
 				err = pool.Send(email, emailTimeoutInNs)
 				if err != nil {

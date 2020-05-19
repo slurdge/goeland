@@ -3,7 +3,7 @@ module github.com/slurdge/goeland
 require (
 	github.com/PuerkitoBio/goquery v1.5.1
 	github.com/abadojack/whatlanggo v1.0.1
-	github.com/jordan-wright/email v0.0.0-20200121133829-a0b5c5b58bb6
+	github.com/go-bindata/go-bindata v3.1.2+incompatible // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/mattn/go-runewidth v0.0.8 // indirect
 	github.com/mmcdole/gofeed v1.0.0-beta2
@@ -11,6 +11,7 @@ require (
 	github.com/olekukonko/tablewriter v0.0.4 // indirect
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
+	github.com/slurdge/go-email v0.0.0-20200519125744-03a5de5089e4
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/cobra v0.0.6
@@ -19,6 +20,9 @@ require (
 	github.com/spf13/viper v1.6.2
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	github.com/stretchr/testify v1.4.0 // indirect
+	github.com/tdewolff/minify v2.3.6+incompatible // indirect
+	github.com/tdewolff/minify/v2 v2.7.4
+	github.com/tdewolff/parse v2.3.4+incompatible // indirect
 	go.etcd.io/bbolt v1.3.3
 	golang.org/x/net v0.0.0-20200226121028-0de0cce0169b // indirect
 	golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae // indirect

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!-- Set the language of your main document. This helps screenreaders use the proper language profile, pronunciation, and accent. -->
+<html lang="en">
+
+<head>
+    <!-- The title is useful for screenreaders reading a document. Use your sender name or subject line. -->
+
+    <title>{{.EntryTitle}}</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- Never disable zoom behavior! Fine to set the initial width and scale, but allow users to set their own zoom preferences. -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style type="text/css">
+        /* CLIENT-SPECIFIC STYLES */
+        
+        body,
+        table,
+        td,
+        a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        
+        table,
+        td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+        
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+        /* RESET STYLES */
+        
+        img {
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+            max-width: 100%;
+        }
+        
+        table {
+            border-collapse: collapse !important;
+        }
+        
+        body {
+            height: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            overflow: hidden;
+        }
+        /* iOS BLUE LINKS */
+        
+        a[x-apple-data-detectors] {
+            color: inherit !important;
+            text-decoration: none !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+        }
+        /* GMAIL BLUE LINKS */
+        
+        u+#body a {
+            color: inherit;
+            text-decoration: none;
+            font-size: inherit;
+            font-family: inherit;
+            font-weight: inherit;
+            line-height: inherit;
+        }
+        /* SAMSUNG MAIL BLUE LINKS */
+        
+        #MessageViewBody a {
+            color: inherit;
+            text-decoration: none;
+            font-size: inherit;
+            font-family: inherit;
+            font-weight: inherit;
+            line-height: inherit;
+        }
+        /* These rules set the link and hover states, making it clear that links are, in fact, links. */
+        /* Embrace established conventions like underlines on links to keep emails accessible. */
+        
+        a {
+            color: rgb(16, 120, 189);
+            font-weight: 600;
+            text-decoration: underline;
+        }
+        
+        a:hover {
+            text-decoration: none !important;
+        }
+        /* These rules adjust styles for desktop devices, keeping the email responsive for users. */
+        /* Some email clients don't properly apply media query-based styles, which is why we go mobile-first. */
+        
+        @media screen and (min-width:600px) {
+            h1 {
+                font-size: 48px !important;
+                line-height: 48px !important;
+            }
+            .intro {
+                font-size: 24px !important;
+                line-height: 36px !important;
+            }
+        }
+    </style>
+</head>
+
+<body style="margin: 0 !important; padding: 0 !important;">
+    <!-- This ghost table is used to constrain the width in Outlook. The role attribute is set to presentation to prevent it from being read by screenreaders. -->
+    <!--[if (gte mso 9)|(IE)]>
+    <table cellspacing="0" cellpadding="0" border="0" width="720" align="center" role="presentation"><tr><td>
+    <![endif]-->
+    <!-- The role and aria-label attributes are added to wrap the email content as an article for screen readers. Some of them will read out the aria-label as the title of the document, so use something like "An email from Your Brand Name" to make it recognizable. -->
+    <!-- Default styling of text is applied to the wrapper div. Be sure to use text that is large enough and has a high contrast with the background color for people with visual impairments. -->
+    <div role="article" aria-label="{{.EntryTitle}}" lang="en" style="font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; font-weight: 400; line-height: 28px; margin: 0 auto; max-width: 720px; padding: 40px 20px 40px 20px;">
+
+        {{if .IncludeHeader}}
+        <!-- Logo section and header. Headers are useful landmark elements. -->
+        <header>
+            <!-- Since this is a purely decorative image, we can leave the alternative text blank. -->
+            <!-- Linking images also helps with Gmail displaying download links next to them. -->
+            <a href="https://www.github.com/slurdge/goeland">
+                <center>
+                    <img style="background-color: white; padding: 16px; border-radius: 16px;" width="250" src="cid:{{.ContentID}}" />
+                </center>
+            </a>
+            <!-- The h1 is the main heading of the document and should come first. -->
+            <!-- We can override the default styles inline. -->
+            <h1 style="font-size: 32px; font-weight: 800; line-height: 32px; margin: 48px 0; text-align: center; ">
+                {{.EntryTitle}}
+            </h1>
+        </header>
+        {{end}}
+
+        <!-- Main content section. Main is a useful landmark element. -->
+        <main>
+            {{.EntryContent}}
+        </main>
+
+        {{if .IncludeFooter}}
+        <!-- Footer information. Footer is a useful landmark element. -->
+        <footer style=" margin-top: 24px; background-color: white; color: black; padding: 16px; border-radius: 16px; ">
+            <!-- This link uses descriptive text to inform the user what will happen with the link is tapped. -->
+            <!-- It also uses inline styles since some email clients won't render embedded styles from the head. -->
+            <center>
+                <p style="font-size: 16px; font-weight: 400; line-height: 16px; ">
+                    Sent with ❤️ by <a href="https://www.github.com/slurdge/goeland">goeland</a>
+                </p>
+            </center>
+        </footer>
+        {{end}}
+
+    </div>
+    <!--[if (gte mso 9)|(IE)]>
+    </td></tr></table>
+    <![endif]-->
+</body>
+
+</html>

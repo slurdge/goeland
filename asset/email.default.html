@@ -131,11 +131,13 @@
                     <img style="background-color: white; padding: 16px; border-radius: 16px;" width="250" src="cid:{{.ContentID}}" />
                 </center>
             </a>
+            {{if .IncludeTitle}}
             <!-- The h1 is the main heading of the document and should come first. -->
             <!-- We can override the default styles inline. -->
             <h1 style="font-size: 32px; font-weight: 800; line-height: 32px; margin: 48px 0; text-align: center; ">
                 {{.EntryTitle}}
             </h1>
+            {{end}}
         </header>
         {{end}}
 

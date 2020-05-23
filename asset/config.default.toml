@@ -28,6 +28,9 @@ password = "pass"
 ## Put "Sent with ❤️ by goeland in the bottom of HTML emails"
 #include-footer = true
 
+## Include title in header
+#include-title = false
+
 ## Email timeout in milliseconds
 #timeout-ms = 5000
 

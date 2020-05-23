@@ -75,11 +75,13 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 		EntryTitle    string
 		EntryContent  string
 		IncludeHeader bool
+		IncludeTitle  bool
 		IncludeFooter bool
 		ContentID     string
 	}{EntryTitle: entry.Title,
 		EntryContent:  entry.Content,
 		IncludeHeader: config.GetBool("email.include-header"),
+		IncludeTitle:  config.GetBool("email.include-title"),
 		IncludeFooter: config.GetBool("email.include-footer"),
 		ContentID:     logoAttachmentName,
 	}

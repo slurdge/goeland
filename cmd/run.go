@@ -162,6 +162,7 @@ func run(cmd *cobra.Command, args []string) {
 				email.To = config.GetStringSlice(fmt.Sprintf("pipes.%s.email_to", pipe))
 				templateString := getSubString("pipes", pipe, "email_title")
 				email.Subject = formatEmailSubject(source, &entry, templateString)
+				entry.Title = email.Subject
 				text, err := html2text.FromString(entry.Content)
 				if err == nil {
 					email.Text = []byte(text)

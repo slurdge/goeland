@@ -110,7 +110,9 @@ $RECYCLE.BIN/
 
 lebrief.xml
 config.toml
+b64convert.py
 build/
 config.*
 data/
 clientid.txt
+templates/

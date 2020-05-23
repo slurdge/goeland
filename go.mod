@@ -3,7 +3,6 @@ module github.com/slurdge/goeland
 require (
 	github.com/PuerkitoBio/goquery v1.5.1
 	github.com/abadojack/whatlanggo v1.0.1
-	github.com/go-bindata/go-bindata v3.1.2+incompatible // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/mattn/go-runewidth v0.0.8 // indirect
 	github.com/mmcdole/gofeed v1.0.0-beta2

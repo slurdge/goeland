@@ -24,6 +24,7 @@ install: true
  
 script:
   - go get -v ./...
+  - go get -v github.com/go-bindata/go-bindata/...
   - export BUILD_DATE=$(date +'%Y%m%d%H%M%S')
   - export GIT_COMMIT=$(shell git rev-parse HEAD)
   - export GIT_DIRTY=$(shell test -n "`git status --porcelain`" && echo "+CHANGES" || true)

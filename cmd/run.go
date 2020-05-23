@@ -30,7 +30,7 @@ func createEmailTemplate(_ config.Provider) (*template.Template, error) {
 	minifier.Add("text/html", &html.Minifier{
 		KeepConditionalComments: true,
 	})
-	emailBytes, err := Asset("asset/email.default.html")
+	emailBytes, err := Asset("email.default.html")
 	if err != nil {
 		return nil, err
 	}
@@ -70,8 +70,7 @@ func formatEmailSubject(source *goeland.Source, entry *goeland.Entry, templateSt
 	tpl.Execute(&output, data)
 	return output.String()
 }
-
-func formatHTMLEmail(entry *goeland.Entry, tpl *template.Template) string {
+func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template.Template) string {
 	data := struct {
 		EntryTitle    string
 		EntryContent  string
@@ -80,15 +79,14 @@ func formatHTMLEmail(entry *goeland.Entry, tpl *template.Template) string {
 		ContentID     string
 	}{EntryTitle: entry.Title,
 		EntryContent:  entry.Content,
-		IncludeHeader: true,
-		IncludeFooter: true,
+		IncludeHeader: config.GetBool("email.include-header"),
+		IncludeFooter: config.GetBool("email.include-footer"),
 		ContentID:     logoAttachmentName,
 	}
 	var output bytes.Buffer
 	tpl.Execute(&output, data)
 	return output.String()
 }
-
 func inlineImage(e *email.Email, r io.Reader, filename string, c string) (a *email.Attachment, err error) {
 	var buffer bytes.Buffer
 	if _, err = io.Copy(&buffer, r); err != nil {
@@ -115,7 +113,7 @@ func run(cmd *cobra.Command, args []string) {
 	log.Debugln("Running...")
 	config := viper.GetViper()
 
-	emailTimeoutInNs := time.Duration(config.GetInt64("email-timeout-ms") * 1000 * 1000)
+	emailTimeoutInNs := time.Duration(config.GetInt64("email.timeout-ms") * 1000 * 1000)
 
 	getSubString := func(root string, key string, tail string) string {
 		return config.GetString(fmt.Sprintf("%s.%s.%s", root, key, tail))
@@ -131,7 +129,7 @@ func run(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Errorf("cannot create email template: %v", err)
 	}
-	logoBytes, err := Asset("asset/goeland.png")
+	logoBytes, err := Asset("goeland.png")
 	if err != nil {
 		log.Errorf("cannot create email logo: %v", err)
 	}
@@ -170,10 +168,15 @@ func run(cmd *cobra.Command, args []string) {
 				} else {
 					email.Text = []byte("There was an error converting HTML content to text")
 				}
-				//at, _ := inlineImage(email, bytes.NewReader(logoBytes), logoAttachmentName, "image/png")
-				at, _ := email.Attach(bytes.NewReader(logoBytes), logoAttachmentName, "image/png")
-				at.HTMLRelated = true
-				html := formatHTMLEmail(&entry, tpl)
+				if config.GetBool("email.include-header") {
+					//at, err := email.Attach(bytes.NewReader(logoBytes), logoAttachmentName, "image/png")
+					at, err := inlineImage(email, bytes.NewReader(logoBytes), logoAttachmentName, "image/png")
+					if err != nil {
+						log.Errorf("error attaching logo: %v", err)
+					}
+					at.HTMLRelated = true
+				}
+				html := formatHTMLEmail(&entry, config, tpl)
 				email.HTML = []byte(html)
 				err = pool.Send(email, emailTimeoutInNs)
 				if err != nil {

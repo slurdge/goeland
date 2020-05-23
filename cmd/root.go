@@ -47,7 +47,7 @@ func createDefaultConfig(cfgFile string) {
 			fatalErr(fmt.Errorf("cannot open config.toml for writing"))
 		}
 		var defaultConfig []byte
-		if defaultConfig, err = Asset("asset/config.default.toml"); err != nil {
+		if defaultConfig, err = Asset("config.default.toml"); err != nil {
 			fatalErr(fmt.Errorf("cannot open embedded default config file"))
 		}
 		configFile.Write(defaultConfig)

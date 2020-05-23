@@ -52,7 +52,7 @@
             margin: 0 !important;
             padding: 0 !important;
             width: 100% !important;
-            overflow: hidden;
+            overflow-wrap: break-word;
         }
         /* iOS BLUE LINKS */
         
@@ -146,7 +146,7 @@
 
         {{if .IncludeFooter}}
         <!-- Footer information. Footer is a useful landmark element. -->
-        <footer style=" margin-top: 24px; background-color: white; color: black; padding: 16px; border-radius: 16px; ">
+        <footer style="margin-top: 24px; padding: 16px; border-radius: 16px; ">
             <!-- This link uses descriptive text to inform the user what will happen with the link is tapped. -->
             <!-- It also uses inline styles since some email clients won't render embedded styles from the head. -->
             <center>

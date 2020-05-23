@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v0.5.0
+------
+
+- True HTML messages with templates
+- New filter: `lasthours` or `lasthours(X)` which allows to keep only entries that have less than X (default: 24) hours date.
+- Add support for go generate.
+- Assets are now put in binary form from `asset/` folder.
+
 v0.4.4
 -------
 

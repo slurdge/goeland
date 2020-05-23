@@ -27,16 +27,17 @@ type filterParams struct {
 const defaultHeaderLevel = 2
 
 var filters = map[string]filter{
-	"all":     filter{"Default, include all entries", filterAll},
-	"none":    filter{"Removes all entries", filterNone},
-	"first":   filter{"Keep only the first entry", filterFirst},
-	"last":    filter{"Keep only the last entry", filterLast},
-	"random":  filter{"Keep 1 or more random entries. Use either 'random' or 'random(5)' for example.", filterRandom},
-	"reverse": filter{"Reverse the order of the entries", filterReverse},
-	"today":   filter{"Keep only the entries for today", filterToday},
-	"digest":  filter{"Make a digest of all entries (optional heading level, default is " + string(defaultHeaderLevel) + ")", filterDigest},
-	"combine": filter{"Combine all the entries into one source and use the first entry title as source title. Useful for merge sources", filterCombine},
-	"links":   filter{`Rewrite relative links src="// and href="// to have an https:// prefix`, filterRelativeLinks},
+	"all":       filter{"Default, include all entries", filterAll},
+	"none":      filter{"Removes all entries", filterNone},
+	"first":     filter{"Keep only the first entry", filterFirst},
+	"last":      filter{"Keep only the last entry", filterLast},
+	"random":    filter{"Keep 1 or more random entries. Use either 'random' or 'random(5)' for example.", filterRandom},
+	"reverse":   filter{"Reverse the order of the entries", filterReverse},
+	"today":     filter{"Keep only the entries for today", filterToday},
+	"lasthours": filter{"Keep only the entries that are from the X last hours (default 24)", filterLastHour},
+	"digest":    filter{"Make a digest of all entries (optional heading level, default is " + string(defaultHeaderLevel) + ")", filterDigest},
+	"combine":   filter{"Combine all the entries into one source and use the first entry title as source title. Useful for merge sources", filterCombine},
+	"links":     filter{`Rewrite relative links src="// and href="// to have an https:// prefix`, filterRelativeLinks},
 	"replace": filter{`Replace a string with another. Use with an argument like this: replace(myreplace) and define
 		[replace.myreplace]
 		from="A string"
@@ -93,6 +94,22 @@ func filterReverse(source *goeland.Source, params *filterParams) {
 	for i, j := 0, len(source.Entries)-1; i < j; i, j = i+1, j-1 {
 		source.Entries[i], source.Entries[j] = source.Entries[j], source.Entries[i]
 	}
+}
+
+func filterLastHour(source *goeland.Source, params *filterParams) {
+	hours := 24
+	if len(params.args) > 0 {
+		hours, _ = strconv.Atoi(params.args[0])
+	}
+	var current int
+	for _, entry := range source.Entries {
+		if entry.Date.Before(time.Now().Add(time.Hour * time.Duration(-hours))) {
+			continue
+		}
+		source.Entries[current] = entry
+		current++
+	}
+	source.Entries = source.Entries[:current]
 }
 
 func filterToday(source *goeland.Source, params *filterParams) {

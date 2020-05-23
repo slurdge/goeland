@@ -1,11 +1,18 @@
 # goeland
 
-![goeland](asset/goeland.svg)
+![goeland](asset/goeland_small.png)
+
+![version](https://img.shields.io/github/go-mod/go-version/slurdge/goeland)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/slurdge/goeland)
+[![Build Status](https://travis-ci.com/slurdge/goeland.svg?branch=master)](https://travis-ci.com/slurdge/goeland)
+![GitHub](https://img.shields.io/github/license/slurdge/goeland)
+![Image license](https://img.shields.io/badge/Images-CC%20BY--SA%204.0-blueviolet)
 
 A RSS to email, ala rss2email written in Go.
 Take one or more RSS feeds and transform them into a proper email format.
 
 The available filters are as follow:
+
 - none: Removes all entries
 - lasthours: Keep only the entries that are from the X last hours (default 24)
 - unseen: Keep only unseen entry

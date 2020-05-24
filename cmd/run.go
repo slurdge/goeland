@@ -3,7 +3,9 @@ package cmd
 import (
 	"bytes"
 	"fmt"
+	"html"
 	"io"
+	"io/ioutil"
 	"net/smtp"
 	"net/textproto"
 	"strings"
@@ -19,7 +21,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/tdewolff/minify/v2"
-	"github.com/tdewolff/minify/v2/html"
+	mhtml "github.com/tdewolff/minify/v2/html"
 	"jaytaylor.com/html2text"
 )
 
@@ -27,7 +29,7 @@ const logoAttachmentName = "logo.png"
 
 func createEmailTemplate(_ config.Provider) (*template.Template, error) {
 	minifier := minify.New()
-	minifier.Add("text/html", &html.Minifier{
+	minifier.Add("text/html", &mhtml.Minifier{
 		KeepConditionalComments: true,
 	})
 	emailBytes, err := Asset("email.default.html")
@@ -61,7 +63,10 @@ func formatEmailSubject(source *goeland.Source, entry *goeland.Entry, templateSt
 		SourceTitle string
 		SourceName  string
 		Today       time.Time
-	}{EntryTitle: entry.Title, SourceTitle: source.Title, SourceName: source.Name, Today: time.Now()}
+	}{EntryTitle: entry.Title,
+		SourceTitle: source.Title,
+		SourceName:  source.Name,
+		Today:       time.Now()}
 	var output bytes.Buffer
 	if strings.TrimSpace(templateString) == "" {
 		templateString = `{{.EntryTitle}}`
@@ -78,7 +83,7 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 		IncludeTitle  bool
 		IncludeFooter bool
 		ContentID     string
-	}{EntryTitle: entry.Title,
+	}{EntryTitle: html.EscapeString(entry.Title),
 		EntryContent:  entry.Content,
 		IncludeHeader: config.GetBool("email.include-header"),
 		IncludeTitle:  config.GetBool("email.include-title"),
@@ -131,9 +136,18 @@ func run(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Errorf("cannot create email template: %v", err)
 	}
-	logoBytes, err := Asset("goeland.png")
-	if err != nil {
-		log.Errorf("cannot create email logo: %v", err)
+	var logoBytes []byte
+	logoFilename := config.GetString("email.logo")
+	if logoFilename == "internal:goeland.png" {
+		logoBytes, err = Asset("goeland@250w.png")
+		if err != nil {
+			log.Errorf("cannot create email logo: %v", err)
+		}
+	} else {
+		logoBytes, err = ioutil.ReadFile(logoFilename)
+		if err != nil {
+			log.Errorf("cannot read email logo file: %v", err)
+		}
 	}
 	pipes := config.GetStringMapString("pipes")
 	for pipe := range pipes {
@@ -218,5 +232,7 @@ The available filters are as follow:`,
 func init() {
 	runCmd.Flags().Bool("dry-run", false, "Do not output anything, just fetch and filter the content")
 	viper.GetViper().BindPFlag("dry-run", runCmd.Flags().Lookup("dry-run"))
+	runCmd.Flags().String("logo", "internal:goeland.png", "Override the logo file")
+	viper.GetViper().BindPFlag("email.logo", runCmd.Flags().Lookup("logo"))
 	rootCmd.AddCommand(runCmd)
 }

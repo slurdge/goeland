@@ -34,6 +34,9 @@ password = "pass"
 ## Email timeout in milliseconds
 #timeout-ms = 5000
 
+## Logo file
+#logo = internal:goeland.png
+
 [sources]
 
 [sources.hackernews]

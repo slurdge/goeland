@@ -22,6 +22,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/tdewolff/minify/v2"
 	mhtml "github.com/tdewolff/minify/v2/html"
+	"github.com/vanng822/go-premailer/premailer"
 	"jaytaylor.com/html2text"
 )
 
@@ -92,7 +93,18 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 	}
 	var output bytes.Buffer
 	tpl.Execute(&output, data)
-	return output.String()
+
+	prem, err := premailer.NewPremailerFromString(output.String(), premailer.NewOptions())
+	if err != nil {
+		log.Errorf("cannot instantiate premailer: %v", err)
+		return output.String()
+	}
+	html, err := prem.Transform()
+	if err != nil {
+		log.Errorf("cannot inline css: %v", err)
+		return output.String()
+	}
+	return html
 }
 func inlineImage(e *email.Email, r io.Reader, filename string, c string) (a *email.Attachment, err error) {
 	var buffer bytes.Buffer

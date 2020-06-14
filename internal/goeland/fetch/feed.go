@@ -2,6 +2,7 @@ package fetch
 
 import (
 	"fmt"
+	"html"
 	"os"
 	"strings"
 	"time"
@@ -35,10 +36,10 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 	for _, item := range feed.Items {
 
 		entry := goeland.Entry{}
-		entry.Title = item.Title
-		entry.Content = item.Description
+		entry.Title = html.UnescapeString(item.Title)
+		entry.Content = html.UnescapeString(item.Description)
 		if len(strings.TrimSpace(entry.Content)) < minContentLen {
-			entry.Content = item.Content
+			entry.Content = html.UnescapeString(item.Content)
 		}
 		entry.UID = item.GUID
 		if item.PublishedParsed != nil {

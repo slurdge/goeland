@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.5.1
+------
+
+- Fix Email titles being escaped twice
+
 v0.5.0
 ------
 

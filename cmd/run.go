@@ -12,7 +12,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/slurdge/go-email"
+	"github.com/jordan-wright/email"
 	"github.com/slurdge/goeland/config"
 	"github.com/slurdge/goeland/internal/goeland"
 	"github.com/slurdge/goeland/internal/goeland/fetch"

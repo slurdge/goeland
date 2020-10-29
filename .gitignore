@@ -116,3 +116,4 @@ config.*
 data/
 clientid.txt
 templates/
+goeland.db

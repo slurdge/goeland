@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.5.2
+------
+
+- Fix bug with Reddit RSS
+
 v0.5.1
 ------
 

@@ -3,15 +3,27 @@ package fetch
 import (
 	"fmt"
 	"html"
+	"net/http"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/mmcdole/gofeed"
 	"github.com/slurdge/goeland/internal/goeland"
+	"github.com/slurdge/goeland/version"
 )
 
 const minContentLen = 10
+
+//from https://github.com/mmcdole/gofeed/issues/74#
+type userAgentTransport struct {
+	http.RoundTripper
+}
+
+func (c *userAgentTransport) roundTrip(r *http.Request) (*http.Response, error) {
+	r.Header.Set("User-Agent", "multiple:goeland:"+version.Version+" (commit id:"+version.GitCommit+") (by /u/goelandrss)")
+	return c.RoundTripper.RoundTrip(r)
+}
 
 func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 	fp := gofeed.NewParser()
@@ -28,6 +40,9 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 			return fmt.Errorf("cannot parse file: %s", feedLocation)
 		}
 	} else {
+		fp.Client = &http.Client{
+			Transport: &userAgentTransport{http.DefaultTransport},
+		}
 		feed, err = fp.ParseURL(feedLocation)
 		if err != nil {
 			return fmt.Errorf("cannot open or parse url: %s", feedLocation)

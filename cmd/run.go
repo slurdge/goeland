@@ -212,6 +212,7 @@ func run(cmd *cobra.Command, args []string) {
 					log.Errorf("error sending email: %v", err)
 				}
 			}
+		case "console":
 		case "terminal":
 			fmt.Printf("**%s**\n", source.Title)
 			for _, entry := range source.Entries {

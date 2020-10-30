@@ -126,7 +126,7 @@ The available filters are as follow:
 ```
 in your config file.
 - includelink: Include the link of entries in the digest form
-- lebrief: Retrieves the full excerpts for Next INpact's Lebrief
+- lebrief: Retrieves the full excerpts for Next INpact's Lebrief. Use only with a source from Next INpact.
 - language: Keep only the specified languages (best effort detection), use like this: `language(en,de)`
 
 ### Pipes
@@ -146,7 +146,7 @@ email_title = "{{.EntryTitle}}"
 
 You can use EntryTitle, SourceTitle and SourceName in the email template. SourceTitle is the title of the RSS stream.
 
-For debug purposes, or in order to pipe in other systems, you can set destination to `console`.
+For debug purposes, or in order to pipe in other systems, you can set destination to `terminal`.
 
 ## Examples
 
@@ -212,6 +212,16 @@ filters = ["unseen", "includelink", "digest"]
 source = "reddit"
 destination = "email"
 email_to = ["example@example.com"]
+email_from = "Reddit <reddit@example.com>"
+```
+
+It is possible to send an email to multiple addresses, just put them in a list:
+
+```
+[pipes.reddit]
+source = "reddit"
+destination = "email"
+email_to = ["bob@example.com", "alice@gmail.com", "charles@yahoo.com"]
 email_from = "Reddit <reddit@example.com>"
 ```
 

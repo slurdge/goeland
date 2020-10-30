@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.5.3
+------
+
+- Fix bug with NextInpact's lebrief filter.
+
 v0.5.2
 ------
 

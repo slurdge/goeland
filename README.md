@@ -64,7 +64,7 @@ Binaries are available for the following platforms:
 Just put it in a folder where you have write permissions and run it first with :
 
 ```console
-goleand run
+goeland run
 ```
 
 ## Usage

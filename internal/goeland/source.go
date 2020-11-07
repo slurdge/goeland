@@ -12,6 +12,7 @@ type Entry struct {
 	URL         string
 	Date        time.Time
 	IncludeLink bool
+	ImageURL    string
 }
 
 // Source ...

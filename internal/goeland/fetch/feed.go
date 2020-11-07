@@ -63,6 +63,9 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 			entry.Date = time.Now()
 		}
 		entry.URL = item.Link
+		if len(item.Enclosures) > 0 && strings.HasPrefix(item.Enclosures[0].Type, "image") {
+			entry.ImageURL = item.Enclosures[0].URL
+		}
 		source.Entries = append(source.Entries, entry)
 	}
 	source.Title = feed.Title

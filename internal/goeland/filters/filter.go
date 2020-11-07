@@ -27,17 +27,18 @@ type filterParams struct {
 const defaultHeaderLevel = 2
 
 var filters = map[string]filter{
-	"all":       filter{"Default, include all entries", filterAll},
-	"none":      filter{"Removes all entries", filterNone},
-	"first":     filter{"Keep only the first entry", filterFirst},
-	"last":      filter{"Keep only the last entry", filterLast},
-	"random":    filter{"Keep 1 or more random entries. Use either 'random' or 'random(5)' for example.", filterRandom},
-	"reverse":   filter{"Reverse the order of the entries", filterReverse},
-	"today":     filter{"Keep only the entries for today", filterToday},
-	"lasthours": filter{"Keep only the entries that are from the X last hours (default 24)", filterLastHour},
-	"digest":    filter{"Make a digest of all entries (optional heading level, default is " + string(defaultHeaderLevel) + ")", filterDigest},
-	"combine":   filter{"Combine all the entries into one source and use the first entry title as source title. Useful for merge sources", filterCombine},
-	"links":     filter{`Rewrite relative links src="// and href="// to have an https:// prefix`, filterRelativeLinks},
+	"all":        filter{"Default, include all entries", filterAll},
+	"none":       filter{"Removes all entries", filterNone},
+	"first":      filter{"Keep only the first entry", filterFirst},
+	"last":       filter{"Keep only the last entry", filterLast},
+	"random":     filter{"Keep 1 or more random entries. Use either 'random' or 'random(5)' for example.", filterRandom},
+	"reverse":    filter{"Reverse the order of the entries", filterReverse},
+	"today":      filter{"Keep only the entries for today", filterToday},
+	"lasthours":  filter{"Keep only the entries that are from the X last hours (default 24)", filterLastHour},
+	"digest":     filter{"Make a digest of all entries (optional heading level, default is " + string(defaultHeaderLevel) + ")", filterDigest},
+	"combine":    filter{"Combine all the entries into one source and use the first entry title as source title. Useful for merge sources", filterCombine},
+	"links":      filter{`Rewrite relative links src="// and href="// to have an https:// prefix`, filterRelativeLinks},
+	"embedimage": filter{`Embed a picture if the entry has an attachment with a type of picture`, filterEmbedImage},
 	"replace": filter{`Replace a string with another. Use with an argument like this: replace(myreplace) and define
 		[replace.myreplace]
 		from="A string"
@@ -190,6 +191,34 @@ func filterReplace(source *goeland.Source, params *filterParams) {
 func filterIncludeLink(source *goeland.Source, params *filterParams) {
 	for i, _ := range source.Entries {
 		source.Entries[i].IncludeLink = true
+	}
+}
+
+func filterEmbedImage(source *goeland.Source, params *filterParams) {
+	args := params.args
+	positions := []string{"top", "bottom", "left", "right"}
+	position := 0
+	if len(args) > 0 {
+		for i, v := range positions {
+			if v == args[0] {
+				position = i
+			}
+		}
+	}
+	for i, entry := range source.Entries {
+		imageLink := fmt.Sprintf(`<img src="%s" class="%s">`, entry.ImageURL, positions[position])
+		switch position {
+		case 0:
+			entry.Content = imageLink + entry.Content
+		case 1:
+			entry.Content = entry.Content + imageLink
+		case 2:
+			entry.Content = imageLink + entry.Content + `<br style="clear:both" />`
+		case 3:
+			entry.Content = imageLink + entry.Content + `<br style="clear:both" />`
+		}
+
+		source.Entries[i] = entry
 	}
 }
 

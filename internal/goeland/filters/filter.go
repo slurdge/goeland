@@ -38,7 +38,7 @@ var filters = map[string]filter{
 	"digest":     filter{"Make a digest of all entries (optional heading level, default is " + string(defaultHeaderLevel) + ")", filterDigest},
 	"combine":    filter{"Combine all the entries into one source and use the first entry title as source title. Useful for merge sources", filterCombine},
 	"links":      filter{`Rewrite relative links src="// and href="// to have an https:// prefix`, filterRelativeLinks},
-	"embedimage": filter{`Embed a picture if the entry has an attachment with a type of picture`, filterEmbedImage},
+	"embedimage": filter{`Embed a picture if the entry has an attachment with a type of picture (optional position: top|bottom|left|right, default is top)`, filterEmbedImage},
 	"replace": filter{`Replace a string with another. Use with an argument like this: replace(myreplace) and define
 		[replace.myreplace]
 		from="A string"

@@ -118,6 +118,7 @@ The available filters are as follow:
 - digest: Make a digest of all entries (optional heading level, default is 2)
 - combine: Combine all the entries into one source and use the first entry title as source title. Useful for merge sources
 - links: Rewrite relative links src="// and href="// to have an https:// prefix
+- embedimage: Embed a picture if the entry has an attachment with a type of picture (optional position: top|bottom|left|right, default is top)
 - replace: Replace a string with another. Use with an argument like this: replace(myreplace) and define
 ```
 [replace.myreplace]
@@ -230,3 +231,15 @@ email_from = "Reddit <reddit@example.com>"
 Feel free to open bugs or PR for more sources, more filters suggestions.
 
 If you encounter a problematic feed, please open a bug with the content of the feed attached.
+
+## Future
+
+Here is a list of things that could be nice
+
+* image inliner
+* embedded scripting language for filters&manipulation
+* remove tags for instagram
+* footer text
+* allow other templates for email
+* remove tracker img for feedburner
+* use enclosure of the feed as header image

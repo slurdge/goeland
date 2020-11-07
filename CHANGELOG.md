@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.6.0
+------
+
+- Add 'embedimage' filter.
+
 v0.5.3
 ------
 

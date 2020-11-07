@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/smtp"
 	"net/textproto"
+	"os"
 	"strings"
 	"text/template"
 	"time"
@@ -211,6 +212,15 @@ func run(cmd *cobra.Command, args []string) {
 				if err != nil {
 					log.Errorf("error sending email: %v", err)
 				}
+			}
+		case "htmlfile":
+			for i, entry := range source.Entries {
+				html := formatHTMLEmail(&entry, config, tpl)
+				var HTMLFile *os.File
+				if HTMLFile, err = os.Create(fmt.Sprintf("%s - %d.html", pipe, i)); err != nil {
+					fatalErr(fmt.Errorf("cannot open config.toml for writing"))
+				}
+				HTMLFile.Write([]byte(html))
 			}
 		case "console":
 		case "terminal":

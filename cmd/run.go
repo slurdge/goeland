@@ -90,7 +90,7 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 		IncludeHeader: config.GetBool("email.include-header"),
 		IncludeTitle:  config.GetBool("email.include-title"),
 		IncludeFooter: config.GetBool("email.include-footer"),
-		ContentID:     logoAttachmentName,
+		ContentID:     "cid:" + logoAttachmentName,
 	}
 	var output bytes.Buffer
 	tpl.Execute(&output, data)

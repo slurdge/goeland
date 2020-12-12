@@ -65,6 +65,17 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 		entry.URL = item.Link
 		if len(item.Enclosures) > 0 && strings.HasPrefix(item.Enclosures[0].Type, "image") {
 			entry.ImageURL = item.Enclosures[0].URL
+		} else if item.Image != nil && item.Image.URL != "" {
+			entry.ImageURL = item.Image.URL
+		} else {
+			for _, extension := range item.Extensions["media"]["content"] {
+				if strings.ToLower(extension.Name) == "content" {
+					if strings.HasPrefix(extension.Attrs["type"], "image") && extension.Attrs["url"] != "" {
+						entry.ImageURL = extension.Attrs["url"]
+					}
+				}
+			}
+
 		}
 		source.Entries = append(source.Entries, entry)
 	}

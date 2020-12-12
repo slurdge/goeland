@@ -9,6 +9,7 @@ require (
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/jordan-wright/email v0.0.0-20200602115436-fd8a7622303e
 	github.com/mattn/go-runewidth v0.0.9 // indirect
+	github.com/microcosm-cc/bluemonday v1.0.4
 	github.com/mitchellh/mapstructure v1.3.2 // indirect
 	github.com/mmcdole/gofeed v1.0.0
 	github.com/olekukonko/tablewriter v0.0.4 // indirect

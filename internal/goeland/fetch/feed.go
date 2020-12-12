@@ -8,12 +8,15 @@ import (
 	"strings"
 	"time"
 
+	"github.com/microcosm-cc/bluemonday"
 	"github.com/mmcdole/gofeed"
 	"github.com/slurdge/goeland/internal/goeland"
 	"github.com/slurdge/goeland/version"
 )
 
 const minContentLen = 10
+
+var policy *bluemonday.Policy
 
 //from https://github.com/mmcdole/gofeed/issues/74#
 type userAgentTransport struct {
@@ -56,6 +59,8 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 		if len(strings.TrimSpace(entry.Content)) < minContentLen {
 			entry.Content = html.UnescapeString(item.Content)
 		}
+		entry.Title = policy.Sanitize(entry.Title)
+		entry.Content = policy.Sanitize(entry.Content)
 		entry.UID = item.GUID
 		if item.PublishedParsed != nil {
 			entry.Date = *item.PublishedParsed
@@ -81,4 +86,8 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 	}
 	source.Title = feed.Title
 	return nil
+}
+
+func init() {
+	policy = bluemonday.UGCPolicy()
 }

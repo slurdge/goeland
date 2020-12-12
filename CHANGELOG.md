@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.6.1
+------
+
+- Fix #2: Not all embedded image are displayed by getting alternative sources for pictures.
+- Fix a rendering bug with img classes.
+- Sanitize HTML input with bluemonday.
+
 v0.6.0
 ------
 

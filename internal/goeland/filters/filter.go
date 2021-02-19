@@ -48,6 +48,7 @@ var filters = map[string]filter{
 	"language":    filter{"Keep only the specified languages (best effort detection), use like this: language(en,de)", filterLanguage},
 	"unseen":      filter{"Keep only unseen entry", filterUnSeen},
 	"lebrief":     filter{"Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
+	"retrieve":    filter{"Retrieves the full content from a goquery", filterRetrieveContent},
 }
 
 func GetFiltersHelp() string {
@@ -67,14 +68,24 @@ func filterNone(source *goeland.Source, params *filterParams) {
 }
 
 func filterFirst(source *goeland.Source, params *filterParams) {
-	source.Entries = source.Entries[:1]
+	number := extractNumber(source, params)
+	source.Entries = source.Entries[:number]
 }
 
 func filterLast(source *goeland.Source, params *filterParams) {
-	source.Entries = source.Entries[len(source.Entries)-1:]
+	number := extractNumber(source, params)
+	source.Entries = source.Entries[len(source.Entries)-number:]
 }
 
 func filterRandom(source *goeland.Source, params *filterParams) {
+	number := extractNumber(source, params)
+	rand.Shuffle(len(source.Entries), func(i, j int) {
+		source.Entries[i], source.Entries[j] = source.Entries[j], source.Entries[i]
+	})
+	source.Entries = source.Entries[:number]
+}
+
+func extractNumber(source *goeland.Source, params *filterParams) int {
 	number := 1
 	if len(params.args) > 0 {
 		number, _ = strconv.Atoi(params.args[0])
@@ -85,10 +96,7 @@ func filterRandom(source *goeland.Source, params *filterParams) {
 	if number > len(source.Entries) {
 		number = len(source.Entries)
 	}
-	rand.Shuffle(len(source.Entries), func(i, j int) {
-		source.Entries[i], source.Entries[j] = source.Entries[j], source.Entries[i]
-	})
-	source.Entries = source.Entries[:number]
+	return number
 }
 
 func filterReverse(source *goeland.Source, params *filterParams) {

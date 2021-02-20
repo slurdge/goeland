@@ -5,8 +5,6 @@ require (
 	github.com/abadojack/whatlanggo v1.0.1
 	github.com/andybalholm/cascadia v1.2.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
-	github.com/go-bindata/go-bindata v3.1.2+incompatible // indirect
-	github.com/gorilla/css v1.0.0 // indirect
 	github.com/jordan-wright/email v0.0.0-20200602115436-fd8a7622303e
 	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.4

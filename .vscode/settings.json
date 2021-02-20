@@ -3,6 +3,7 @@
     "cSpell.words": [
         "Debugf",
         "Debugln",
+        "Footer",
         "Imgur",
         "Infof",
         "goeland",
@@ -10,6 +11,8 @@
         "gopath",
         "ldflags",
         "mmcdole",
-        "osarch"
-    ]
+        "osarch",
+        "premailer"
+    ],
+    "cSpell.language": "en"
 }

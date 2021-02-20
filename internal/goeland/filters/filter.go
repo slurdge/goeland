@@ -29,9 +29,9 @@ const defaultHeaderLevel = 2
 var filters = map[string]filter{
 	"all":        filter{"Default, include all entries", filterAll},
 	"none":       filter{"Removes all entries", filterNone},
-	"first":      filter{"Keep only the first entry", filterFirst},
-	"last":       filter{"Keep only the last entry", filterLast},
-	"random":     filter{"Keep 1 or more random entries. Use either 'random' or 'random(5)' for example.", filterRandom},
+	"first":      filter{"Keep only the first (optional: N) entry. Use either 'first'  or 'first(3')", filterFirst},
+	"last":       filter{"Keep only the last  (optional: N) entry. Use either 'last'  or 'last(3')", filterLast},
+	"random":     filter{"Keep 1 or more random entries. Use either 'random' or 'random(5)'", filterRandom},
 	"reverse":    filter{"Reverse the order of the entries", filterReverse},
 	"today":      filter{"Keep only the entries for today", filterToday},
 	"lasthours":  filter{"Keep only the entries that are from the X last hours (default 24)", filterLastHour},

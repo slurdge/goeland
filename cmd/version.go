@@ -21,6 +21,15 @@ var versionCmd = &cobra.Command{
 	},
 }
 
+var changelogCmd = &cobra.Command{
+	Use:   "changelog",
+	Short: "Print the full changelog",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println(version.ChangeLog)
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(changelogCmd)
 }

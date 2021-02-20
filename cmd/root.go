@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	_ "embed" //needed for embedding files
 	"fmt"
 	"os"
 
@@ -40,15 +41,14 @@ func Execute() {
 	}
 }
 
+//go:embed asset/config.default.toml
+var defaultConfig []byte
+
 func createDefaultConfig(cfgFile string) {
 	if _, err := os.Stat(cfgFile); os.IsNotExist(err) {
 		var configFile *os.File
 		if configFile, err = os.Create(cfgFile); err != nil {
 			fatalErr(fmt.Errorf("cannot open config.toml for writing"))
-		}
-		var defaultConfig []byte
-		if defaultConfig, err = Asset("config.default.toml"); err != nil {
-			fatalErr(fmt.Errorf("cannot open embedded default config file"))
 		}
 		configFile.Write(defaultConfig)
 	}

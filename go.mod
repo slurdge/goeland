@@ -33,4 +33,4 @@ require (
 	jaytaylor.com/html2text v0.0.0-20200412013138-3577fbdbcff7
 )
 
-go 1.14
+go 1.16

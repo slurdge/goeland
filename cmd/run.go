@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bytes"
+	_ "embed" //needed for embedding files
 	"fmt"
 	"html"
 	"io"
@@ -30,15 +31,17 @@ import (
 
 const logoAttachmentName = "logo.png"
 
+//go:embed asset/email.default.html
+var emailBytes []byte
+
+//go:embed asset/goeland@250w.png
+var logoBytes []byte
+
 func createEmailTemplate(_ config.Provider) (*template.Template, error) {
 	minifier := minify.New()
 	minifier.Add("text/html", &mhtml.Minifier{
 		KeepConditionalComments: true,
 	})
-	emailBytes, err := Asset("email.default.html")
-	if err != nil {
-		return nil, err
-	}
 	minified, err := minifier.Bytes("text/html", emailBytes)
 	if err != nil {
 		return nil, err
@@ -153,14 +156,8 @@ func run(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Errorf("cannot create email template: %v", err)
 	}
-	var logoBytes []byte
 	logoFilename := config.GetString("email.logo")
-	if logoFilename == "internal:goeland.png" {
-		logoBytes, err = Asset("goeland@250w.png")
-		if err != nil {
-			log.Errorf("cannot create email logo: %v", err)
-		}
-	} else {
+	if logoFilename != "internal:goeland.png" {
 		logoBytes, err = ioutil.ReadFile(logoFilename)
 		if err != nil {
 			log.Errorf("cannot read email logo file: %v", err)

@@ -1,6 +1,6 @@
 # goeland
 
-![goeland](asset/goeland_small.png)
+![goeland](cmd/asset/goeland_small.png)
 
 ![version](https://img.shields.io/github/go-mod/go-version/slurdge/goeland)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/slurdge/goeland)

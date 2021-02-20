@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v0.7.0
+------
+
+- Add a 'retrieve' filter. Retrieves the full articles from links. Use it like this: retrive(#content). See goquery for queries.
+- Bump go to 1.6.0
+- Bump mod dependencies to latests versions
+- Remove go generate and use the new go embed
+- Add more footers
+- Extract version from changelog
+- First & Last filters now accept arguments
+
 v0.6.1
 ------
 

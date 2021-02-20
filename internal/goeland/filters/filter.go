@@ -47,7 +47,7 @@ var filters = map[string]filter{
 	"includelink": filter{"Include the link of entries in the digest form", filterIncludeLink},
 	"language":    filter{"Keep only the specified languages (best effort detection), use like this: language(en,de)", filterLanguage},
 	"unseen":      filter{"Keep only unseen entry", filterUnSeen},
-	"lebrief":     filter{"Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
+	"lebrief":     filter{"Deprecated. Use retrieve(div.content) instead. Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
 	"retrieve":    filter{"Retrieves the full content from a goquery", filterRetrieveContent},
 }
 

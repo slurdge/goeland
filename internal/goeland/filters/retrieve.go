@@ -10,6 +10,7 @@ import (
 
 var policy *bluemonday.Policy
 
+// Deprecated: use filterRetrieveContent instead
 func filterLeBrief(source *goeland.Source, params *filterParams) {
 	params.args = []string{"div.content"}
 	filterRetrieveContent(source, params)

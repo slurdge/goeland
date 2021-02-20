@@ -24,12 +24,10 @@ install: true
  
 script:
   - go get -v ./...
-  - go get -v github.com/go-bindata/go-bindata/...
   - export BUILD_DATE=$(date +'%Y%m%d%H%M%S')
   - export GIT_COMMIT=$(shell git rev-parse HEAD)
   - export GIT_DIRTY=$(shell test -n "`git status --porcelain`" && echo "+CHANGES" || true)
   - export CGO_ENABLED="0"
-  - go generate
   - python3 gox.py -osarch="linux/386 linux/amd64 linux/arm linux/arm64 darwin/amd64 windows/amd64 windows/386" -output "build/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags "-X github.com/slurdge/goeland/version.GitCommit=${GIT_COMMIT}${GIT_DIRTY} -X github.com/slurdge/goeland/version.BuildDate=${BUILD_DATE} -X github.com/slurdge/goeland/internal/goeland/fetch.clientID=${IMGUR_CLIENT_ID}"
 
 before_deploy:

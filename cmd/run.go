@@ -6,6 +6,7 @@ import (
 	"html"
 	"io"
 	"io/ioutil"
+	"math/rand"
 	"net/smtp"
 	"net/textproto"
 	"os"
@@ -84,12 +85,15 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 		IncludeHeader bool
 		IncludeTitle  bool
 		IncludeFooter bool
+		EntryFooter   string
 		ContentID     string
-	}{EntryTitle: html.EscapeString(entry.Title),
+	}{
+		EntryTitle:    html.EscapeString(entry.Title),
 		EntryContent:  entry.Content,
 		IncludeHeader: config.GetBool("email.include-header"),
 		IncludeTitle:  config.GetBool("email.include-title"),
 		IncludeFooter: config.GetBool("email.include-footer"),
+		EntryFooter:   footers[rand.Intn(len(footers))],
 		ContentID:     "cid:" + logoAttachmentName,
 	}
 	var output bytes.Buffer

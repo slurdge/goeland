@@ -35,7 +35,7 @@ var filters = map[string]filter{
 	"reverse":    filter{"Reverse the order of the entries", filterReverse},
 	"today":      filter{"Keep only the entries for today", filterToday},
 	"lasthours":  filter{"Keep only the entries that are from the X last hours (default 24)", filterLastHour},
-	"digest":     filter{"Make a digest of all entries (optional heading level, default is " + string(defaultHeaderLevel) + ")", filterDigest},
+	"digest":     filter{"Make a digest of all entries (optional heading level, default is " + fmt.Sprint(defaultHeaderLevel) + ")", filterDigest},
 	"combine":    filter{"Combine all the entries into one source and use the first entry title as source title. Useful for merge sources", filterCombine},
 	"links":      filter{`Rewrite relative links src="// and href="// to have an https:// prefix`, filterRelativeLinks},
 	"embedimage": filter{`Embed a picture if the entry has an attachment with a type of picture (optional position: top|bottom|left|right, default is top)`, filterEmbedImage},

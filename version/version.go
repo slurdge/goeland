@@ -29,7 +29,7 @@ var BuildDate = ""
 var GoVersion = runtime.Version()
 
 // OsArch returns the os and arch used to build the binary
-var OsArch = fmt.Sprintf("%s %s", runtime.GOOS, runtime.GOARCH)
+var OsArch = fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH)
 
 // ExtractVersionFromChangelog is used to extract the latest version referenced in the Changelog, this is our version
 func ExtractVersionFromChangelog(changeLog string) {

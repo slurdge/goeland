@@ -14,6 +14,11 @@ var footers = [...]string{
 	`Sent with a touch of 🌼 by `,
 	`In your 📧 from `,
 	`Your 📰 from `,
+	`Sent bravely ⚔️ by `,
+	`Sent happily 😊 by `,
+	`Sent smoothly ✈️ by `,
+	`Sent simply 🌞 by `,
+	`Sent with 🤘🏻 by `,
 }
 
 func init() {

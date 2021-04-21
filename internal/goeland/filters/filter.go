@@ -49,6 +49,7 @@ var filters = map[string]filter{
 	"unseen":      filter{"Keep only unseen entry", filterUnSeen},
 	"lebrief":     filter{"Deprecated. Use retrieve(div.content) instead. Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
 	"retrieve":    filter{"Retrieves the full content from a goquery", filterRetrieveContent},
+	"untrack":     filter{"Removes feedburner pixel tracking", filterUntrack},
 }
 
 func GetFiltersHelp() string {

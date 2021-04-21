@@ -174,7 +174,8 @@ func run(cmd *cobra.Command, args []string) {
 		sourceName := getSubString("pipes", pipe, "source")
 		source, err := fetch.FetchSource(config, sourceName)
 		if err != nil {
-			log.Errorf("Error getting source: %s", sourceName)
+			log.Errorf("Error getting source: %s: %v", sourceName, err)
+			continue
 		}
 		if dryRun {
 			log.Infoln("Dry run has been specified, not outputting...")

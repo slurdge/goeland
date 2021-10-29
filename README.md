@@ -10,6 +10,8 @@
 
 A RSS to email, ala rss2email written in Go.
 
+Support this project by giving it a ⭐️ and sharing it.
+
 ## About
 
 Goeland excels at creating beautiful emails from RSS, tailored for daily or weekly digest.
@@ -247,3 +249,4 @@ Here is a list of things that could be nice
 * a filter that adds a TOC
 * https://github.com/xhit/go-simple-mail
 * https://github.com/go-shiori/go-readability
+

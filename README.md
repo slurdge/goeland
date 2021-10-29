@@ -226,6 +226,8 @@ email_to = ["bob@example.com", "alice@gmail.com", "charles@yahoo.com"]
 email_from = "Reddit <reddit@example.com>"
 ```
 
+See also the `examples/` folder.
+
 ## Contributing
 
 Feel free to open bugs or PR for more sources, more filters suggestions.
@@ -241,5 +243,7 @@ Here is a list of things that could be nice
 * remove tags for instagram
 * footer text
 * allow other templates for email
-* remove tracker img for feedburner
 * use enclosure of the feed as header image
+* a filter that adds a TOC
+* https://github.com/xhit/go-simple-mail
+* https://github.com/go-shiori/go-readability

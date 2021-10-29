@@ -1,0 +1,38 @@
+loglevel = "none"
+dry-run = false
+
+[email]
+host = "smtp.sendgrid.net"
+port = 587
+username = "apikey"
+password = ""
+
+[replace.wikipedia]
+from = "Article labellisé du jour"
+to = ""
+
+[sources]
+
+[sources.wikipedia]
+url = "https://rssbridge.example.com/?action=display&bridge=Wikipedia&language=fr&subject=tfa&format=MRss"
+type = "feed"
+filters = ["links", "replace(wikipedia)"]
+
+[sources.didyouknow]
+url = "https://rssbridge.example.com/?action=display&bridge=Wikipedia&language=fr&subject=dyk&format=MRss"
+type = "feed"
+filters = ["links", "unseen", "digest(2)"]
+
+[sources.wikiboth]
+sources = ["wikipedia", "didyouknow"]
+type = "merge"
+filters = ["combine"]
+
+[pipes]
+
+[pipes.wikipedia]
+source = "wikiboth"
+destination = "email"
+email_to = ["user1@example.com", "user2@example.com"]
+email_from = "Wikipedia <goeland@example.com>"
+email_title = "[Wikipedia] {{.EntryTitle}}"

@@ -1,0 +1,24 @@
+#Get top feed for reddit
+
+loglevel = "info"
+dry-run = false
+database = "reddit.db"
+
+[email]
+host = "example.com"
+port = 25
+username = "default"
+password = ""
+
+[sources]
+
+[sources.reddit]
+url = "http://www.reddit.com/r/news/.rss"
+type = "feed"
+filters = ["first(20)","embedimage", "unseen", "digest"]
+
+[pipes.reddit]
+source = "reddit"
+destination = "email"
+email_to = ["news@example.com"]
+email_from = "Reddit <reddit@example.com>"

@@ -8,14 +8,11 @@ import (
 	"io"
 	"io/ioutil"
 	"math/rand"
-	"net/smtp"
-	"net/textproto"
 	"os"
 	"strings"
 	"text/template"
 	"time"
 
-	"github.com/jordan-wright/email"
 	"github.com/slurdge/goeland/config"
 	"github.com/slurdge/goeland/internal/goeland"
 	"github.com/slurdge/goeland/internal/goeland/fetch"
@@ -26,6 +23,7 @@ import (
 	"github.com/tdewolff/minify/v2"
 	mhtml "github.com/tdewolff/minify/v2/html"
 	"github.com/vanng822/go-premailer/premailer"
+	email "github.com/xhit/go-simple-mail/v2"
 	"jaytaylor.com/html2text"
 )
 
@@ -50,17 +48,32 @@ func createEmailTemplate(_ config.Provider) (*template.Template, error) {
 	return tpl, nil
 }
 
-func createEmailPool(config config.Provider) (*email.Pool, error) {
+func createEmailPool(config config.Provider) (*email.SMTPClient, error) {
 	host := config.GetString("email.host")
 	port := config.GetInt("email.port")
 	if port == 0 {
 		port = 587
 	}
-	fullhost := fmt.Sprintf("%s:%v", host, port)
 	user := config.GetString("email.username")
 	pass := config.GetString("email.password")
-	auth := smtp.PlainAuth("", user, pass, host)
-	return email.NewPool(fullhost, 8, auth)
+	//auth := smtp.PlainAuth("", user, pass, host)
+	server := email.NewSMTPClient()
+	server.Host = host
+	server.Port = port
+	server.Username = user
+	server.Password = pass
+	server.Encryption = email.EncryptionSTARTTLS
+	server.KeepAlive = true
+	emailTimeout := time.Duration(config.GetInt64("email.timeout-ms") * 1000 * 1000)
+	server.ConnectTimeout = emailTimeout
+	server.SendTimeout = emailTimeout
+	//server.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	smtpClient, err := server.Connect()
+
+	if err != nil {
+		return nil, err
+	}
+	return smtpClient, nil
 }
 
 func formatEmailSubject(source *goeland.Source, entry *goeland.Entry, templateString string) string {
@@ -114,33 +127,29 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 	}
 	return html
 }
-func inlineImage(e *email.Email, r io.Reader, filename string, c string) (a *email.Attachment, err error) {
+func inlineImage(e *email.Email, r io.Reader, filename string, c string) (err error) {
 	var buffer bytes.Buffer
 	if _, err = io.Copy(&buffer, r); err != nil {
-		return
+		return err
 	}
-	at := &email.Attachment{
-		Filename: filename,
-		Header:   textproto.MIMEHeader{},
-		Content:  buffer.Bytes(),
+	at := &email.File{
+		Name:   filename,
+		Inline: true,
+		Data:   buffer.Bytes(),
 	}
 	if c != "" {
-		at.Header.Set("Content-Type", c)
-	} else {
-		at.Header.Set("Content-Type", "application/octet-stream")
+		at.MimeType = c
 	}
-	at.Header.Set("Content-Disposition", fmt.Sprintf("inline;\r\n filename=\"%s\"", filename))
-	at.Header.Set("Content-ID", fmt.Sprintf("<%s>", filename))
-	at.Header.Set("Content-Transfer-Encoding", "base64")
-	e.Attachments = append(e.Attachments, at)
-	return at, nil
+	e.Attach(at)
+	if e.Error != nil {
+		return e.Error
+	}
+	return nil
 }
 
 func run(cmd *cobra.Command, args []string) {
 	log.Debugln("Running...")
 	config := viper.GetViper()
-
-	emailTimeoutInNs := time.Duration(config.GetInt64("email.timeout-ms") * 1000 * 1000)
 
 	getSubString := func(root string, key string, tail string) string {
 		return config.GetString(fmt.Sprintf("%s.%s.%s", root, key, tail))
@@ -188,29 +197,27 @@ func run(cmd *cobra.Command, args []string) {
 				log.Errorf("cannot send email: no pool created")
 			}
 			for _, entry := range source.Entries {
-				email := email.NewEmail()
-				email.From = getSubString("pipes", pipe, "email_from")
-				email.To = config.GetStringSlice(fmt.Sprintf("pipes.%s.email_to", pipe))
+				message := email.NewMSG()
+				message.SetFrom(getSubString("pipes", pipe, "email_from"))
+				message.AddTo(config.GetStringSlice(fmt.Sprintf("pipes.%s.email_to", pipe))...)
 				templateString := getSubString("pipes", pipe, "email_title")
-				email.Subject = formatEmailSubject(source, &entry, templateString)
-				entry.Title = email.Subject
-				text, err := html2text.FromString(entry.Content)
-				if err == nil {
-					email.Text = []byte(text)
-				} else {
-					email.Text = []byte("There was an error converting HTML content to text")
-				}
+				subject := formatEmailSubject(source, &entry, templateString)
+				message.SetSubject(subject)
+				entry.Title = subject
 				if config.GetBool("email.include-header") {
-					//at, err := email.Attach(bytes.NewReader(logoBytes), logoAttachmentName, "image/png")
-					at, err := inlineImage(email, bytes.NewReader(logoBytes), logoAttachmentName, "image/png")
+					err := inlineImage(message, bytes.NewReader(logoBytes), logoAttachmentName, "image/png")
 					if err != nil {
 						log.Errorf("error attaching logo: %v", err)
 					}
-					at.HTMLRelated = true
 				}
 				html := formatHTMLEmail(&entry, config, tpl)
-				email.HTML = []byte(html)
-				err = pool.Send(email, emailTimeoutInNs)
+				message.SetBody(email.TextHTML, html)
+				text, err := html2text.FromString(entry.Content)
+				if err != nil {
+					text = "There was an error converting HTML content to text"
+				}
+				message.AddAlternative(email.TextPlain, text)
+				err = message.Send(pool)
 				if err != nil {
 					log.Errorf("error sending email: %v", err)
 				}

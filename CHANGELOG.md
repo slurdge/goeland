@@ -4,7 +4,7 @@ Changelog
 v0.7.0
 ------
 
-- Add a 'retrieve' filter. Retrieves the full articles from links. Use it like this: retrive(#content). See goquery for queries.
+- Add a 'retrieve' filter. Retrieves the full articles from links. Use it like this: retrieve(#content). See goquery for queries.
 - Bump go to 1.6.0
 - Bump mod dependencies to latests versions
 - Remove go generate and use the new go embed
@@ -55,7 +55,7 @@ v0.4.4
 v0.4.3
 ------
 
-- Fix the imgur clientID not being correctly provisionned
+- Fix the imgur clientID not being correctly provisioned
 
 v0.4.2
 ------

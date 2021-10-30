@@ -127,10 +127,10 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 	}
 	return html
 }
-func inlineImage(e *email.Email, r io.Reader, filename string, c string) (a *email.File, err error) {
+func inlineImage(e *email.Email, r io.Reader, filename string, c string) (err error) {
 	var buffer bytes.Buffer
 	if _, err = io.Copy(&buffer, r); err != nil {
-		return
+		return err
 	}
 	at := &email.File{
 		Name:   filename,
@@ -140,9 +140,11 @@ func inlineImage(e *email.Email, r io.Reader, filename string, c string) (a *ema
 	if c != "" {
 		at.MimeType = c
 	}
-	log.Infof("attaching inline image: %s of type %s", filename, c)
 	e.Attach(at)
-	return at, nil
+	if e.Error != nil {
+		return e.Error
+	}
+	return nil
 }
 
 func run(cmd *cobra.Command, args []string) {
@@ -203,12 +205,10 @@ func run(cmd *cobra.Command, args []string) {
 				message.SetSubject(subject)
 				entry.Title = subject
 				if config.GetBool("email.include-header") {
-					//at, err := message.Attach(bytes.NewReader(logoBytes), logoAttachmentName, "image/png")
-					_, err := inlineImage(message, bytes.NewReader(logoBytes), logoAttachmentName, "image/png")
+					err := inlineImage(message, bytes.NewReader(logoBytes), logoAttachmentName, "image/png")
 					if err != nil {
 						log.Errorf("error attaching logo: %v", err)
 					}
-					//at.HTMLRelated = true
 				}
 				html := formatHTMLEmail(&entry, config, tpl)
 				message.SetBody(email.TextHTML, html)

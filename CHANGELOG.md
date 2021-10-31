@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.8.1
+------
+
+- Fix GMail display by swapping HTML&Text
+- Add footer override
+- Add more nice footers
+
 v0.8.0
 ------
 

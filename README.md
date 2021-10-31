@@ -151,6 +151,20 @@ You can use EntryTitle, SourceTitle and SourceName in the email template. Source
 
 For debug purposes, or in order to pipe in other systems, you can set destination to `terminal`.
 
+### Email
+
+In the email section you need to specify your outgoing mail server. From 0.8.0, you can specify both `encryption` and `allow-insecure` to connect to self hosted servers.
+
+```toml
+[email]
+host = "smtp.example.com"
+port = 25
+username = "default"
+password = "p4ssw0rd"
+encryption = "tls"
+allow-insecure = false
+```
+
 ## Examples
 
 This will bring you 6 puppies to your inbox.

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bytes"
+	"crypto/tls"
 	_ "embed" //needed for embedding files
 	"fmt"
 	"html"
@@ -62,12 +63,19 @@ func createEmailPool(config config.Provider) (*email.SMTPClient, error) {
 	server.Port = port
 	server.Username = user
 	server.Password = pass
-	server.Encryption = email.EncryptionSTARTTLS
+	encryptions := map[string]email.Encryption{"none": email.EncryptionNone, "tls": email.EncryptionSTARTTLS, "ssl": email.EncryptionSSLTLS}
+	encryption, found := encryptions[config.GetString("email.encryption")]
+	if !found {
+		encryption = email.EncryptionSTARTTLS
+	}
+	server.Encryption = encryption
+	if config.GetBool("email.allow-insecure") {
+		server.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	}
 	server.KeepAlive = true
 	emailTimeout := time.Duration(config.GetInt64("email.timeout-ms") * 1000 * 1000)
 	server.ConnectTimeout = emailTimeout
 	server.SendTimeout = emailTimeout
-	//server.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	smtpClient, err := server.Connect()
 
 	if err != nil {
@@ -159,17 +167,17 @@ func run(cmd *cobra.Command, args []string) {
 
 	pool, err := createEmailPool(config)
 	if err != nil {
-		log.Errorf("cannot create email pool: %v", err)
+		log.Fatalf("cannot create email pool: %v", err)
 	}
 	tpl, err := createEmailTemplate(config)
 	if err != nil {
-		log.Errorf("cannot create email template: %v", err)
+		log.Fatalf("cannot create email template: %v", err)
 	}
 	logoFilename := config.GetString("email.logo")
 	if logoFilename != "internal:goeland.png" {
 		logoBytes, err = ioutil.ReadFile(logoFilename)
 		if err != nil {
-			log.Errorf("cannot read email logo file: %v", err)
+			log.Fatalf("cannot read email logo file: %v", err)
 		}
 	}
 	pipes := config.GetStringMapString("pipes")

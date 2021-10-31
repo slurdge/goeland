@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v0.8.0
+------
+
+- Add a filter to remove feedburner tracking
+- Add some examples
+- Replaced email library
+- Allow to connect to TLS/SSL/Non secure servers
+- Allow to override TLS/SSL security check
+- Fixes email Titles containing escaped characters
+
 v0.7.0
 ------
 

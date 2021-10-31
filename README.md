@@ -55,13 +55,13 @@ Also works with dark theme and tablet/phone email clients.
 Grab the latest binary release from the [release page](https://github.com/slurdge/goeland/releases/latest/).
 Binaries are available for the following platforms:
 
- * linux/386
- * linux/amd64
- * linux/arm
- * linux/arm64
- * darwin/amd64
- * windows/amd64
- * windows/386
+* linux/386
+* linux/amd64
+* linux/arm
+* linux/arm64
+* darwin/amd64
+* windows/amd64
+* windows/386
 
 Just put it in a folder where you have write permissions and run it first with :
 
@@ -89,9 +89,9 @@ You can then use `'hackernews'` in the following pipes.
 
 The different source types are:
 
- * `"feed"`: Regular RSS feed. Fill in the `url` field
- * `"imgur"`: Return most recent results for a tag. Fill in the the `tag` field.
- * `"merge"`: Will merge two or more sources together. Fill in the `sources` field with a list of sources: `sources = ["source1", "source2"]`. Especially useful to merge different sources on the same topic. Don't forget to `digest` or `combine` it later.
+* `"feed"`: Regular RSS feed. Fill in the `url` field
+* `"imgur"`: Return most recent results for a tag. Fill in the the `tag` field.
+* `"merge"`: Will merge two or more sources together. Fill in the `sources` field with a list of sources: `sources = ["source1", "source2"]`. Especially useful to merge different sources on the same topic. Don't forget to `digest` or `combine` it later.
 
 ### Filtering
 
@@ -99,38 +99,41 @@ One powerful aspect of goeland is filtering. Instead of sending the content of t
 
 Any number of filters can be defined, the order is important. For example, the following:
 
-```
+```toml
 filters = ["unseen", "lebrief", "digest"]
 ```
 
 Will first keep only previously `unseen` entries, then transform it nicer with `lebrief` filter, and, at last, will put them all together with `digest`. This will create only one email with a SourceTitle as the title of the RSS feed.
 
-
 The available filters are as follow:
 
-- none: Removes all entries
-- all: Default, include all entries
-- first: Keep only the first entry
-- last: Keep only the last entry
-- reverse: Reverse the order of the entries
-- random: Keep 1 or more random entries. Use either 'random' or 'random(5)' for example.
-- unseen: Keep only unseen entry. Entries that have been seen will be put in a `goeland.db` file. Use the `purge` command to remove seen entries.
-- today: Keep only the entries for today
-- lasthours: Keep only the entries that are from the X last hours (default 24)
-- digest: Make a digest of all entries (optional heading level, default is 2)
-- combine: Combine all the entries into one source and use the first entry title as source title. Useful for merge sources
-- links: Rewrite relative links src="// and href="// to have an https:// prefix
-- embedimage: Embed a picture if the entry has an attachment with a type of picture (optional position: top|bottom|left|right, default is top)
-- replace: Replace a string with another. Use with an argument like this: replace(myreplace) and define
-```
+* none: Removes all entries
+* all: Default, include all entries
+
+* first: Keep only the first entry
+* last: Keep only the last entry
+* reverse: Reverse the order of the entries
+* random: Keep 1 or more random entries. Use either 'random' or 'random(5)' for example.
+* unseen: Keep only unseen entry. Entries that have been seen will be put in a `goeland.db` file. Use the `purge` command to remove seen entries.
+* today: Keep only the entries for today
+* lasthours: Keep only the entries that are from the X last hours (default 24)
+* digest: Make a digest of all entries (optional heading level, default is 2)
+* combine: Combine all the entries into one source and use the first entry title as source title. Useful for merge sources
+* links: Rewrite relative links src="// and href="// to have an https:// prefix
+* embedimage: Embed a picture if the entry has an attachment with a type of picture (optional position: top|bottom|left|right, default is top)
+* replace: Replace a string with another. Use with an argument like this: replace(myreplace) and define
+
+```toml
 [replace.myreplace]
         from="A string"
         to="Another string"
 ```
+
 in your config file.
-- includelink: Include the link of entries in the digest form
-- lebrief: Retrieves the full excerpts for Next INpact's Lebrief. Use only with a source from Next INpact.
-- language: Keep only the specified languages (best effort detection), use like this: `language(en,de)`
+
+* includelink: Include the link of entries in the digest form
+* lebrief: Retrieves the full excerpts for Next INpact's Lebrief. Use only with a source from Next INpact.
+* language: Keep only the specified languages (best effort detection), use like this: `language(en,de)`
 
 ### Pipes
 
@@ -169,8 +172,6 @@ include-footer = true
 #footer = Your custom footer
 #logo = internal:goeland.png
 ```
-
-
 
 ## Examples
 
@@ -241,7 +242,7 @@ email_from = "Reddit <reddit@example.com>"
 
 It is possible to send an email to multiple addresses, just put them in a list:
 
-```
+```toml
 [pipes.reddit]
 source = "reddit"
 destination = "email"
@@ -268,6 +269,5 @@ Here is a list of things that could be nice
 * allow other templates for email
 * use enclosure of the feed as header image
 * a filter that adds a TOC
-* https://github.com/xhit/go-simple-mail
-* https://github.com/go-shiori/go-readability
-
+* <https://github.com/xhit/go-simple-mail>
+* <https://github.com/go-shiori/go-readability>

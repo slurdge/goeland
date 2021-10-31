@@ -163,7 +163,14 @@ username = "default"
 password = "p4ssw0rd"
 encryption = "tls"
 allow-insecure = false
+#Email customization
+include-header = true
+include-footer = true
+#footer = Your custom footer
+#logo = internal:goeland.png
 ```
+
+
 
 ## Examples
 

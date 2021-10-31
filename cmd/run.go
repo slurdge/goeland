@@ -103,6 +103,10 @@ func formatEmailSubject(source *goeland.Source, entry *goeland.Entry, templateSt
 	return output.String()
 }
 func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template.Template) string {
+	footer := strings.TrimSpace(config.GetString("email.footer"))
+	if footer == "" {
+		footer = footers[rand.Intn(len(footers))]
+	}
 	data := struct {
 		EntryTitle    string
 		EntryContent  string
@@ -117,7 +121,7 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 		IncludeHeader: config.GetBool("email.include-header"),
 		IncludeTitle:  config.GetBool("email.include-title"),
 		IncludeFooter: config.GetBool("email.include-footer"),
-		EntryFooter:   footers[rand.Intn(len(footers))],
+		EntryFooter:   footer,
 		ContentID:     "cid:" + logoAttachmentName,
 	}
 	var output bytes.Buffer
@@ -274,5 +278,7 @@ func init() {
 	viper.GetViper().BindPFlag("dry-run", runCmd.Flags().Lookup("dry-run"))
 	runCmd.Flags().String("logo", "internal:goeland.png", "Override the logo file")
 	viper.GetViper().BindPFlag("email.logo", runCmd.Flags().Lookup("logo"))
+	runCmd.Flags().String("footer", "", "Override the default footer")
+	viper.GetViper().BindPFlag("email.footer", runCmd.Flags().Lookup("footer"))
 	rootCmd.AddCommand(runCmd)
 }

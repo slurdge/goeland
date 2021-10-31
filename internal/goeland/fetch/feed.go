@@ -54,7 +54,10 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 	for _, item := range feed.Items {
 
 		entry := goeland.Entry{}
-		entry.Title = html.UnescapeString(item.Title)
+		//order is important for title as Sanitize will escape
+		entry.Title = item.Title
+		entry.Title = policy.Sanitize(entry.Title)
+		entry.Title = html.UnescapeString(entry.Title)
 		contentLength := len(strings.TrimSpace(item.Content))
 		descriptionLength := len(strings.TrimSpace(item.Description))
 		entry.Content = html.UnescapeString(item.Description)
@@ -62,7 +65,6 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 		if descriptionLength < minContentLen || contentLength > descriptionLength+minContentLen {
 			entry.Content = html.UnescapeString(item.Content)
 		}
-		entry.Title = policy.Sanitize(entry.Title)
 		entry.Content = policy.Sanitize(entry.Content)
 		entry.UID = item.GUID
 		if item.PublishedParsed != nil {

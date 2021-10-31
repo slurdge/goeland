@@ -219,12 +219,12 @@ func run(cmd *cobra.Command, args []string) {
 					}
 				}
 				html := formatHTMLEmail(&entry, config, tpl)
-				message.SetBody(email.TextHTML, html)
 				text, err := html2text.FromString(entry.Content)
 				if err != nil {
 					text = "There was an error converting HTML content to text"
 				}
-				message.AddAlternative(email.TextPlain, text)
+				message.SetBody(email.TextPlain, text)
+				message.AddAlternative(email.TextHTML, html)
 				err = message.Send(pool)
 				if err != nil {
 					log.Errorf("error sending email: %v", err)

@@ -23,15 +23,15 @@ type imgurItem struct {
 	Title    string       `json:"title"`
 	Link     string       `json:"link"`
 	DateTime int64        `json:"datetime"`
-	Images   []imgurImage `json:images`
+	Images   []imgurImage `json:"images"`
 }
 
 type imgurData struct {
-	Items []imgurItem `json:items`
+	Items []imgurItem `json:"items"`
 }
 
 type imgurRoot struct {
-	Data imgurData `json:data`
+	Data imgurData `json:"data"`
 }
 
 var clientID = ""

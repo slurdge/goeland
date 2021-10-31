@@ -27,29 +27,29 @@ type filterParams struct {
 const defaultHeaderLevel = 2
 
 var filters = map[string]filter{
-	"all":        filter{"Default, include all entries", filterAll},
-	"none":       filter{"Removes all entries", filterNone},
-	"first":      filter{"Keep only the first (optional: N) entry. Use either 'first'  or 'first(3')", filterFirst},
-	"last":       filter{"Keep only the last  (optional: N) entry. Use either 'last'  or 'last(3')", filterLast},
-	"random":     filter{"Keep 1 or more random entries. Use either 'random' or 'random(5)'", filterRandom},
-	"reverse":    filter{"Reverse the order of the entries", filterReverse},
-	"today":      filter{"Keep only the entries for today", filterToday},
-	"lasthours":  filter{"Keep only the entries that are from the X last hours (default 24)", filterLastHour},
-	"digest":     filter{"Make a digest of all entries (optional heading level, default is " + fmt.Sprint(defaultHeaderLevel) + ")", filterDigest},
-	"combine":    filter{"Combine all the entries into one source and use the first entry title as source title. Useful for merge sources", filterCombine},
-	"links":      filter{`Rewrite relative links src="// and href="// to have an https:// prefix`, filterRelativeLinks},
-	"embedimage": filter{`Embed a picture if the entry has an attachment with a type of picture (optional position: top|bottom|left|right, default is top)`, filterEmbedImage},
-	"replace": filter{`Replace a string with another. Use with an argument like this: replace(myreplace) and define
+	"all":        {"Default, include all entries", filterAll},
+	"none":       {"Removes all entries", filterNone},
+	"first":      {"Keep only the first (optional: N) entry. Use either 'first'  or 'first(3')", filterFirst},
+	"last":       {"Keep only the last  (optional: N) entry. Use either 'last'  or 'last(3')", filterLast},
+	"random":     {"Keep 1 or more random entries. Use either 'random' or 'random(5)'", filterRandom},
+	"reverse":    {"Reverse the order of the entries", filterReverse},
+	"today":      {"Keep only the entries for today", filterToday},
+	"lasthours":  {"Keep only the entries that are from the X last hours (default 24)", filterLastHour},
+	"digest":     {"Make a digest of all entries (optional heading level, default is " + fmt.Sprint(defaultHeaderLevel) + ")", filterDigest},
+	"combine":    {"Combine all the entries into one source and use the first entry title as source title. Useful for merge sources", filterCombine},
+	"links":      {`Rewrite relative links src="// and href="// to have an https:// prefix`, filterRelativeLinks},
+	"embedimage": {`Embed a picture if the entry has an attachment with a type of picture (optional position: top|bottom|left|right, default is top)`, filterEmbedImage},
+	"replace": {`Replace a string with another. Use with an argument like this: replace(myreplace) and define
 		[replace.myreplace]
 		from="A string"
 		to="Another string"
 	  in your config file.`, filterReplace},
-	"includelink": filter{"Include the link of entries in the digest form", filterIncludeLink},
-	"language":    filter{"Keep only the specified languages (best effort detection), use like this: language(en,de)", filterLanguage},
-	"unseen":      filter{"Keep only unseen entry", filterUnSeen},
-	"lebrief":     filter{"Deprecated. Use retrieve(div.content) instead. Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
-	"retrieve":    filter{"Retrieves the full content from a goquery", filterRetrieveContent},
-	"untrack":     filter{"Removes feedburner pixel tracking", filterUntrack},
+	"includelink": {"Include the link of entries in the digest form", filterIncludeLink},
+	"language":    {"Keep only the specified languages (best effort detection), use like this: language(en,de)", filterLanguage},
+	"unseen":      {"Keep only unseen entry", filterUnSeen},
+	"lebrief":     {"Deprecated. Use retrieve(div.content) instead. Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
+	"retrieve":    {"Retrieves the full content from a goquery", filterRetrieveContent},
+	"untrack":     {"Removes feedburner pixel tracking", filterUntrack},
 }
 
 func GetFiltersHelp() string {
@@ -198,7 +198,7 @@ func filterReplace(source *goeland.Source, params *filterParams) {
 }
 
 func filterIncludeLink(source *goeland.Source, params *filterParams) {
-	for i, _ := range source.Entries {
+	for i := range source.Entries {
 		source.Entries[i].IncludeLink = true
 	}
 }

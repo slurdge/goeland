@@ -156,7 +156,7 @@ For debug purposes, or in order to pipe in other systems, you can set destinatio
 
 ### Email
 
-In the email section you need to specify your outgoing mail server. From 0.8.0, you can specify both `encryption` and `allow-insecure` to connect to self hosted servers.
+In the email section you need to specify your outgoing mail server. From 0.8.0, you can specify both `encryption` and `allow-insecure` to connect to self hosted servers. You can also specify `authentication` to select the appropriate option for your server ( the options available are `"none"`, `"plain"`, `"login"` and `"crammd5"`; if unspecified it defaults to `"plain"`; see [`go-simple-mail`](https://pkg.go.dev/github.com/xhit/go-simple-mail/v2#AuthType)'s documentation for details).
 
 ```toml
 [email]
@@ -166,6 +166,7 @@ username = "default"
 password = "p4ssw0rd"
 encryption = "tls"
 allow-insecure = false
+authentication = "plain"
 #Email customization
 include-header = true
 include-footer = true

@@ -59,6 +59,12 @@ func createEmailPool(config config.Provider) (*email.SMTPClient, error) {
 	pass := config.GetString("email.password")
 	//auth := smtp.PlainAuth("", user, pass, host)
 	server := email.NewSMTPClient()
+	authentications := map[string]email.AuthType{"none": email.AuthNone, "plain": email.AuthPlain, "login": email.AuthLogin, "crammd5": email.AuthCRAMMD5}
+	authentication, found := authentications[config.GetString("email.authentication")]
+	if !found {
+		authentication = email.AuthPlain
+	}
+	server.Authentication = authentication
 	server.Host = host
 	server.Port = port
 	server.Username = user
@@ -266,7 +272,7 @@ var runCmd = &cobra.Command{
 	Short: "Fetch the RSS and emails it",
 	Long: strings.Join([]string{
 		`Take one or more RSS feeds and transform them into a proper email format.
-		
+
 The available filters are as follow:`,
 		filters.GetFiltersHelp(),
 	}, "\n"),

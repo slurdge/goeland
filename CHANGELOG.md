@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.9.0
+------
+
+- Add the possibility to change authentication mechanism, thanks to dfosas
+
 v0.8.1
 ------
 

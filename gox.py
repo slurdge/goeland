@@ -50,6 +50,6 @@ if __name__ == '__main__':
     print(f"Using {args.parallel} workers")
     for i in range(args.parallel):
         worker = Thread(target=build, args=(queue,))
-        worker.setDaemon(True)
+        worker.daemon = True
         worker.start()
     queue.join()

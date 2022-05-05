@@ -175,10 +175,8 @@ func run(cmd *cobra.Command, args []string) {
 
 	dryRun := config.GetBool("dry-run")
 
-	pool, err := createEmailPool(config)
-	if err != nil {
-		log.Fatalf("cannot create email pool: %v", err)
-	}
+	var pool *email.SMTPClient
+
 	tpl, err := createEmailTemplate(config)
 	if err != nil {
 		log.Fatalf("cannot create email template: %v", err)
@@ -212,7 +210,13 @@ func run(cmd *cobra.Command, args []string) {
 		switch destination {
 		case "email":
 			if pool == nil {
-				log.Errorf("cannot send email: no pool created")
+				pool, err = createEmailPool(config)
+				if err != nil {
+					log.Fatalf("cannot create email pool: %v", err)
+				}
+				if pool == nil {
+					log.Errorf("cannot send email: no pool created")
+				}
 			}
 			for _, entry := range source.Entries {
 				message := email.NewMSG()

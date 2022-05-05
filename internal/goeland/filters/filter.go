@@ -50,6 +50,7 @@ var filters = map[string]filter{
 	"lebrief":     {"Deprecated. Use retrieve(div.content) instead. Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
 	"retrieve":    {"Retrieves the full content from a goquery", filterRetrieveContent},
 	"untrack":     {"Removes feedburner pixel tracking", filterUntrack},
+	"reddit":      {"Better formatting for reddit rss", filterReddit},
 }
 
 func GetFiltersHelp() string {

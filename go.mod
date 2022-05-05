@@ -3,6 +3,7 @@ module github.com/slurdge/goeland
 require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/abadojack/whatlanggo v1.0.1
+	github.com/buger/jsonparser v1.1.1
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.16

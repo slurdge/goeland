@@ -165,6 +165,15 @@ func inlineImage(e *email.Email, r io.Reader, filename string, c string) (err er
 	return nil
 }
 
+func stringInSlice(str string, slice []string) bool {
+	for _, value := range slice {
+		if value == str {
+			return true
+		}
+	}
+	return false
+}
+
 func run(cmd *cobra.Command, args []string) {
 	log.Debugln("Running...")
 	config := viper.GetViper()
@@ -190,6 +199,9 @@ func run(cmd *cobra.Command, args []string) {
 	}
 	pipes := config.GetStringMapString("pipes")
 	for pipe := range pipes {
+		if len(args) != 0 && !stringInSlice(pipe, args) {
+			continue
+		}
 		disabled := config.GetBool(fmt.Sprintf("pipes.%s.disabled", pipe))
 		if disabled {
 			log.Infof("Skipping disabled pipe: %s", pipe)
@@ -270,7 +282,6 @@ func run(cmd *cobra.Command, args []string) {
 	}
 }
 
-// versionCmd represents the version command
 var runCmd = &cobra.Command{
 	Use:   "run",
 	Short: "Fetch the RSS and emails it",

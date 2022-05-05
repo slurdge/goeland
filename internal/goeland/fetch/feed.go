@@ -3,7 +3,6 @@ package fetch
 import (
 	"fmt"
 	"html"
-	"net/http"
 	"os"
 	"strings"
 	"time"
@@ -11,27 +10,16 @@ import (
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/mmcdole/gofeed"
 	"github.com/slurdge/goeland/internal/goeland"
-	"github.com/slurdge/goeland/version"
+	"github.com/slurdge/goeland/internal/goeland/httpget"
 )
 
 const minContentLen = 10
 
 var policy *bluemonday.Policy
 
-//from https://github.com/mmcdole/gofeed/issues/74#
-type userAgentTransport struct {
-	http.RoundTripper
-}
-
-func (c *userAgentTransport) roundTrip(r *http.Request) (*http.Response, error) {
-	r.Header.Set("User-Agent", "multiple:goeland:"+version.Version+" (commit id:"+version.GitCommit+") (by /u/goelandrss)")
-	return c.RoundTripper.RoundTrip(r)
-}
-
 func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 	fp := gofeed.NewParser()
 	var feed *gofeed.Feed
-	var err error
 	if isFile {
 		file, err := os.Open(feedLocation)
 		if err != nil {
@@ -43,12 +31,13 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 			return fmt.Errorf("cannot parse file: %s", feedLocation)
 		}
 	} else {
-		fp.Client = &http.Client{
-			Transport: &userAgentTransport{http.DefaultTransport},
-		}
-		feed, err = fp.ParseURL(feedLocation)
+		body, err := httpget.GetHTTPRessource(feedLocation)
 		if err != nil {
-			return fmt.Errorf("cannot open or parse url: %s", feedLocation)
+			return fmt.Errorf("cannot open or parse url: %s (%v)", feedLocation, err)
+		}
+		feed, err = fp.ParseString(string(body))
+		if err != nil {
+			return fmt.Errorf("cannot open or parse url: %s (%v)", feedLocation, err)
 		}
 	}
 	for _, item := range feed.Items {

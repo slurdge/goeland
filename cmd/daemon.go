@@ -20,6 +20,12 @@ func runPipe(pipe string) {
 func daemon(cmd *cobra.Command, args []string) {
 	config := viper.GetViper()
 	pipes := config.GetStringMapString("pipes")
+	runAtStartup, err := cmd.Flags().GetBool("run-at-startup")
+	if runAtStartup && err == nil {
+		for pipe := range pipes {
+			runPipe(pipe)
+		}
+	}
 	scheduler := cron.New()
 	found := 0
 	for pipe := range pipes {
@@ -50,5 +56,6 @@ var daemonCmd = &cobra.Command{
 }
 
 func init() {
+	daemonCmd.Flags().Bool("run-at-startup", false, "Run all the enabled pipes once at startup, before scheduling them")
 	rootCmd.AddCommand(daemonCmd)
 }

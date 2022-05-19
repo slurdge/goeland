@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v0.10.0
+-------
+
+- Add a `daemon` command for daemons. Also add a `--run-at-startup` flag for daemon
+- Allow to override log level on the command line
+- Allow to specify which pipes are running. Example: `goeland run <pipename>`
+- Add a reddit filter that gets better pictures. Useful for picture intensive subreddits.
+- Fix reddit rss download
+- Create an email pool only if it's needed
+- Various small fixes
+
 v0.9.0
 ------
 

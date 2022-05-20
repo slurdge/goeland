@@ -2,8 +2,8 @@
 
 ![goeland](cmd/asset/goeland_small.png)
 
-![version](https://img.shields.io/github/go-mod/go-version/slurdge/goeland)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/slurdge/goeland)
+![version](https://img.shields.io/github/go-mod/go-version/slurdge/goeland)
 [![Build Status](https://travis-ci.com/slurdge/goeland.svg?branch=master)](https://travis-ci.com/slurdge/goeland)
 ![GitHub](https://img.shields.io/github/license/slurdge/goeland)
 ![Image license](https://img.shields.io/badge/Images-CC%20BY--SA%204.0-blueviolet)
@@ -267,8 +267,5 @@ Here is a list of things that could be nice
 * embedded scripting language for filters&manipulation
 * remove tags for instagram
 * footer text
-* allow other templates for email
 * use enclosure of the feed as header image
-* a filter that adds a TOC
-* <https://github.com/xhit/go-simple-mail>
 * <https://github.com/go-shiori/go-readability>

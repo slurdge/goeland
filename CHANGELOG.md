@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.10.1
+-------
+
+- Fix by kylrth: fix pipes running only latest defined pipe in daemon mode.
+
 v0.10.0
 -------
 

@@ -32,7 +32,12 @@ func daemon(cmd *cobra.Command, args []string) {
 		schedule := config.GetString(fmt.Sprintf("pipes.%s.cron", pipe))
 		if schedule != "" {
 			log.Infof("Scheduling pipe:%s to run at: %s", pipe, schedule)
-			scheduler.AddFunc(schedule, func() { runPipe(pipe) })
+			pipe := pipe
+			_, err = scheduler.AddFunc(schedule, func() { runPipe(pipe) })
+			if err != nil {
+				log.Warnf("Failed to schedule pipe:%s: %v", pipe, err)
+				continue
+			}
 			found += 1
 		}
 	}

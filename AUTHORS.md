@@ -2,7 +2,7 @@
 
 ## Development Lead
 
-- Slurdge [slurdge](https://github.com/slurdge)
+- [Slurdge](https://github.com/slurdge)
 
 ## Contributors
 

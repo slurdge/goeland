@@ -22,7 +22,7 @@ jobs:
         go-version: 1.16
         
     - name: Setup Python
-      uses: actions/setup-python@v2.2.1
+      uses: actions/setup-python@v3.1.2
     
     - name: Get Go Deps
       run: go get -v ./...

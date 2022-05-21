@@ -7,5 +7,5 @@ updates:
       interval: "weekly"
   - package-ecosystem: "gomod"
     directory: "/"
-      schedule:
-        interval: "weekly"
+    schedule:
+      interval: "weekly"

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.10.2
+-------
+
+- Small release with Docker releases
+
 v0.10.1
 -------
 

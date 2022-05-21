@@ -5,7 +5,7 @@ on:
     branches:
       - "!*"
     tags:
-      - "v*"
+      - "v*.*.*"
   workflow_dispatch:
 
 jobs:
@@ -60,11 +60,11 @@ jobs:
           IMGUR_CLIENT_ID=$${ secrets.IMGUR_CLIENT_ID }}
         platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
         #push: true
-        #tags: |
+        tags: |
+          ghcr.io/slurdge/goeland:latest
+          ghcr.io/slurdge/goeland:
         #  slurdge/keewebdav:latest
-          ghcr.io/slurdge/keewebdav:latest
         #  slurdge/keewebdav:caddy_${{ steps.vars.outputs.caddy_version }}_keeweb_${{ steps.vars.outputs.keeweb_version }}
-          ghcr.io/slurdge/keewebdav:caddy_${{ steps.vars.outputs.caddy_version }}_keeweb_${{ steps.vars.outputs.keeweb_version }}
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
 

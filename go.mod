@@ -4,27 +4,22 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/abadojack/whatlanggo v1.0.1
 	github.com/buger/jsonparser v1.1.1
-	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.18
 	github.com/mmcdole/gofeed v1.1.3
 	github.com/mmcdole/goxpp v0.0.0-20200921145534-2f3784f67354 // indirect
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/pflag v1.0.5
-	github.com/spf13/viper v1.9.0
+	github.com/spf13/viper v1.11.0
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	github.com/tdewolff/minify/v2 v2.9.22
 	github.com/tdewolff/parse/v2 v2.5.22 // indirect
 	github.com/vanng822/go-premailer v1.20.1
 	github.com/xhit/go-simple-mail/v2 v2.10.0
 	go.etcd.io/bbolt v1.3.6
-	golang.org/x/net v0.0.0-20211020060615-d418f374d309 // indirect
-	golang.org/x/sys v0.0.0-20211025201205-69cdffdb9359 // indirect
-	golang.org/x/text v0.3.7 // indirect
 	jaytaylor.com/html2text v0.0.0-20211013233858-90c08c5027d3
 )
 

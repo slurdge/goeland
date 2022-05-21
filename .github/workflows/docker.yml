@@ -21,7 +21,6 @@ jobs:
     - name: Get version
       id: vars
       run: |
-        - export ="0"
         echo ::set-output name=BUILD_DATE::$(date +'%Y%m%d%H%M%S')
         echo ::set-output name=GIT_COMMIT::$(git rev-parse HEAD)
     - name: Setup QEMU

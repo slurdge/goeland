@@ -4,6 +4,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/abadojack/whatlanggo v1.0.1
 	github.com/buger/jsonparser v1.1.1
+	github.com/go-test/deep v1.0.8 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.18
 	github.com/mmcdole/gofeed v1.1.3
@@ -17,7 +18,7 @@ require (
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	github.com/tdewolff/minify/v2 v2.11.2
 	github.com/vanng822/go-premailer v1.20.1
-	github.com/xhit/go-simple-mail/v2 v2.10.0
+	github.com/xhit/go-simple-mail/v2 v2.11.0
 	go.etcd.io/bbolt v1.3.6
 	jaytaylor.com/html2text v0.0.0-20211013233858-90c08c5027d3
 )

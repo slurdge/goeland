@@ -1,7 +1,9 @@
 package fetch
 
 import (
+	"encoding/hex"
 	"fmt"
+	"hash/fnv"
 	"html"
 	"os"
 	"strings"
@@ -74,7 +76,11 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 					}
 				}
 			}
-
+		}
+		if strings.TrimSpace(entry.UID) == "" {
+			hash := fnv.New64a()
+			hash.Write([]byte(entry.URL))
+			entry.UID = hex.EncodeToString(hash.Sum([]byte{}))
 		}
 		source.Entries = append(source.Entries, entry)
 	}

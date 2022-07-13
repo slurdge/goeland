@@ -37,6 +37,9 @@ password = "pass"
 ## Logo file
 #logo = internal:goeland.png
 
+## Template file
+#template = "/path/to/template.html"
+
 [sources]
 
 [sources.hackernews]

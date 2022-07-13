@@ -14,17 +14,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Go
+    - name Setup
+      uses: actions/checkout@v3
       uses: actions/setup-go@v3
       with:
         go-version: 1.16
-        
-    - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: 3.10
+        architecture: 'x64'
     
     - name: Get Go Deps
       run: go get -v ./...

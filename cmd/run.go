@@ -31,20 +31,33 @@ import (
 const logoAttachmentName = "logo.png"
 
 //go:embed asset/email.default.html
-var emailBytes []byte
+var defaultEmailBytes []byte
 
 //go:embed asset/goeland@250w.png
 var logoBytes []byte
 
-func createEmailTemplate(_ config.Provider) (*template.Template, error) {
+func createEmailTemplate(config config.Provider) (*template.Template, error) {
 	minifier := minify.New()
 	minifier.Add("text/html", &mhtml.Minifier{
 		KeepConditionalComments: true,
 	})
+
+	emailBytes := defaultEmailBytes
+
+	templateFilename := config.GetString("email.template")
+	if len(templateFilename) > 0 {
+		var err error
+		emailBytes, err = ioutil.ReadFile(templateFilename)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	minified, err := minifier.Bytes("text/html", emailBytes)
 	if err != nil {
 		return nil, err
 	}
+
 	tpl := template.Must(template.New("email").Parse(string(minified)))
 	return tpl, nil
 }

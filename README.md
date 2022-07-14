@@ -173,6 +173,7 @@ include-header = true
 include-footer = true
 #footer = Your custom footer
 #logo = internal:goeland.png
+#template = /path/to/template.html
 ```
 
 ## Examples

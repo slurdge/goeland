@@ -4,10 +4,13 @@ on:
   push:
     branches:
       - "!*"
+      - "master"
     tags:
       - "v*"
   pull_request:
     branches: [ master ]
+  
+  workflow_dispatch:
 
 jobs:
 
@@ -31,6 +34,27 @@ jobs:
     - name: Get Go Deps
       run: go get -v ./...
 
-    - name: Build
-      run: python3 gox.py -osarch="linux/386 linux/amd64 linux/arm linux/arm64 darwin/amd64 windows/amd64 windows/386" -output "build/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags "-X github.com/slurdge/goeland/version.GitCommit=${GIT_COMMIT}${GIT_DIRTY} -X github.com/slurdge/goeland/version.BuildDate=${BUILD_DATE} -X github.com/slurdge/goeland/internal/goeland/fetch.clientID=${IMGUR_CLIENT_ID}"
+    - name: Get version
+      id: vars
+      run: |
+        echo ::set-output name=BUILD_DATE::$(date +'%Y%m%d%H%M%S')
+        echo ::set-output name=GIT_COMMIT::$(git rev-parse HEAD)
+        echo ::set-output name=GIT_TAG::$(git describe --tags --abbrev=0)
 
+    - name: Build
+      run: python3 gox.py -osarch="linux/386 linux/amd64 linux/arm linux/arm64 darwin/amd64 windows/amd64 windows/386" -output "build/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags "-X github.com/slurdge/goeland/version.GitCommit=${GIT_COMMIT} -X github.com/slurdge/goeland/version.BuildDate=${BUILD_DATE} -X github.com/slurdge/goeland/internal/goeland/fetch.clientID=${IMGUR_CLIENT_ID}"
+
+    - name: Run UPX
+      uses: crazy-max/ghaction-upx@v2
+      with:
+        version: latest
+        files: |
+          ./build/*
+        args: -9
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          ./build/*

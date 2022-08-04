@@ -296,10 +296,11 @@ The available filters are as follow:`,
 
 func init() {
 	runCmd.Flags().Bool("dry-run", false, "Do not output anything, just fetch and filter the content")
-	viper.GetViper().BindPFlag("dry-run", runCmd.Flags().Lookup("dry-run"))
+	viper.BindPFlag("dry-run", runCmd.Flags().Lookup("dry-run"))
 	runCmd.Flags().String("logo", "internal:goeland.png", "Override the logo file")
-	viper.GetViper().BindPFlag("email.logo", runCmd.Flags().Lookup("logo"))
+	viper.BindPFlag("email.logo", runCmd.Flags().Lookup("logo"))
 	runCmd.Flags().String("footer", "", "Override the default footer")
-	viper.GetViper().BindPFlag("email.footer", runCmd.Flags().Lookup("footer"))
+	viper.BindPFlag("email.footer", runCmd.Flags().Lookup("footer"))
+	bindFlags(runCmd, viper.GetViper())
 	rootCmd.AddCommand(runCmd)
 }

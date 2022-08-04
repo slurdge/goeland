@@ -20,8 +20,9 @@ func runPipe(pipe string) {
 func daemon(cmd *cobra.Command, args []string) {
 	config := viper.GetViper()
 	pipes := config.GetStringMapString("pipes")
-	runAtStartup, err := cmd.Flags().GetBool("run-at-startup")
-	if runAtStartup && err == nil {
+	runAtStartup := config.GetBool("run-at-startup")
+	if runAtStartup {
+		log.Infof("Running all the pipes once as requested")
 		for pipe := range pipes {
 			runPipe(pipe)
 		}
@@ -33,7 +34,7 @@ func daemon(cmd *cobra.Command, args []string) {
 		if schedule != "" {
 			log.Infof("Scheduling pipe:%s to run at: %s", pipe, schedule)
 			pipe := pipe
-			_, err = scheduler.AddFunc(schedule, func() { runPipe(pipe) })
+			_, err := scheduler.AddFunc(schedule, func() { runPipe(pipe) })
 			if err != nil {
 				log.Warnf("Failed to schedule pipe:%s: %v", pipe, err)
 				continue
@@ -62,5 +63,7 @@ var daemonCmd = &cobra.Command{
 
 func init() {
 	daemonCmd.Flags().Bool("run-at-startup", false, "Run all the enabled pipes once at startup, before scheduling them")
+	viper.BindPFlag("run-at-startup", daemonCmd.Flags().Lookup("run-at-startup"))
+	bindFlags(daemonCmd, viper.GetViper())
 	rootCmd.AddCommand(daemonCmd)
 }

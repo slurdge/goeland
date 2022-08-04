@@ -29,6 +29,7 @@ var purgeCmd = &cobra.Command{
 
 func init() {
 	purgeCmd.Flags().Int("purge-days", 15, "Number of days to keep for the purge command")
-	viper.GetViper().BindPFlag("purge-days", purgeCmd.Flags().Lookup("purge-days"))
+	viper.BindPFlag("purge-days", purgeCmd.Flags().Lookup("purge-days"))
+	bindFlags(purgeCmd, viper.GetViper())
 	rootCmd.AddCommand(purgeCmd)
 }

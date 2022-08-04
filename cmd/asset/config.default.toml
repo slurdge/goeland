@@ -6,6 +6,15 @@
 ## Do not output anything or send email after fecthing the sources
 #dry-run = false
 
+## Do not sanitize input
+## This is not sanitize (the default) any input.
+## Use at your own risk as you will include everything from your sources, including scripts, etc.
+## You can always sanitize afterwards with the 'sanitize' filter.
+#unsafe-no-sanitize-filter = false
+
+## Run all the pipes once at startup in daemon mode
+#run-at-startup = false
+
 ## Purge days
 ## Number of days to keep the entries when the purge command is used
 ## Can be overrided by command line switch
@@ -55,7 +64,9 @@ filters = ["all", "today"]
 disabled = true
 source = "hackernews"
 destination = "email"
-email_to = "example@example.com"
+email_to = ["zeus@olympus.com", "athena@olympus.com"]
+email_cc = ["apollo@example.com"]
+email_bcc = ["hades@example.com"]
 email_from = "HackerNews <goeland@example.com>"
 #Default: you can use EntryTitle, SourceTitle and SourceName in the template
 #email_title = "{{.EntryTitle}}"

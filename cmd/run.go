@@ -247,6 +247,8 @@ func run(cmd *cobra.Command, args []string) {
 				message := email.NewMSG()
 				message.SetFrom(getSubString("pipes", pipe, "email_from"))
 				message.AddTo(config.GetStringSlice(fmt.Sprintf("pipes.%s.email_to", pipe))...)
+				message.AddCc(config.GetStringSlice(fmt.Sprintf("pipes.%s.email_cc", pipe))...)
+				message.AddBcc(config.GetStringSlice(fmt.Sprintf("pipes.%s.email_bcc", pipe))...)
 				templateString := getSubString("pipes", pipe, "email_title")
 				subject := formatEmailSubject(source, &entry, templateString)
 				message.SetSubject(subject)

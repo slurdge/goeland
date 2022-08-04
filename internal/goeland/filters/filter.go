@@ -51,6 +51,7 @@ var filters = map[string]filter{
 	"retrieve":    {"Retrieves the full content from a goquery", filterRetrieveContent},
 	"untrack":     {"Removes feedburner pixel tracking", filterUntrack},
 	"reddit":      {"Better formatting for reddit rss", filterReddit},
+	"sanitize":    {"Sanitize the content of entries (to be used in case of --unsafe-no-sanitize-filter flag)", filterSanitize},
 }
 
 func GetFiltersHelp() string {
@@ -194,6 +195,13 @@ func filterReplace(source *goeland.Source, params *filterParams) {
 	to := config.GetString(fmt.Sprintf("replace.%s.to", key))
 	for i, entry := range source.Entries {
 		entry.Content = strings.ReplaceAll(entry.Content, from, to)
+		source.Entries[i] = entry
+	}
+}
+
+func filterSanitize(source *goeland.Source, params *filterParams) {
+	for i, entry := range source.Entries {
+		entry.Content = policy.Sanitize(entry.Content)
 		source.Entries[i] = entry
 	}
 }

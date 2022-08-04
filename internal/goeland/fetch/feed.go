@@ -13,6 +13,7 @@ import (
 	"github.com/mmcdole/gofeed"
 	"github.com/slurdge/goeland/internal/goeland"
 	"github.com/slurdge/goeland/internal/goeland/httpget"
+	"github.com/spf13/viper"
 )
 
 const minContentLen = 10
@@ -56,7 +57,9 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 		if descriptionLength < minContentLen || contentLength > descriptionLength+minContentLen {
 			entry.Content = html.UnescapeString(item.Content)
 		}
-		entry.Content = policy.Sanitize(entry.Content)
+		if !viper.GetBool("unsafe-no-sanitize-filter") {
+			entry.Content = policy.Sanitize(entry.Content)
+		}
 		entry.UID = item.GUID
 		if item.PublishedParsed != nil {
 			entry.Date = *item.PublishedParsed

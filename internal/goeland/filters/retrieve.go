@@ -6,6 +6,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/slurdge/goeland/internal/goeland"
+	"github.com/spf13/viper"
 )
 
 var policy *bluemonday.Policy
@@ -55,7 +56,11 @@ func filterRetrieveContent(source *goeland.Source, params *filterParams) {
 		if err != nil {
 			continue
 		}
-		entry.Content = policy.Sanitize(html)
+		if !viper.GetBool("unsafe-no-sanitize-filter") {
+			entry.Content = policy.Sanitize(html)
+		} else {
+			entry.Content = html
+		}
 		source.Entries[index] = entry
 	}
 }

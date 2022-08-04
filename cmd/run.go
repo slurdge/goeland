@@ -314,6 +314,8 @@ func init() {
 	viper.BindPFlag("email.logo", runCmd.Flags().Lookup("logo"))
 	runCmd.Flags().String("footer", "", "Override the default footer")
 	viper.BindPFlag("email.footer", runCmd.Flags().Lookup("footer"))
+	runCmd.Flags().Bool("unsafe-no-sanitize-filter", false, "Do not sanitize inputs. ⚠ Use at your own risk!")
+	viper.BindPFlag("unsafe-no-sanitize-filter", runCmd.Flags().Lookup("unsafe-no-sanitize-filter"))
 	bindFlags(runCmd, viper.GetViper())
 	rootCmd.AddCommand(runCmd)
 }

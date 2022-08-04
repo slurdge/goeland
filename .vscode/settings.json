@@ -30,6 +30,7 @@
         "mmcdole",
         "myreplace",
         "osarch",
+        "pflag",
         "premailer",
         "Puerkito",
         "sendgrid",
@@ -37,6 +38,7 @@
         "tdewolff",
         "untrack",
         "vanng",
+        "Warningf",
         "xhit"
     ],
     "cSpell.language": "en"

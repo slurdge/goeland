@@ -10,8 +10,10 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceRoot}/main.go",
-            "env": {},
-            "args": ["run"]
+            "env": {
+                "GOELAND_RUN_AT_STARTUP": "true"
+            },
+            "args": ["daemon", "--config" ,"config.test.toml" ,"--loglevel", "debug"]
         }
     ]
 }

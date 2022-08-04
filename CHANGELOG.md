@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v0.10.3
+--------
+
+- Fixed a bug where empty UID feed wouldn't work with `unseen` filter.
+- Updated dependencies
+
 v0.10.2
 -------
 

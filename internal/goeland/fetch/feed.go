@@ -52,7 +52,7 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 		contentLength := len(strings.TrimSpace(item.Content))
 		descriptionLength := len(strings.TrimSpace(item.Description))
 		entry.Content = html.UnescapeString(item.Description)
-		// 'smart' check to get the most interresting content
+		// 'smart' check to get the most interesting content
 		if descriptionLength < minContentLen || contentLength > descriptionLength+minContentLen {
 			entry.Content = html.UnescapeString(item.Content)
 		}

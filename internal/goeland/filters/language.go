@@ -10,7 +10,7 @@ import (
 
 func stringInSlice(a string, list []string) bool {
 	for _, b := range list {
-		if strings.ToLower(b) == strings.ToLower(a) {
+		if strings.EqualFold(b, a) {
 			return true
 		}
 	}

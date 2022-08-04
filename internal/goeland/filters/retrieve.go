@@ -1,11 +1,13 @@
 package filters
 
 import (
+	"bytes"
 	"net/url"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/slurdge/goeland/internal/goeland"
+	"github.com/slurdge/goeland/internal/goeland/httpget"
 	"github.com/spf13/viper"
 )
 
@@ -25,7 +27,11 @@ func filterRetrieveContent(source *goeland.Source, params *filterParams) {
 	query := args[0]
 	for index, entry := range source.Entries {
 		link := entry.URL
-		doc, err := goquery.NewDocument(link)
+		body, err := httpget.GetHTTPRessource(link)
+		if err != nil {
+			continue
+		}
+		doc, err := goquery.NewDocumentFromReader(bytes.NewReader(body))
 		if err != nil {
 			continue
 		}
@@ -33,7 +39,7 @@ func filterRetrieveContent(source *goeland.Source, params *filterParams) {
 		if err != nil {
 			continue
 		}
-		fullcontent := doc.Find(query)
+		fullContent := doc.Find(query)
 
 		makeAttrFilter := func(attr string) func(_ int, selection *goquery.Selection) {
 			return func(i int, selection *goquery.Selection) {
@@ -50,9 +56,9 @@ func filterRetrieveContent(source *goeland.Source, params *filterParams) {
 		}
 		srcFilter := makeAttrFilter("src")
 		hrefFilter := makeAttrFilter("href")
-		fullcontent.Find("img").Each(srcFilter)
-		fullcontent.Find("a").Each(hrefFilter)
-		html, err := fullcontent.Html()
+		fullContent.Find("img").Each(srcFilter)
+		fullContent.Find("a").Each(hrefFilter)
+		html, err := fullContent.Html()
 		if err != nil {
 			continue
 		}

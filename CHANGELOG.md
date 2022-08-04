@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v0.11.0
+-------
+
+- Feature: allow other email template (by @fabianofranz)
+- Fixed environment variables not fetched (useful for Docker deployments)
+- Feature: You can now cc and bcc recipients
+- Feature: Sanitization can now be skipped, and added later through a filter.
+- Bumped go to 1.18
+- Updated dependencies
+
 v0.10.3
 --------
 

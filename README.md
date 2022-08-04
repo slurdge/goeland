@@ -7,6 +7,7 @@
 [![Build Status](https://travis-ci.com/slurdge/goeland.svg?branch=master)](https://travis-ci.com/slurdge/goeland)
 ![GitHub](https://img.shields.io/github/license/slurdge/goeland)
 ![Image license](https://img.shields.io/badge/Images-CC%20BY--SA%204.0-blueviolet)
+[![Docker images](https://github.com/slurdge/goeland/actions/workflows/docker.yml/badge.svg)](https://github.com/slurdge/goeland/actions/workflows/docker.yml)
 
 A RSS to email, ala rss2email written in Go.
 
@@ -172,6 +173,7 @@ include-header = true
 include-footer = true
 #footer = Your custom footer
 #logo = internal:goeland.png
+#template = /path/to/template.html
 ```
 
 ## Examples

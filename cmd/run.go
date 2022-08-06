@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/tls"
 	_ "embed" //needed for embedding files
+	"encoding/base64"
 	"fmt"
 	"html"
 	"io"
@@ -121,7 +122,7 @@ func formatEmailSubject(source *goeland.Source, entry *goeland.Entry, templateSt
 	tpl.Execute(&output, data)
 	return output.String()
 }
-func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template.Template) string {
+func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template.Template, destination string) string {
 	footer := strings.TrimSpace(config.GetString("email.footer"))
 	if footer == "" {
 		footer = footers[rand.Intn(len(footers))]
@@ -142,6 +143,9 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 		IncludeFooter: config.GetBool("email.include-footer"),
 		EntryFooter:   footer,
 		ContentID:     "cid:" + logoAttachmentName,
+	}
+	if destination == "htmlfile" {
+		data.ContentID = "data:image/png;base64," + base64.StdEncoding.EncodeToString(logoBytes)
 	}
 	var output bytes.Buffer
 	tpl.Execute(&output, data)
@@ -259,7 +263,7 @@ func run(cmd *cobra.Command, args []string) {
 						log.Errorf("error attaching logo: %v", err)
 					}
 				}
-				html := formatHTMLEmail(&entry, config, tpl)
+				html := formatHTMLEmail(&entry, config, tpl, destination)
 				text, err := html2text.FromString(entry.Content)
 				if err != nil {
 					text = "There was an error converting HTML content to text"
@@ -273,7 +277,7 @@ func run(cmd *cobra.Command, args []string) {
 			}
 		case "htmlfile":
 			for i, entry := range source.Entries {
-				html := formatHTMLEmail(&entry, config, tpl)
+				html := formatHTMLEmail(&entry, config, tpl, destination)
 				var HTMLFile *os.File
 				if HTMLFile, err = os.Create(fmt.Sprintf("%s - %d.html", pipe, i)); err != nil {
 					fatalErr(fmt.Errorf("cannot open config.toml for writing"))

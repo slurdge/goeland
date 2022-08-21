@@ -36,8 +36,8 @@ type imgurRoot struct {
 
 var clientID = ""
 
-func fetchImgurTag(source *goeland.Source, tag string) error {
-	url := "https://api.imgur.com/3/gallery/t/" + tag + "/top/0/day"
+func fetchImgurTag(source *goeland.Source, tag string, sort string) error {
+	url := "https://api.imgur.com/3/gallery/t/" + tag + "/" + sort + "/0/day"
 	client := http.Client{Timeout: time.Second * 3}
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)

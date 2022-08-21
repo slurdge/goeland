@@ -29,7 +29,11 @@ func FetchSource(config config.Provider, sourceName string) (*goeland.Source, er
 		}
 	case "imgur":
 		tag := config.GetString(fmt.Sprintf("sources.%s.tag", sourceName))
-		err = fetchImgurTag(source, tag)
+		sort := config.GetString(fmt.Sprintf("sources.%s.sort", sourceName))
+		if !filters.StringInSlice(sort, []string{"top", "viral", "time"}) {
+			sort = "top"
+		}
+		err = fetchImgurTag(source, tag, sort)
 		if err != nil {
 			log.Errorf("Cannot retrieve imgur tag: %s error: %v", tag, err)
 			return source, err

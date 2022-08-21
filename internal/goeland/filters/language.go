@@ -8,7 +8,7 @@ import (
 	"jaytaylor.com/html2text"
 )
 
-func stringInSlice(a string, list []string) bool {
+func StringInSlice(a string, list []string) bool {
 	for _, b := range list {
 		if strings.EqualFold(b, a) {
 			return true
@@ -26,7 +26,7 @@ func filterLanguage(source *goeland.Source, params *filterParams) {
 			text = entry.Content
 		}
 		lang := whatlanggo.DetectLang(text)
-		if !stringInSlice(lang.Iso6391(), languages) {
+		if !StringInSlice(lang.Iso6391(), languages) {
 			continue
 		}
 		source.Entries[current] = entry

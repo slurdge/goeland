@@ -13,7 +13,7 @@ require (
 	github.com/spf13/viper v1.13.0
 	github.com/tdewolff/minify/v2 v2.12.0
 	github.com/vanng822/go-premailer v1.20.1
-	github.com/xhit/go-simple-mail/v2 v2.11.0
+	github.com/xhit/go-simple-mail/v2 v2.12.0
 	go.etcd.io/bbolt v1.3.6
 	jaytaylor.com/html2text v0.0.0-20211013233858-90c08c5027d3
 )

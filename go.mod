@@ -4,7 +4,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/abadojack/whatlanggo v1.0.1
 	github.com/buger/jsonparser v1.1.1
-	github.com/microcosm-cc/bluemonday v1.0.20
+	github.com/microcosm-cc/bluemonday v1.0.21
 	github.com/mmcdole/gofeed v1.1.3
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.9.0
@@ -45,7 +45,7 @@ require (
 	github.com/tdewolff/parse/v2 v2.6.1 // indirect
 	github.com/toorop/go-dkim v0.0.0-20201103131630-e1cd1a0a5208 // indirect
 	github.com/vanng822/css v1.0.1 // indirect
-	golang.org/x/net v0.0.0-20220826154423-83b083e8dc8b // indirect
+	golang.org/x/net v0.0.0-20221002022538-bcab6841153b // indirect
 	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect

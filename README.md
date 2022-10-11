@@ -176,6 +176,8 @@ include-footer = true
 #template = /path/to/template.html
 ```
 
+You can create your own template, see [relevant documentation](documentation/templates.md)
+
 ## Examples
 
 This will bring you 6 puppies to your inbox.

@@ -11,7 +11,10 @@ import (
 
 	"github.com/slurdge/goeland/config"
 	"github.com/slurdge/goeland/internal/goeland"
+	_ "github.com/slurdge/goeland/internal/goeland/i18n"
 	"github.com/slurdge/goeland/log"
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 )
 
 type filter struct {
@@ -141,7 +144,8 @@ func filterDigestGeneric(source *goeland.Source, level int, useFirstEntryTitle b
 		return
 	}
 	digest := goeland.Entry{}
-	digest.Title = fmt.Sprintf("Digest for %s", source.Title)
+	i8n := message.NewPrinter(language.BritishEnglish)
+	digest.Title = i8n.Sprintf("Digest for %s", source.Title)
 	if useFirstEntryTitle && len(source.Entries) > 0 {
 		digest.Title = source.Entries[0].Title
 	}

@@ -34,6 +34,9 @@ const logoAttachmentName = "logo.png"
 //go:embed asset/email.default.html
 var defaultEmailBytes []byte
 
+//go:embed asset/default.css
+var defaultCSS string
+
 //go:embed asset/goeland@250w.png
 var logoBytes []byte
 
@@ -135,6 +138,7 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 		IncludeFooter bool
 		EntryFooter   string
 		ContentID     string
+		CSS           string
 	}{
 		EntryTitle:    html.EscapeString(entry.Title),
 		EntryContent:  entry.Content,
@@ -143,6 +147,7 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 		IncludeFooter: config.GetBool("email.include-footer"),
 		EntryFooter:   footer,
 		ContentID:     "cid:" + logoAttachmentName,
+		CSS:           defaultCSS,
 	}
 	if destination == "htmlfile" {
 		data.ContentID = "data:image/png;base64," + base64.StdEncoding.EncodeToString(logoBytes)

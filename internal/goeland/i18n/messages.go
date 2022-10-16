@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	message.SetString(language.BritishEnglish, "Digest for %s", "Digest for %s _uk")
-	message.SetString(language.AmericanEnglish, "Digest for %s", "Digest for %s _us")
+	message.SetString(language.BritishEnglish, "Digest for %s", "Digest for %s")
+	message.SetString(language.AmericanEnglish, "Digest for %s", "Digest for %s")
 	message.SetString(language.French, "Digest for %s", "Abrégé de %s")
 }

@@ -4,7 +4,7 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/slurdge/goeland)
 ![version](https://img.shields.io/github/go-mod/go-version/slurdge/goeland)
-[![Build Status](https://travis-ci.com/slurdge/goeland.svg?branch=master)](https://travis-ci.com/slurdge/goeland)
+[![Build Status](https://github.com/slurdge/goeland/actions/workflows/build.yml/badge.svg)](https://github.com/slurdge/goeland/actions/workflows/build.yml)
 ![GitHub](https://img.shields.io/github/license/slurdge/goeland)
 ![Image license](https://img.shields.io/badge/Images-CC%20BY--SA%204.0-blueviolet)
 [![Docker images](https://github.com/slurdge/goeland/actions/workflows/docker.yml/badge.svg)](https://github.com/slurdge/goeland/actions/workflows/docker.yml)
@@ -22,34 +22,39 @@ It include a number of filters (see below) that can transform the RSS content al
 Goeland transforms this...
 
 ```xml
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hacker News: Newest</title><link>https://news.ycombinator.com/newest</link><description>Hacker News RSS</description><docs>https://hnrss.org/</docs><generator>go-hnrss v1.0-10-g4f1b850</generator><lastBuildDate>Thu, 29 Oct 2020 12:42:05 +0000</lastBuildDate><atom:link href="https://hnrss.org/newest" rel="self" type="application/rss+xml"></atom:link><item><title><![CDATA[U.S. GDP booms at 33.1% rate in Q3, better than expected]]></title><description><![CDATA[
-<p>Article URL: <a href="https://www.cnbc.com/2020/10/29/us-gdp-report-third-quarter-2020.html">https://www.cnbc.com/2020/10/29/us-gdp-report-third-quarter-2020.html</a></p>
-<p>Comments URL: <a href="https://news.ycombinator.com/item?id=24929841">https://news.ycombinator.com/item?id=24929841</a></p>
-<p>Points: 1</p>
-<p># Comments: 0</p>
-]]></description><pubDate>Thu, 29 Oct 2020 12:39:15 +0000</pubDate><link>https://www.cnbc.com/2020/10/29/us-gdp-report-third-quarter-2020.html</link><dc:creator>kjhughes</dc:creator><comments>https://news.ycombinator.com/item?id=24929841</comments><guid isPermaLink="false">https://news.ycombinator.com/item?id=24929841</guid></item><item><title><![CDATA[NASA Scientists Discover ‘Weird’ Molecule in Titan’s Atmosphere]]></title><description><![CDATA[
-<p>Article URL: <a href="https://www.nasa.gov/feature/goddard/2020/nasa-scientists-discover-a-weird-molecule-in-titan-s-atmosphere/">https://www.nasa.gov/feature/goddard/2020/nasa-scientists-discover-a-weird-molecule-in-titan-s-atmosphere/</a></p>
-<p>Comments URL: <a href="https://news.ycombinator.com/item?id=24929819">https://news.ycombinator.com/item?id=24929819</a></p>
-<p>Points: 1</p>
-<p># Comments: 2</p>
-]]></description><pubDate>Thu, 29 Oct 2020 12:36:38 +0000</pubDate><link>https://www.nasa.gov/feature/goddard/2020/nasa-scientists-discover-a-weird-molecule-in-titan-s-atmosphere/</link><dc:creator>Kaibeezy</dc:creator><comments>https://news.ycombinator.com/item?id=24929819</comments><guid isPermaLink="false">https://news.ycombinator.com/item?id=24929819</guid></item><item><title><![CDATA[Automation Tools for FinTech Startups]]></title><description><![CDATA[
-<p>Article URL: <a href="https://www.ego-cms.com/post/5-fintech-automation-features-to-win-customer-trust-with">https://www.ego-cms.com/post/5-fintech-automation-features-to-win-customer-trust-with</a></p>
-<p>Comments URL: <a href="https://news.ycombinator.com/item?id=24929801">https://news.ycombinator.com/item?id=24929801</a></p>
-<p>Points: 1</p>
-<p># Comments: 0</p>
-]]></description><pubDate>Thu, 29 Oct 2020 12:34:16 +0000</pubDate><link>https://www.ego-cms.com/post/5-fintech-automation-features-to-win-customer-trust-with</link><dc:creator>_Tata_</dc:creator><comments>https://news.ycombinator.com/item?id=24929801</comments><guid isPermaLink="false">https://news.ycombinator.com/item?id=24929801</guid></item><item><title><![CDATA[Preparing for the Docker Hub Rate Limits]]></title><description><![CDATA[
-<p>Article URL: <a href="https://inlets.dev/blog/2020/10/29/preparing-docker-hub-rate-limits.html">https://inlets.dev/blog/2020/10/29/preparing-docker-hub-rate-limits.html</a></p>
-<p>Comments URL: <a href="https://news.ycombinator.com/item?id=24929792">https://news.ycombinator.com/item?id=24929792</a></p>
-<p>Points: 1</p>
-<p># Comments: 1</p>
-]]></description>
+<rss version="2.0">
+<channel>
+<title>Phoronix</title>
+<link>https://www.phoronix.com/</link>
+<description>
+Linux Hardware Reviews, Benchmarks & Open-Source News
+</description>
+<language>en-us</language>
+<item>
+<title>
+Google Announces KataOS As Security-Focused OS, Leveraging Rust & seL4 Microkernel
+</title>
+<link>https://www.phoronix.com/news/Google-KataOS</link>
+<guid>https://www.phoronix.com/news/Google-KataOS</guid>
+<description>
+Google this week has announced the release of KataOS as their newest operating system effort focused on embedded devices running ambient machine learning workloads. KataOS is security-minded, exclusively uses the Rust programming language, and is built atop the seL4 microkernel as its foundation...
+</description>
+<pubDate>Sun, 16 Oct 2022 06:10:25 -0400</pubDate>
+</item>
+</rss>
 ```
 
 into this
 
-![email](email.png)
+![email](documentation/screenshots/phoronix_mixed.png)
 
-Also works with dark theme and tablet/phone email clients.
+Goeland has a size-fits-all default template that works well with mobile, tablet, desktop and webmail clients.
+
+Goeland can extract full text from most articles sources, enabling a ready to consume email.
+
+## Status
+
+Goeland is used in production with many email clients, and has sent over thousands of email. It is considered stable.
 
 ## Installation
 
@@ -69,6 +74,8 @@ Just put it in a folder where you have write permissions and run it first with :
 ```console
 goeland run
 ```
+
+If you are interested in another platform supported, please open a PR or submit a feature request.
 
 ## Usage
 

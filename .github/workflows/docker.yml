@@ -26,7 +26,7 @@ jobs:
         echo ::set-output name=GIT_TAG::$(git describe --tags --abbrev=0)
     - name: Setup QEMU
       id: qemu
-      uses: docker/setup-qemu-action@v2.0.0
+      uses: docker/setup-qemu-action@v2.1.0
       with:
         platforms: all
 

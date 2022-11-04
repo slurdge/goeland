@@ -40,7 +40,7 @@ var defaultCSS string
 //go:embed asset/goeland@250w.png
 var logoBytes []byte
 
-func createEmailTemplate(config config.Provider) (*template.Template, error) {
+func createEmailTemplate(config config.Provider, pipe string) (*template.Template, error) {
 	minifier := minify.New()
 	minifier.Add("text/html", &mhtml.Minifier{
 		KeepConditionalComments: true,
@@ -48,7 +48,13 @@ func createEmailTemplate(config config.Provider) (*template.Template, error) {
 
 	emailBytes := defaultEmailBytes
 
-	templateFilename := config.GetString("email.template")
+	var templateFilename string
+	if len(pipe) > 0 {
+		templateFilename = config.GetString(fmt.Sprintf("pipes.%s.template", pipe))
+	}
+	if len(templateFilename) == 0 {
+		templateFilename = config.GetString("email.template")
+	}
 	if len(templateFilename) > 0 {
 		var err error
 		emailBytes, err = ioutil.ReadFile(templateFilename)
@@ -211,10 +217,11 @@ func run(cmd *cobra.Command, args []string) {
 
 	var pool *email.SMTPClient
 
-	tpl, err := createEmailTemplate(config)
+	mainTemplate, err := createEmailTemplate(config, "")
 	if err != nil {
 		log.Fatalf("cannot create email template: %v", err)
 	}
+
 	logoFilename := config.GetString("email.logo")
 	if logoFilename != "internal:goeland.png" {
 		logoBytes, err = ioutil.ReadFile(logoFilename)
@@ -224,6 +231,13 @@ func run(cmd *cobra.Command, args []string) {
 	}
 	pipes := config.GetStringMapString("pipes")
 	for pipe := range pipes {
+		tpl := mainTemplate
+		if len(getSubString("pipes", pipe, "template")) > 0 {
+			tpl, err = createEmailTemplate(config, pipe)
+			if err != nil {
+				log.Fatalf("cannot create email template: %v", err)
+			}
+		}
 		if len(args) != 0 && !stringInSlice(pipe, args) {
 			continue
 		}

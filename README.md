@@ -156,6 +156,7 @@ destination = "email"
 email_to = "example@example.com"
 email_from = "HackerNews <goeland@example.com>"
 email_title = "{{.EntryTitle}}"
+template = "/path/to/template.html"
 ```
 
 You can use EntryTitle, SourceTitle and SourceName in the email template. SourceTitle is the title of the RSS stream.
@@ -183,7 +184,8 @@ include-footer = true
 #template = /path/to/template.html
 ```
 
-You can create your own template, see [relevant documentation](documentation/templates.md)
+You can create your own template, see [relevant documentation](documentation/templates.md).
+The pipe template takes precedence over the main template defined in the `[email]` section.
 
 ## Examples
 

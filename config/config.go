@@ -53,7 +53,9 @@ func ReadDefaultConfig(appName string, configName string) {
 	viper.SetDefault("run-at-startup", false)
 
 	viper.SetConfigFile(configName)
+	viper.AddConfigPath("/etc/goeland")
 	viper.AddConfigPath("$HOME/.goeland")
+	viper.AddConfigPath("$XDG_CONFIG_HOME/goeland")
 	viper.AddConfigPath(".")
 	if ex, err := os.Executable(); err == nil {
 		exPath := filepath.Dir(ex)

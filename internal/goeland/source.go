@@ -17,7 +17,10 @@ type Entry struct {
 
 // Source ...
 type Source struct {
-	Name    string
-	Title   string
-	Entries []Entry
+	Name       string
+	Title      string
+	URL        string
+	ImageURL   string
+	Entries    []Entry
+	Subsources []*Source
 }

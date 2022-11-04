@@ -43,6 +43,7 @@ func FetchSource(config config.Provider, sourceName string) (*goeland.Source, er
 		for _, subSourceName := range subSourceNames {
 			subSource, err := FetchSource(config, subSourceName)
 			source.Entries = append(source.Entries, subSource.Entries...)
+			source.Subsources = append(source.Subsources, subSource)
 			if err != nil {
 				log.Errorf("cannot fetch source: %s (%v)", subSourceName, err)
 				continue

@@ -47,6 +47,8 @@ func ReadDefaultConfig(appName string, configName string) {
 	viper.SetDefault("email.timeout-ms", 5000)
 	viper.SetDefault("email.include-header", true)
 	viper.SetDefault("email.include-footer", true)
+	viper.SetDefault("email.include-toc", false)
+	viper.SetDefault("email.include-content", true)
 	viper.SetDefault("email.encryption", "tls")
 	viper.SetDefault("email.allow-insecure", false)
 	viper.SetDefault("email.authentication", "plain")

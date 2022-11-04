@@ -128,29 +128,35 @@ func formatEmailSubject(source *goeland.Source, entry *goeland.Entry, templateSt
 	tpl.Execute(&output, data)
 	return output.String()
 }
-func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template.Template, destination string) string {
+func formatHTMLEmail(source *goeland.Source, entry *goeland.Entry, config config.Provider, tpl *template.Template, destination string) string {
 	footer := strings.TrimSpace(config.GetString("email.footer"))
 	if footer == "" {
 		footer = footers[rand.Intn(len(footers))]
 	}
 	data := struct {
-		EntryTitle    string
-		EntryContent  string
-		IncludeHeader bool
-		IncludeTitle  bool
-		IncludeFooter bool
-		EntryFooter   string
-		ContentID     string
-		CSS           string
+		EntryTitle     string
+		EntryContent   string
+		IncludeHeader  bool
+		IncludeTitle   bool
+		IncludeFooter  bool
+		IncludeToC     bool
+		IncludeContent bool
+		EntryFooter    string
+		ContentID      string
+		CSS            string
+		Subsources     []*goeland.Source
 	}{
-		EntryTitle:    html.EscapeString(entry.Title),
-		EntryContent:  entry.Content,
-		IncludeHeader: config.GetBool("email.include-header"),
-		IncludeTitle:  config.GetBool("email.include-title"),
-		IncludeFooter: config.GetBool("email.include-footer"),
-		EntryFooter:   footer,
-		ContentID:     "cid:" + logoAttachmentName,
-		CSS:           defaultCSS,
+		EntryTitle:     html.EscapeString(entry.Title),
+		EntryContent:   entry.Content,
+		IncludeHeader:  config.GetBool("email.include-header"),
+		IncludeTitle:   config.GetBool("email.include-title"),
+		IncludeFooter:  config.GetBool("email.include-footer"),
+		IncludeToC:     config.GetBool("email.include-toc"),
+		IncludeContent: config.GetBool("email.include-content"),
+		EntryFooter:    footer,
+		ContentID:      "cid:" + logoAttachmentName,
+		CSS:            defaultCSS,
+		Subsources:     source.Subsources,
 	}
 	if destination == "htmlfile" {
 		data.ContentID = "data:image/png;base64," + base64.StdEncoding.EncodeToString(logoBytes)
@@ -271,7 +277,7 @@ func run(cmd *cobra.Command, args []string) {
 						log.Errorf("error attaching logo: %v", err)
 					}
 				}
-				html := formatHTMLEmail(&entry, config, tpl, destination)
+				html := formatHTMLEmail(source, &entry, config, tpl, destination)
 				text, err := html2text.FromString(entry.Content)
 				if err != nil {
 					text = "There was an error converting HTML content to text"
@@ -285,7 +291,7 @@ func run(cmd *cobra.Command, args []string) {
 			}
 		case "htmlfile":
 			for i, entry := range source.Entries {
-				html := formatHTMLEmail(&entry, config, tpl, destination)
+				html := formatHTMLEmail(source, &entry, config, tpl, destination)
 				var HTMLFile *os.File
 				if HTMLFile, err = os.Create(fmt.Sprintf("%s - %d.html", pipe, i)); err != nil {
 					fatalErr(fmt.Errorf("cannot open config.toml for writing"))

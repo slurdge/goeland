@@ -143,6 +143,13 @@ func filterDigestGeneric(source *goeland.Source, level int, useFirstEntryTitle b
 	if len(source.Entries) < 1 {
 		return
 	}
+	if len(source.Subsources) == 0 { // if it's a digest of only one source
+		// a subsource with all original entries is necessary to generate a table of content
+		sourceCopy := *source
+		sourceCopy.Entries = make([]goeland.Entry, len(source.Entries))
+		copy(sourceCopy.Entries, source.Entries)
+		source.Subsources = append(source.Subsources, &sourceCopy)
+	}
 	digest := goeland.Entry{}
 	i8n := message.NewPrinter(language.BritishEnglish)
 	digest.Title = i8n.Sprintf("Digest for %s", source.Title)

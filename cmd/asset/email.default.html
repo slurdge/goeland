@@ -48,7 +48,26 @@
 
         <!-- Main content section. Main is a useful landmark element. -->
         <main>
-            {{.EntryContent}}
+        {{if .IncludeToC}}
+        {{with .Subsources}}
+          <ul>
+            {{range .}}
+            {{if .Entries}}
+            <li><a href="{{.URL}}">{{.Title}}</a>
+              <ul>
+              {{range .Entries}}
+                <li><a href="{{.URL}}">{{.Title}}</a></li>
+              {{end}}
+              </ul>
+            </li>
+            {{end}}
+            {{end}}
+          </ul>
+        {{end}}
+        {{end}}
+        {{if .IncludeContent}}
+          {{.EntryContent}}
+        {{end}}
         </main>
 
         {{if .IncludeFooter}}

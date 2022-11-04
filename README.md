@@ -178,6 +178,8 @@ authentication = "plain"
 #Email customization
 include-header = true
 include-footer = true
+include-toc = false
+include-content = true
 #footer = Your custom footer
 #logo = internal:goeland.png
 #template = /path/to/template.html

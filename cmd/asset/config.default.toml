@@ -40,6 +40,12 @@ password = "pass"
 ## Include title in header
 #include-title = false
 
+## Include a table of content (only relevant if using the "digest" or "combine" filter)
+#include-toc = false
+
+## Include the content (set to false if you only want the table of content)
+#include-content = true
+
 ## Email timeout in milliseconds
 #timeout-ms = 5000
 

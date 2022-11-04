@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+	"strings"
 
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -35,6 +36,8 @@ type Provider interface {
 // ReadDefaultConfig reads the configuration file
 func ReadDefaultConfig(appName string, configName string) {
 	viper.SetEnvPrefix(appName)
+    replacer := strings.NewReplacer(".", "_")
+    viper.SetEnvKeyReplacer(replacer)
 	viper.AutomaticEnv()
 
 	// global defaults

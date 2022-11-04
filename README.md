@@ -80,6 +80,7 @@ If you are interested in another platform supported, please open a PR or submit 
 ## Usage
 
 On first run, if it doesn't exist yet, goeland will create a `config.toml` with the default values. You need to adjust the `[email]` section with your SMTP server details.
+The config values can also be set with environment variables (e.g. `GOELAND_EMAIL_PASSWORD_FILE=/path/to/pass`).
 
 ### Sources
 
@@ -172,6 +173,7 @@ host = "smtp.example.com"
 port = 25
 username = "default"
 password = "p4ssw0rd"
+# password_file = /run/password/goeland_smtp_pass
 encryption = "tls"
 allow-insecure = false
 authentication = "plain"

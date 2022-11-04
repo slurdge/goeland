@@ -74,6 +74,17 @@ func createEmailPool(config config.Provider) (*email.SMTPClient, error) {
 	}
 	user := config.GetString("email.username")
 	pass := config.GetString("email.password")
+	passFile := config.GetString("email.password_file")
+	if len(passFile) > 0 {
+		if len(pass) > 0 {
+			log.Warn("Both password and password_file are set. Using password_file.")
+		}
+		passFileContent, err := ioutil.ReadFile(passFile)
+		if err != nil {
+			return nil, fmt.Errorf("error while reading password file: %v", err)
+		}
+		pass = string(passFileContent)
+	}
 	//auth := smtp.PlainAuth("", user, pass, host)
 	server := email.NewSMTPClient()
 	authentications := map[string]email.AuthType{"none": email.AuthNone, "plain": email.AuthPlain, "login": email.AuthLogin, "crammd5": email.AuthCRAMMD5}

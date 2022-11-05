@@ -20,7 +20,7 @@ var rootCmd = &cobra.Command{
 	Use:   "goeland run",
 	Short: "goeland is a simple rss to email program.",
 	Long: `goeland is a simple rss to email program.
-	
+
 It was inspired by rss2email, but is an alternative with some cool features, such as filters.
 The simple way to use it is to type goeland run, then customize the create config.toml file.
 To obtain a list of all the filter, type: goeland help run`,

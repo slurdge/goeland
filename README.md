@@ -98,7 +98,7 @@ You can then use `'hackernews'` in the following pipes.
 
 The different source types are:
 
-* `"feed"`: Regular RSS feed. Fill in the `url` field
+* `"feed"`: RSS, Atom or JSON feed (all supported formats can be found [here](https://github.com/mmcdole/gofeed#supported-feed-types)). Fill in the `url` field.
 * `"imgur"`: Return most recent results for a tag. Fill in the the `tag` field.
 * `"merge"`: Will merge two or more sources together. Fill in the `sources` field with a list of sources: `sources = ["source1", "source2"]`. Especially useful to merge different sources on the same topic. Don't forget to `digest` or `combine` it later.
 
@@ -157,6 +157,7 @@ destination = "email"
 email_to = "example@example.com"
 email_from = "HackerNews <goeland@example.com>"
 email_title = "{{.EntryTitle}}"
+template = "/path/to/template.html"
 ```
 
 You can use EntryTitle, SourceTitle and SourceName in the email template. SourceTitle is the title of the RSS stream.
@@ -165,7 +166,7 @@ For debug purposes, or in order to pipe in other systems, you can set destinatio
 
 ### Email
 
-In the email section you need to specify your outgoing mail server. From 0.8.0, you can specify both `encryption` and `allow-insecure` to connect to self hosted servers. You can also specify `authentication` to select the appropriate option for your server ( the options available are `"none"`, `"plain"`, `"login"` and `"crammd5"`; if unspecified it defaults to `"plain"`; see [`go-simple-mail`](https://pkg.go.dev/github.com/xhit/go-simple-mail/v2#AuthType)'s documentation for details).
+In the email section you need to specify your outgoing mail server. From 0.8.0, you can specify both `encryption` and `allow-insecure` to connect to self hosted servers. You can also specify `authentication` to select the appropriate option for your server (the options available are `"none"`, `"plain"`, `"login"` and `"crammd5"`; if unspecified it defaults to `"plain"`; see [`go-simple-mail`](https://pkg.go.dev/github.com/xhit/go-simple-mail/v2#AuthType)'s documentation for details).
 
 ```toml
 [email]
@@ -185,7 +186,8 @@ include-footer = true
 #template = /path/to/template.html
 ```
 
-You can create your own template, see [relevant documentation](documentation/templates.md)
+You can create your own template, see [relevant documentation](documentation/templates.md).
+The pipe template takes precedence over the main template defined in the `[email]` section.
 
 ## Examples
 

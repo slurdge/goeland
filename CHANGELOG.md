@@ -1,3 +1,29 @@
+# Changelog
+
+## [0.12.0](https://github.com/slurdge/goeland/compare/v0.11.0...v0.12.0) (2022-11-13)
+
+
+### Features
+
+* add a way to have toc & link only digest with toc filter. fixes [#79](https://github.com/slurdge/goeland/issues/79) ([037a7c4](https://github.com/slurdge/goeland/commit/037a7c427a742566c155c67c72c5ba577fc46d59))
+* add a way to limit the number of words in the entries. fixes [#74](https://github.com/slurdge/goeland/issues/74) ([59ad04f](https://github.com/slurdge/goeland/commit/59ad04fbb73fa1ee40f1c9caa4e51528e8537376))
+* add basic i18n ([9e4d3e1](https://github.com/slurdge/goeland/commit/9e4d3e1b49823361e4322a6b6274f977f4b3de53))
+* add password_file option ([e9b3322](https://github.com/slurdge/goeland/commit/e9b332274d533232b8acd65f05228505b97c2fa5))
+* add Release please ([1078e19](https://github.com/slurdge/goeland/commit/1078e194faab8c968220c15317c8ed9103298d2a))
+* allow defining pipe templates ([d5888f0](https://github.com/slurdge/goeland/commit/d5888f05bb37f93d8f67b6eb9746966db80cce92))
+* get config from standard places ([9471b13](https://github.com/slurdge/goeland/commit/9471b137abf587b20b4d42f018965060a9b48933))
+* logo base64 png output for debug html files ([9fb6010](https://github.com/slurdge/goeland/commit/9fb6010db88425b6e21a76f7522f2d66f765e9fd))
+* scaffolding for supporting other css/theme, tested with sakura ([b2ce9fc](https://github.com/slurdge/goeland/commit/b2ce9fc028934b10ba142be7acec56a982b00e69))
+
+
+### Bug Fixes
+
+* default encryption set twice ([bf91552](https://github.com/slurdge/goeland/commit/bf915521a22fad436d5ce864b28ac139f6513fed))
+* default to SSLTLS encryption when port is 465 ([fa44112](https://github.com/slurdge/goeland/commit/fa44112602c0962a2a5e65d05c60f43c97bc5b26))
+* fix branch name for release ([ae48309](https://github.com/slurdge/goeland/commit/ae483092caad366c6c9532b80de1d506f7a24eec))
+* put defaults values for ports related to encryption. never default to none ([068acd4](https://github.com/slurdge/goeland/commit/068acd41a3a3ef97aae332b27fbb17808aae18b6))
+* wrong translations ([c305144](https://github.com/slurdge/goeland/commit/c305144257b98882baadff49caec667a60ae22eb))
+
 Changelog
 =========
 

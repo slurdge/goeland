@@ -88,6 +88,7 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 		source.Entries = append(source.Entries, entry)
 	}
 	source.Title = feed.Title
+	source.URL = feed.Link
 	return nil
 }
 

@@ -55,6 +55,7 @@ var filters = map[string]filter{
 	"untrack":     {"Removes feedburner pixel tracking", filterUntrack},
 	"reddit":      {"Better formatting for reddit rss", filterReddit},
 	"sanitize":    {"Sanitize the content of entries (to be used in case of --unsafe-no-sanitize-filter flag)", filterSanitize},
+	"toc":         {"Create a table of content entry for all the entries", filterToc},
 }
 
 func GetFiltersHelp() string {
@@ -242,6 +243,31 @@ func filterEmbedImage(source *goeland.Source, params *filterParams) {
 
 		source.Entries[i] = entry
 	}
+}
+
+func filterToc(source *goeland.Source, params *filterParams) {
+	toc := goeland.Entry{}
+	args := params.args
+	if len(args) > 0 && strings.ToLower(args[0]) == "nameastitle" {
+		toc.Title = fmt.Sprintf(`<a href="%s">%s</a>`, source.URL, source.Title)
+	} else {
+		toc.Title = fmt.Sprintf("Table of Content for %s", source.Title)
+	}
+	content := "<ul>"
+	for _, entry := range source.Entries {
+		if entry.IncludeLink {
+			content += fmt.Sprintf(`<li><a href="%s">%s</a></li>`, entry.URL, entry.Title)
+		} else {
+			content += fmt.Sprintf("<li>%s</li>", entry.Title)
+		}
+	}
+	content += "</ul>"
+	h := sha256.New()
+	h.Write([]byte(content))
+	toc.UID = fmt.Sprintf("%x", h.Sum(nil))
+	toc.Date = time.Now()
+	toc.Content = content
+	source.Entries = append([]goeland.Entry{toc}, source.Entries...)
 }
 
 // FilterSource filters a source according to the config

@@ -2,6 +2,7 @@ package fetch
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -81,6 +82,7 @@ func fetchImgurTag(source *goeland.Source, tag string, sort string) error {
 		entry.URL = item.Link
 		source.Entries = append(source.Entries, entry)
 	}
-	source.Title = "Imgur pictures for tag #" + tag
+	source.Title = fmt.Sprintf("Imgur pictures for tag #%s", tag)
+	source.URL = fmt.Sprintf("https://imgur.com/t/%s", tag)
 	return nil
 }

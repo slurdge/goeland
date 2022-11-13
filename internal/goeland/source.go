@@ -19,5 +19,6 @@ type Entry struct {
 type Source struct {
 	Name    string
 	Title   string
+	URL     string
 	Entries []Entry
 }

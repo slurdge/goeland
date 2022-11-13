@@ -1,8 +1,11 @@
+name: Release
+
 on:
   push:
     branches:
       - main
-name: release-please
+  workflow_dispatch:
+
 jobs:
   release-please:
     runs-on: ubuntu-latest

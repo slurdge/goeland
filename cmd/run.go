@@ -106,9 +106,16 @@ func createEmailPool(config config.Provider) (*email.SMTPClient, error) {
 	encryptions := map[string]email.Encryption{"none": email.EncryptionNone, "tls": email.EncryptionSTARTTLS, "ssl": email.EncryptionSSLTLS}
 	encryption, found := encryptions[config.GetString("email.encryption")]
 	if !found {
-		encryption = email.EncryptionSTARTTLS
-		if port == 465 {
+		switch port {
+		default:
+		case 25:
+		case 587:
+		case 2525:
+			encryption = email.EncryptionSTARTTLS
+			break
+		case 465:
 			encryption = email.EncryptionSSLTLS
+			break
 		}
 	}
 	server.Encryption = encryption

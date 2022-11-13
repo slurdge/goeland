@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/slurdge/goeland/config"
 	"github.com/slurdge/goeland/internal/goeland"
@@ -32,8 +34,8 @@ const defaultHeaderLevel = 2
 var filters = map[string]filter{
 	"all":        {"Default, include all entries", filterAll},
 	"none":       {"Removes all entries", filterNone},
-	"first":      {"Keep only the first (optional: N) entry. Use either 'first'  or 'first(3')", filterFirst},
-	"last":       {"Keep only the last  (optional: N) entry. Use either 'last'  or 'last(3')", filterLast},
+	"first":      {"Keep only the first (optional: N) entry. Use either 'first'  or 'first(3)'", filterFirst},
+	"last":       {"Keep only the last  (optional: N) entry. Use either 'last'  or 'last(3)'", filterLast},
 	"random":     {"Keep 1 or more random entries. Use either 'random' or 'random(5)'", filterRandom},
 	"reverse":    {"Reverse the order of the entries", filterReverse},
 	"today":      {"Keep only the entries for today", filterToday},
@@ -55,7 +57,8 @@ var filters = map[string]filter{
 	"untrack":     {"Removes feedburner pixel tracking", filterUntrack},
 	"reddit":      {"Better formatting for reddit rss", filterReddit},
 	"sanitize":    {"Sanitize the content of entries (to be used in case of --unsafe-no-sanitize-filter flag)", filterSanitize},
-	"toc":         {"Create a table of content entry for all the entries", filterToc},
+	"toc":         {"Create a table of content entry for all the entries (optional: title, will use the Title as a link)", filterToc},
+	"limitwords":  {"Limit the number of words in the entry. Use limitwords(number).", filterLimitWords},
 }
 
 func GetFiltersHelp() string {
@@ -194,7 +197,10 @@ func filterRelativeLinks(source *goeland.Source, params *filterParams) {
 }
 
 func filterReplace(source *goeland.Source, params *filterParams) {
-	key := params.args[0]
+	key := ""
+	if len(params.args) > 0 {
+		key = params.args[0]
+	}
 	config := params.config
 	from := config.GetString(fmt.Sprintf("replace.%s.from", key))
 	to := config.GetString(fmt.Sprintf("replace.%s.to", key))
@@ -248,7 +254,7 @@ func filterEmbedImage(source *goeland.Source, params *filterParams) {
 func filterToc(source *goeland.Source, params *filterParams) {
 	toc := goeland.Entry{}
 	args := params.args
-	if len(args) > 0 && strings.ToLower(args[0]) == "nameastitle" {
+	if len(args) > 0 && strings.ToLower(args[0]) == "title" {
 		toc.Title = fmt.Sprintf(`<a href="%s">%s</a>`, source.URL, source.Title)
 	} else {
 		toc.Title = fmt.Sprintf("Table of Content for %s", source.Title)
@@ -268,6 +274,64 @@ func filterToc(source *goeland.Source, params *filterParams) {
 	toc.Date = time.Now()
 	toc.Content = content
 	source.Entries = append([]goeland.Entry{toc}, source.Entries...)
+}
+
+func isEndOfSentence(r rune) bool {
+	return r == '.' || r == '?' || r == '!' || r == '"' || r == '\n'
+}
+
+// taken from https://github.com/gohugoio/hugo/blob/3854a6fa6c323d1c09aa71a0626c9eef62709294/helpers/content.go#L219
+func truncateWordsToWholeSentence(s string, summaryLength int) (string, bool) {
+	var (
+		wordCount     = 0
+		lastWordIndex = -1
+	)
+
+	for i, r := range s {
+		if unicode.IsSpace(r) {
+			wordCount++
+			lastWordIndex = i
+
+			if wordCount >= summaryLength {
+				break
+			}
+
+		}
+	}
+
+	if lastWordIndex == -1 {
+		return s, false
+	}
+
+	endIndex := -1
+
+	for j, r := range s[lastWordIndex:] {
+		if isEndOfSentence(r) {
+			endIndex = j + lastWordIndex + utf8.RuneLen(r)
+			break
+		}
+	}
+
+	if endIndex == -1 {
+		return s, false
+	}
+
+	return strings.TrimSpace(s[:endIndex]), endIndex < len(s)
+}
+
+func filterLimitWords(source *goeland.Source, params *filterParams) {
+	number := -1
+	if len(params.args) > 0 {
+		number, _ = strconv.Atoi(params.args[0])
+	}
+	for i, entry := range source.Entries {
+		if number > 0 {
+			//var isTruncated bool
+			//add a more link here ?
+			entry.Content, _ = truncateWordsToWholeSentence(entry.Content, number)
+		}
+		source.Entries[i] = entry
+	}
 }
 
 // FilterSource filters a source according to the config

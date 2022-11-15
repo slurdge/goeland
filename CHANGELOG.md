@@ -31,9 +31,6 @@
 * put defaults values for ports related to encryption. never default to none ([068acd4](https://github.com/slurdge/goeland/commit/068acd41a3a3ef97aae332b27fbb17808aae18b6))
 * wrong translations ([c305144](https://github.com/slurdge/goeland/commit/c305144257b98882baadff49caec667a60ae22eb))
 
-Changelog
-=========
-
 v0.11.0
 -------
 

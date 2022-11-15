@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"os"
+    "path/filepath"
 	"strings"
 	"text/template"
 	"time"
@@ -312,8 +313,12 @@ func run(cmd *cobra.Command, args []string) {
 			for i, entry := range source.Entries {
 				html := formatHTMLEmail(&entry, config, tpl, destination)
 				var HTMLFile *os.File
-				if HTMLFile, err = os.Create(fmt.Sprintf("%s - %d.html", pipe, i)); err != nil {
-					fatalErr(fmt.Errorf("cannot open config.toml for writing"))
+				err := os.MkdirAll("data", os.ModePerm)
+				if err != nil {
+					fatalErr(fmt.Errorf("error while creating the data directory to put the html file in: %v", err))
+				}
+				if HTMLFile, err = os.Create(fmt.Sprintf(filepath.Join("data", "%s - %d.html"), pipe, i)); err != nil {
+					fatalErr(fmt.Errorf("error while writing html file: %v", err))
 				}
 				HTMLFile.Write([]byte(html))
 			}

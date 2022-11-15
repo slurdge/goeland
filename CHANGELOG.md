@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.1](https://github.com/slurdge/goeland/compare/v0.12.0...v0.12.1) (2022-11-15)
+
+
+### Bug Fixes
+
+* default to SSLTLS only on port 465 ([1bbe563](https://github.com/slurdge/goeland/commit/1bbe563c0492c298dc3ac054ffc0c5832608fc67))
+
 ## [0.12.0](https://github.com/slurdge/goeland/compare/v0.11.0...v0.12.0) (2022-11-13)
 
 

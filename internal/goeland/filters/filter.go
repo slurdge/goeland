@@ -252,6 +252,9 @@ func filterEmbedImage(source *goeland.Source, params *filterParams) {
 }
 
 func filterToc(source *goeland.Source, params *filterParams) {
+	if len(source.Entries) == 0 {
+		return
+	}
 	toc := goeland.Entry{}
 	args := params.args
 	if len(args) > 0 && strings.ToLower(args[0]) == "title" {

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.3](https://github.com/slurdge/goeland/compare/v0.12.2...v0.12.3) (2022-11-16)
+
+
+### Bug Fixes
+
+* another try for releases to trigger tag building ([3ff35c9](https://github.com/slurdge/goeland/commit/3ff35c92695d1fa8404ed74db37ec774cd0d2a9b))
+
 ## [0.12.2](https://github.com/slurdge/goeland/compare/v0.12.1...v0.12.2) (2022-11-16)
 
 

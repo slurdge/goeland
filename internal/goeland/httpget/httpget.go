@@ -9,15 +9,16 @@ import (
 	"github.com/slurdge/goeland/version"
 )
 
-var UserAgent string = "multiple:goeland:" + version.Version + " (commit id:" + version.GitCommit + ") (by /u/goelandrss)"
+var userAgent string = "multiple:goeland:" + version.Version + " (commit id:" + version.GitCommit + ") (by /u/goelandrss)"
 var defaultClient http.Client
 
+// GetHTTPRessource gets the bytes corresponding to an URL
 func GetHTTPRessource(url string) (body []byte, err error) {
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
-	request.Header.Set("User-Agent", UserAgent)
+	request.Header.Set("User-Agent", userAgent)
 	request.Header.Set("Accept", "*/*")
 
 	resp, err := defaultClient.Do(request)

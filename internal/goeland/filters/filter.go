@@ -13,7 +13,7 @@ import (
 
 	"github.com/slurdge/goeland/config"
 	"github.com/slurdge/goeland/internal/goeland"
-	_ "github.com/slurdge/goeland/internal/goeland/i18n"
+	_ "github.com/slurdge/goeland/internal/goeland/i18n" //needed for now as we do not properly do i8n
 	"github.com/slurdge/goeland/log"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
@@ -61,6 +61,7 @@ var filters = map[string]filter{
 	"limitwords":  {"Limit the number of words in the entry. Use limitwords(number).", filterLimitWords},
 }
 
+// GetFiltersHelp returns a string that contains help for all filters
 func GetFiltersHelp() string {
 	lines := []string{}
 	for name, value := range filters {

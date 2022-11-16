@@ -14,5 +14,5 @@ jobs:
         with:
           release-type: go
           package-name: release-please-action
-          skip-github-release: true
           include-v-in-tag: true
+          token: ${{ secrets.RELEASE_TOKEN }}

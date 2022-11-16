@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.2](https://github.com/slurdge/goeland/compare/v0.12.1...v0.12.2) (2022-11-16)
+
+
+### Bug Fixes
+
+* try to fix workflow run with release please ([933c982](https://github.com/slurdge/goeland/commit/933c982edda74882a4c90f3234987e8b4eb16aff))
+
 ## [0.12.1](https://github.com/slurdge/goeland/compare/v0.12.0...v0.12.1) (2022-11-15)
 
 

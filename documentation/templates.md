@@ -2,9 +2,9 @@ Email templates
 ===============
 
 Templates are provided by the standard go `"text/template"` package.
-The easiest way to create a new template is to copy one of the original one in the `cmd/asset` subdirectory and change accordingly.
+The easiest way to create a new template is to copy the original one in the `cmd/asset` subdirectory and change it according to your needs.
 
-The following variables will be put inside the template
+The following variables can be used inside the template:
 
 |Variable|Usage|
 |--------|-----|

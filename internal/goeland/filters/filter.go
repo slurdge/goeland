@@ -56,7 +56,7 @@ var filters = map[string]filter{
 	"retrieve":    {"Retrieves the full content from a goquery", filterRetrieveContent},
 	"untrack":     {"Removes feedburner pixel tracking", filterUntrack},
 	"reddit":      {"Better formatting for reddit rss", filterReddit},
-	"sanitize":    {"Sanitize the content of entries (to be used in case of --unsafe-no-sanitize-filter flag)", filterSanitize},
+	"sanitize":    {"Sanitize the content of entries (to be used if --unsafe-no-sanitize-filter was passed)", filterSanitize},
 	"toc":         {"Create a table of content entry for all the entries (optional: title, will use the Title as a link)", filterToc},
 	"limitwords":  {"Limit the number of words in the entry. Use limitwords(number).", filterLimitWords},
 }

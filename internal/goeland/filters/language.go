@@ -8,6 +8,7 @@ import (
 	"jaytaylor.com/html2text"
 )
 
+// StringInSlice tells if a string is in a slice of strings
 func StringInSlice(a string, list []string) bool {
 	for _, b := range list {
 		if strings.EqualFold(b, a) {

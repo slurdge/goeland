@@ -8,7 +8,7 @@ import (
 
 const goelandURL = `<a href="https://www.github.com/slurdge/goeland">goeland</a>`
 
-var footers_i8n = map[language.Tag][]string{
+var footersI8n = map[language.Tag][]string{
 	language.BritishEnglish: {
 		`Sent with ❤️ by %s`,
 		`Sent with 💖 by %s`,
@@ -67,7 +67,7 @@ var footers_i8n = map[language.Tag][]string{
 var footers []string
 
 func init() {
-	for _, footer := range footers_i8n[language.BritishEnglish] {
+	for _, footer := range footersI8n[language.BritishEnglish] {
 		footers = append(footers, fmt.Sprintf(footer, goelandURL))
 	}
 }

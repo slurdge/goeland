@@ -39,7 +39,7 @@ func daemon(cmd *cobra.Command, args []string) {
 				log.Warnf("Failed to schedule pipe:%s: %v", pipe, err)
 				continue
 			}
-			found += 1
+			found++
 		}
 	}
 	exitsignal := make(chan os.Signal, 1)

@@ -9,15 +9,15 @@
 ![Image license](https://img.shields.io/badge/Images-CC%20BY--SA%204.0-blueviolet)
 [![Docker images](https://github.com/slurdge/goeland/actions/workflows/docker.yml/badge.svg)](https://github.com/slurdge/goeland/actions/workflows/docker.yml)
 
-A RSS to email, ala rss2email written in Go.
+An RSS to email, à la rss2email, written in Go.
 
 Support this project by giving it a ⭐️ and sharing it.
 
 ## About
 
-Goeland excels at creating beautiful emails from RSS, tailored for daily or weekly digest.
+Goeland excels at creating beautiful emails from RSS feeds, tailored for daily or weekly digest.
 
-It include a number of filters (see below) that can transform the RSS content along the way. It can also consume other sources, such as a Imgur tag.
+It includes a number of filters (see below) that can transform the RSS content along the way. It can also consume other sources, such as Imgur tags.
 
 Goeland transforms this...
 
@@ -50,11 +50,11 @@ into this
 
 Goeland has a size-fits-all default template that works well with mobile, tablet, desktop and webmail clients.
 
-Goeland can extract full text from most articles sources, enabling a ready to consume email.
+Goeland can extract full text from most article sources, enabling a ready to consume email.
 
 ## Status
 
-Goeland is used in production with many email clients, and has sent over thousands of email. It is considered stable.
+Goeland is used in production with many email clients, and has sent over thousands of emails. It is considered stable.
 
 ## Installation
 
@@ -75,7 +75,7 @@ Just put it in a folder where you have write permissions and run it first with :
 goeland run
 ```
 
-If you are interested in another platform supported, please open a PR or submit a feature request.
+If you are interested for another platform to be supported, please open a PR or submit a feature request.
 
 ## Usage
 
@@ -106,30 +106,34 @@ The different source types are:
 
 One powerful aspect of goeland is filtering. Instead of sending the content of the RSS directly to the email system, it can transform it in a number of ways in order to make it easier to read, process, etc.
 
-Any number of filters can be defined, the order is important. For example, the following:
+Any number of filters can be defined, **the order is important**. For example, the following:
 
 ```toml
-filters = ["unseen", "lebrief", "digest"]
+filters = ["unseen", "retrieve", "digest"]
 ```
 
-Will first keep only previously `unseen` entries, then transform it nicer with `lebrief` filter, and, at last, will put them all together with `digest`. This will create only one email with a SourceTitle as the title of the RSS feed.
+Will first keep only previously `unseen` entries, then make it nicer with the `retrieve` filter, and, at last, will put them all together with `digest`. This will create only one email with a SourceTitle as the title of the RSS feed.
 
-The available filters are as follow:
+Filters can have options. For example, to get the 3 newest post, you would do:
+```toml
+filters = ["first(3)"]
+```
+
+The available filters are as follows:
 
 * none: Removes all entries
 * all: Default, include all entries
-
-* first: Keep only the first entry
-* last: Keep only the last entry
+* first: Keep only the first (usually newest) entries (default 1)
+* last: Keep only the last (usually oldest) entries (default 1)
 * reverse: Reverse the order of the entries
-* random: Keep 1 or more random entries. Use either 'random' or 'random(5)' for example.
-* unseen: Keep only unseen entry. Entries that have been seen will be put in a `goeland.db` file. Use the `purge` command to remove seen entries.
-* today: Keep only the entries for today
+* random: Keep 1 or more random entries (default 5)
+* unseen: Keep only unseen entry. Entries that have been seen will be put in a `goeland.db` file. Use the `purge` command to remove seen entries
+* today: Keep only the entries of the day
 * lasthours: Keep only the entries that are from the X last hours (default 24)
-* digest: Make a digest of all entries (optional heading level, default is 2)
-* combine: Combine all the entries into one source and use the first entry title as source title. Useful for merge sources
+* digest: Make a digest of all entries (optional heading level, default 2)
+* combine: Combine all the entries into one source and use the first entry title as source title. Useful for merged sources
 * links: Rewrite relative links src="// and href="// to have an https:// prefix
-* embedimage: Embed a picture if the entry has an attachment with a type of picture (optional position: top|bottom|left|right, default is top)
+* embedimage: Embed a picture if the entry has an attachment with a type of picture (optional position: top|bottom|left|right, default top)
 * replace: Replace a string with another. Use with an argument like this: replace(myreplace) and define
 
 ```toml
@@ -141,12 +145,17 @@ The available filters are as follow:
 in your config file.
 
 * includelink: Include the link of entries in the digest form
-* lebrief: Retrieves the full excerpts for Next INpact's Lebrief. Use only with a source from Next INpact.
+* retrieve: Retrieves the full content from a goquery. E.g. you can use `retrieve(div.content)` to get the full excerpts of Next INpact's [LeBrief](https://www.nextinpact.com/lebrief/)
 * language: Keep only the specified languages (best effort detection), use like this: `language(en,de)`
+* untrack: Removes feedburner pixel tracking
+* reddit: Better formatting for reddit rss
+* sanitize: Sanitize the content of entries (to be used if --unsafe-no-sanitize-filter was passed)
+* toc: Create a special table of content entry containing the titles of all entries. Use `toc(title)` to use the Title as a link
+* limitwords: Limit the number of words in the entry, use like this:  `limitwords(32)`
 
 ### Pipes
 
-After defining a number of sources, you can send them to a pipe. One source can be send to multiple pipes, but a pipe can only have one source. If you need to combine sources together, use the above special `merge` type to have this effect.
+After defining some sources, you can send them to a pipe. One source can be sent to multiple pipes, but a pipe can only have one source. If you need to combine sources together, use the above special `merge`.
 
 A pipe has the following structure:
 
@@ -157,16 +166,16 @@ destination = "email"
 email_to = "example@example.com"
 email_from = "HackerNews <goeland@example.com>"
 email_title = "{{.EntryTitle}}"
-template = "/path/to/template.html"
+template = "/path/to/template.html" # optional
 ```
 
-You can use EntryTitle, SourceTitle and SourceName in the email template. SourceTitle is the title of the RSS stream.
+You can use EntryTitle, SourceTitle and SourceName in the email template. SourceTitle is the title of the RSS feed.
 
-For debug purposes, or in order to pipe in other systems, you can set destination to `terminal`.
+For debugging purposes, or in order to pipe to other systems, you can set the destination to `terminal`.
 
 ### Email
 
-In the email section you need to specify your outgoing mail server. From 0.8.0, you can specify both `encryption` and `allow-insecure` to connect to self hosted servers. You can also specify `authentication` to select the appropriate option for your server (the options available are `"none"`, `"plain"`, `"login"` and `"crammd5"`; if unspecified it defaults to `"plain"`; see [`go-simple-mail`](https://pkg.go.dev/github.com/xhit/go-simple-mail/v2#AuthType)'s documentation for details).
+In the email section you need to specify your outgoing mail server. You can specify both `encryption` and `allow-insecure` to connect to self-hosted servers. You can also specify `authentication` to select the appropriate option for your server (the options available are `"none"`, `"plain"`, `"login"` and `"crammd5"`; if unspecified it defaults to `"plain"`; see [`go-simple-mail`](https://pkg.go.dev/github.com/xhit/go-simple-mail/v2#AuthType)'s documentation for details).
 
 ```toml
 [email]
@@ -270,9 +279,9 @@ See also the `examples/` folder.
 
 ## Contributing
 
-Feel free to open bugs or PR for more sources, more filters suggestions.
+Feel free to open issues or PR for bugs and suggestions for more filters and source types.
 
-If you encounter a problematic feed, please open a bug with the content of the feed attached.
+If you encounter a problematic feed, please open an issue with the content of the feed attached.
 
 ## Future
 

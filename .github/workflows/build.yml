@@ -31,8 +31,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.10.0
-        architecture: 'x64'
+        python-version: 3.11.0
     
     - name: Get Go Deps
       run: go get -v ./...

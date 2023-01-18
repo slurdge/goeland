@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.13.0](https://github.com/slurdge/goeland/compare/v0.12.3...v0.13.0) (2023-01-18)
+
+
+### Features
+
+* allow insecure feed location ([71091b6](https://github.com/slurdge/goeland/commit/71091b66a9fab0ea6767c87f91845096d859f3ea))
+
+
+### Bug Fixes
+
+* prevent merges to have cycles and infinite recursion fixes [#100](https://github.com/slurdge/goeland/issues/100) ([8b10526](https://github.com/slurdge/goeland/commit/8b10526f95e652e46c16e8eaf53cf3181c475834))
+
 ## [0.12.3](https://github.com/slurdge/goeland/compare/v0.12.2...v0.12.3) (2022-11-16)
 
 

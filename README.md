@@ -4,10 +4,11 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/slurdge/goeland)
 ![version](https://img.shields.io/github/go-mod/go-version/slurdge/goeland)
-[![Build Status](https://github.com/slurdge/goeland/actions/workflows/build.yml/badge.svg)](https://github.com/slurdge/goeland/actions/workflows/build.yml)
 ![GitHub](https://img.shields.io/github/license/slurdge/goeland)
 ![Image license](https://img.shields.io/badge/Images-CC%20BY--SA%204.0-blueviolet)
-[![Docker images](https://github.com/slurdge/goeland/actions/workflows/docker.yml/badge.svg)](https://github.com/slurdge/goeland/actions/workflows/docker.yml)
+
+[![Build Status](https://github.com/slurdge/goeland/actions/workflows/build.yml/badge.svg)](https://github.com/slurdge/goeland/actions/workflows/build.yml)[![Docker images](https://github.com/slurdge/goeland/actions/workflows/docker.yml/badge.svg)](https://github.com/slurdge/goeland/actions/workflows/docker.yml)
+![CodeQL](https://github.com/slurdge/goeland/actions/workflows/codeql-analysis.yml/badge.svg)
 
 An RSS to email, à la rss2email, written in Go.
 

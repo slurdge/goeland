@@ -16,7 +16,7 @@ func FetchSource(config config.Provider, sourceName string, parents []string) (*
 		return nil, fmt.Errorf("cannot find source: %s", sourceName)
 	}
 	if filters.StringInSlice(strings.ToLower(sourceName), parents) {
-		return nil, fmt.Errorf("source: %s has already be seen, preventing cycle", sourceName)
+		return nil, fmt.Errorf("source: %s. there seems to be a cycle in your configuration. Make sure no 'merge' source is referencing itself", sourceName)
 	}
 	sourceType := config.GetString(fmt.Sprintf("sources.%s.type", sourceName))
 	log.Infof("Fetching source: %s of type %s", sourceName, sourceType)

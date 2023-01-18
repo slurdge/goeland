@@ -11,7 +11,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"os"
-    "path/filepath"
+	"path/filepath"
 	"strings"
 	"text/template"
 	"time"
@@ -260,7 +260,7 @@ func run(cmd *cobra.Command, args []string) {
 		}
 		log.Infof("Executing pipe named: %s", pipe)
 		sourceName := getSubString("pipes", pipe, "source")
-		source, err := fetch.FetchSource(config, sourceName)
+		source, err := fetch.FetchSource(config, sourceName, []string{})
 		if err != nil {
 			log.Errorf("Error getting source: %s: %v", sourceName, err)
 			continue

@@ -41,7 +41,7 @@ var footersI8n = map[language.Tag][]string{
 		`Envoyé avec 💖 par %s`,
 		`Envoyé avec 💙 par %s`,
 		`Envoyé avec 🥰 par %s`,
-		`Amené tout 🐣 par %s`,
+		`Amené tot 🐣 par %s`,
 		`Envoyé rapidemment ⚡ par %s`,
 		`Envoyé avec a touch of 💐 par %s`,
 		`Envoyé avec a touch of 🌸 par %s`,

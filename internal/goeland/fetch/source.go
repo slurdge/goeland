@@ -25,7 +25,8 @@ func FetchSource(config config.Provider, sourceName string, parents []string) (*
 	switch sourceType {
 	case "feed":
 		url := config.GetString(fmt.Sprintf("sources.%s.url", sourceName))
-		err = fetchFeed(source, url, !strings.HasPrefix(url, "http"))
+		allowInsecure := config.GetBool(fmt.Sprintf("sources.%s.allow-insecure", sourceName))
+		err = fetchFeed(source, url, !strings.HasPrefix(url, "http"), allowInsecure)
 		if err != nil {
 			log.Errorf("Cannot retrieve feed: %s error: %v", url, err)
 			return source, err

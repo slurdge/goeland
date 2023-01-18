@@ -11,9 +11,12 @@ import (
 )
 
 // FetchSource retrieves a source from either a feed, imgur or other sub-sources
-func FetchSource(config config.Provider, sourceName string) (*goeland.Source, error) {
+func FetchSource(config config.Provider, sourceName string, parents []string) (*goeland.Source, error) {
 	if !config.IsSet(fmt.Sprintf("sources.%s", sourceName)) {
 		return nil, fmt.Errorf("cannot find source: %s", sourceName)
+	}
+	if filters.StringInSlice(strings.ToLower(sourceName), parents) {
+		return nil, fmt.Errorf("source: %s has already be seen, preventing cycle", sourceName)
 	}
 	sourceType := config.GetString(fmt.Sprintf("sources.%s.type", sourceName))
 	log.Infof("Fetching source: %s of type %s", sourceName, sourceType)
@@ -41,19 +44,18 @@ func FetchSource(config config.Provider, sourceName string) (*goeland.Source, er
 	case "merge":
 		subSourceNames := config.GetStringSlice(fmt.Sprintf("sources.%s.sources", sourceName))
 		for _, subSourceName := range subSourceNames {
-			subSource, err := FetchSource(config, subSourceName)
-			source.Entries = append(source.Entries, subSource.Entries...)
+			parents = append(parents, strings.ToLower(sourceName))
+			subSource, err := FetchSource(config, subSourceName, parents)
 			if err != nil {
 				log.Errorf("cannot fetch source: %s (%v)", subSourceName, err)
 				continue
 			}
+			source.Entries = append(source.Entries, subSource.Entries...)
 		}
 	default:
 		return nil, fmt.Errorf("cannot understand source type: %s", sourceType)
 	}
-	if source != nil {
-		source.Name = sourceName
-	}
+	source.Name = sourceName
 	filters.FilterSource(source, config)
 	log.Debugf("%v", source)
 	return source, nil

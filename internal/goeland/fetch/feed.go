@@ -13,6 +13,7 @@ import (
 	"github.com/mmcdole/gofeed"
 	"github.com/slurdge/goeland/internal/goeland"
 	"github.com/slurdge/goeland/internal/goeland/httpget"
+	"github.com/slurdge/goeland/log"
 	"github.com/spf13/viper"
 )
 
@@ -20,7 +21,7 @@ const minContentLen = 10
 
 var policy *bluemonday.Policy
 
-func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
+func fetchFeed(source *goeland.Source, feedLocation string, isFile bool, allowInsecure bool) error {
 	fp := gofeed.NewParser()
 	var feed *gofeed.Feed
 	if isFile {
@@ -34,7 +35,15 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool) error {
 			return fmt.Errorf("cannot parse file: %s", feedLocation)
 		}
 	} else {
-		body, err := httpget.GetHTTPRessource(feedLocation)
+		var body []byte
+		var err error
+		if !allowInsecure {
+			body, err = httpget.GetHTTPRessource(feedLocation)
+		} else {
+			log.Warningf("ignoring certificate security for url: %s\n", feedLocation)
+			body, err = httpget.GetHTTPRessourceInsecure(feedLocation)
+		}
+
 		if err != nil {
 			return fmt.Errorf("cannot open or parse url: %s (%v)", feedLocation, err)
 		}

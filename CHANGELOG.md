@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.14.0](https://github.com/slurdge/goeland/compare/v0.13.0...v0.14.0) (2023-03-16)
+
+
+### Features
+
+* add a second arg to image, 'link', which put a link to the entry associated with the image. ([eef64c6](https://github.com/slurdge/goeland/commit/eef64c6a142129cf7130c7d5825baf593156de74))
+* get information from media:group if main info is empty. Should make Youtube work. Fix [#122](https://github.com/slurdge/goeland/issues/122) ([2c24d5c](https://github.com/slurdge/goeland/commit/2c24d5c404b5acd333e3cf11a604ce73803ca5e5))
+* try to have a v in releases ([c147b9c](https://github.com/slurdge/goeland/commit/c147b9ccc0cf56b0a6d407e90b109129cc301ac4))
+
+
+### Bug Fixes
+
+* correctly parse change log as formatted by release-please. fixes [#126](https://github.com/slurdge/goeland/issues/126) ([0b6a9d7](https://github.com/slurdge/goeland/commit/0b6a9d7f9ee44f664d20381f0516aab012bd3ea2))
+* python invocation for local build ([fbdb0b3](https://github.com/slurdge/goeland/commit/fbdb0b3d05363b2283f6d516f557cec107e22ede))
+
 ## [v0.13.0](https://github.com/slurdge/goeland/compare/v0.12.3...v0.13.0) (2023-01-18)
 
 

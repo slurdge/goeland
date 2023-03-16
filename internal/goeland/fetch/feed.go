@@ -6,6 +6,7 @@ import (
 	"hash/fnv"
 	"html"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -18,6 +19,9 @@ import (
 )
 
 const minContentLen = 10
+
+var linkRegExp *regexp.Regexp
+var newlineRegExp *regexp.Regexp
 
 var policy *bluemonday.Policy
 
@@ -89,6 +93,27 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool, allowIn
 				}
 			}
 		}
+		if len(entry.Content) == 0 && len(item.Extensions["media"]["group"]) > 0 {
+			for _, extensions := range item.Extensions["media"]["group"][0].Children {
+				if len(extensions) > 0 {
+					extension := extensions[0]
+					if strings.ToLower(extension.Name) == "description" {
+						if strings.ToLower(extension.Attrs["type"]) == "html" {
+							entry.Content = extension.Value
+						} else {
+							content := extension.Value
+							content = linkRegExp.ReplaceAllString(content, `<a href="$1">$1</a>`)
+							content = newlineRegExp.ReplaceAllString(content, "<br>")
+							entry.Content = content
+						}
+
+					}
+					if strings.ToLower(extension.Name) == "thumbnail" {
+						entry.ImageURL = extension.Attrs["url"]
+					}
+				}
+			}
+		}
 		if strings.TrimSpace(entry.UID) == "" {
 			hash := fnv.New64a()
 			hash.Write([]byte(entry.URL))
@@ -103,4 +128,6 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool, allowIn
 
 func init() {
 	policy = bluemonday.UGCPolicy()
+	linkRegExp = regexp.MustCompile(`((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[.\!\/\\w]*))?)`)
+	newlineRegExp = regexp.MustCompile(`\r?\n`)
 }

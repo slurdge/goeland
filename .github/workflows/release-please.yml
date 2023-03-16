@@ -15,4 +15,5 @@ jobs:
           release-type: go
           package-name: release-please-action
           include-v-in-tag: true
+          changelog-notes-type: github
           token: ${{ secrets.RELEASE_TOKEN }}

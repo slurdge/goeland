@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.13.0](https://github.com/slurdge/goeland/compare/v0.12.3...v0.13.0) (2023-01-18)
+## [v0.13.0](https://github.com/slurdge/goeland/compare/v0.12.3...v0.13.0) (2023-01-18)
 
 
 ### Features
@@ -12,28 +12,28 @@
 
 * prevent merges to have cycles and infinite recursion fixes [#100](https://github.com/slurdge/goeland/issues/100) ([8b10526](https://github.com/slurdge/goeland/commit/8b10526f95e652e46c16e8eaf53cf3181c475834))
 
-## [0.12.3](https://github.com/slurdge/goeland/compare/v0.12.2...v0.12.3) (2022-11-16)
+## [v0.12.3](https://github.com/slurdge/goeland/compare/v0.12.2...v0.12.3) (2022-11-16)
 
 
 ### Bug Fixes
 
 * another try for releases to trigger tag building ([3ff35c9](https://github.com/slurdge/goeland/commit/3ff35c92695d1fa8404ed74db37ec774cd0d2a9b))
 
-## [0.12.2](https://github.com/slurdge/goeland/compare/v0.12.1...v0.12.2) (2022-11-16)
+## [v0.12.2](https://github.com/slurdge/goeland/compare/v0.12.1...v0.12.2) (2022-11-16)
 
 
 ### Bug Fixes
 
 * try to fix workflow run with release please ([933c982](https://github.com/slurdge/goeland/commit/933c982edda74882a4c90f3234987e8b4eb16aff))
 
-## [0.12.1](https://github.com/slurdge/goeland/compare/v0.12.0...v0.12.1) (2022-11-15)
+## [v0.12.1](https://github.com/slurdge/goeland/compare/v0.12.0...v0.12.1) (2022-11-15)
 
 
 ### Bug Fixes
 
 * default to SSLTLS only on port 465 ([1bbe563](https://github.com/slurdge/goeland/commit/1bbe563c0492c298dc3ac054ffc0c5832608fc67))
 
-## [0.12.0](https://github.com/slurdge/goeland/compare/v0.11.0...v0.12.0) (2022-11-13)
+## [v0.12.0](https://github.com/slurdge/goeland/compare/v0.11.0...v0.12.0) (2022-11-13)
 
 
 ### Features

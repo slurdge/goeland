@@ -235,8 +235,20 @@ func filterEmbedImage(source *goeland.Source, params *filterParams) {
 			}
 		}
 	}
+	includeEntryLink := false
+	if len(args) > 1 {
+		if strings.ToLower(args[1]) == "link" {
+			includeEntryLink = true
+		}
+	}
 	for i, entry := range source.Entries {
+		if strings.TrimSpace(entry.ImageURL) == "" {
+			continue
+		}
 		imageLink := fmt.Sprintf(`<img src="%s" class="%s">`, entry.ImageURL, positions[position])
+		if includeEntryLink {
+			imageLink = fmt.Sprintf(`<a href="%s">%s</a>`, entry.URL, imageLink)
+		}
 		switch position {
 		case 0:
 			entry.Content = imageLink + entry.Content

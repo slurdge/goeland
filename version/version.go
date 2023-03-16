@@ -35,12 +35,21 @@ var OsArch = fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH)
 func ExtractVersionFromChangelog(changeLog string) {
 	ChangeLog = changeLog
 	scanner := bufio.NewScanner(strings.NewReader(ChangeLog))
-	versionRegExp := regexp.MustCompile(`^v[0-9]+\.[0-9]+\.[0-9]+$`)
+	versionRegExp := regexp.MustCompile(`^(v[0-9]+\.[0-9]+\.[0-9]+)$`)
+	versionRegExpAlternate := regexp.MustCompile(`^## \[(v?[0-9]+\.[0-9]+\.[0-9]+)\]`)
 	for scanner.Scan() {
 		line := scanner.Bytes()
-		if versionRegExp.Match(line) {
-			Version = string(line)
+		if ver := versionRegExp.FindSubmatch(line); ver != nil {
+			Version = string(ver[1])
 			break
 		}
+		if ver := versionRegExpAlternate.FindSubmatch(line); ver != nil {
+			Version = string(ver[1])
+			break
+		}
+	}
+	Version = strings.ToLower(Version)
+	if Version[0] != 'v' {
+		Version = "v" + Version
 	}
 }

@@ -50,6 +50,7 @@ var filters = map[string]filter{
 		to="Another string"
 	  in your config file.`, filterReplace},
 	"includelink": {"Include the link of entries in the digest form", filterIncludeLink},
+	"includesourcetitle": {"Include source titles of the entries in the digest form. Useful for merge sources", filterIncludeSourceTitle},
 	"language":    {"Keep only the specified languages (best effort detection), use like this: language(en,de)", filterLanguage},
 	"unseen":      {"Keep only unseen entry", filterUnSeen},
 	"lebrief":     {"Deprecated. Use retrieve(div.content) instead. Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
@@ -154,8 +155,14 @@ func filterDigestGeneric(source *goeland.Source, level int, useFirstEntryTitle b
 	if useFirstEntryTitle && len(source.Entries) > 0 {
 		digest.Title = source.Entries[0].Title
 	}
+	previousSourceTitle := ""
 	content := ""
 	for _, entry := range source.Entries {
+		if entry.IncludeSourceTitle && previousSourceTitle != entry.Source.Title  {
+			content += "<hr/>"
+			content += fmt.Sprintf(`<h%d><a href="%s">%s</a></h%d>`, level - 1, entry.Source.URL, entry.Source.Title, level - 1)
+			previousSourceTitle = entry.Source.Title
+		}
 		if entry.IncludeLink {
 			content += fmt.Sprintf(`<h%d><a href="%s">%s</a></h%d>`, level, entry.URL, entry.Title, level)
 		} else {
@@ -221,6 +228,12 @@ func filterSanitize(source *goeland.Source, params *filterParams) {
 func filterIncludeLink(source *goeland.Source, params *filterParams) {
 	for i := range source.Entries {
 		source.Entries[i].IncludeLink = true
+	}
+}
+
+func filterIncludeSourceTitle(source *goeland.Source, params *filterParams) {
+	for i := range source.Entries {
+		source.Entries[i].IncludeSourceTitle = true
 	}
 }
 

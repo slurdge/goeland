@@ -56,6 +56,10 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool, allowIn
 			return fmt.Errorf("cannot open or parse url: %s (%v)", feedLocation, err)
 		}
 	}
+
+	source.Title = feed.Title
+	source.URL = feed.Link
+
 	for _, item := range feed.Items {
 
 		entry := goeland.Entry{}
@@ -119,10 +123,9 @@ func fetchFeed(source *goeland.Source, feedLocation string, isFile bool, allowIn
 			hash.Write([]byte(entry.URL))
 			entry.UID = hex.EncodeToString(hash.Sum([]byte{}))
 		}
+		entry.Source = *source
 		source.Entries = append(source.Entries, entry)
 	}
-	source.Title = feed.Title
-	source.URL = feed.Link
 	return nil
 }
 

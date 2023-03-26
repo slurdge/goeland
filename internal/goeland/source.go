@@ -14,7 +14,7 @@ type Entry struct {
 	IncludeLink        bool
 	IncludeSourceTitle bool
 	ImageURL           string
-	Source             Source
+	Source             *Source
 }
 
 // Source ...

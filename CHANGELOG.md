@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.15.0](https://github.com/slurdge/goeland/compare/v0.14.0...v0.15.0) (2023-03-26)
+
+
+### Features
+
+* Add fields to the Entry struct ([1b6106b](https://github.com/slurdge/goeland/commit/1b6106b93fd93af0e94b698adcb8fec58d7dd808))
+* Add includesourcetitle filter ([6ba56f5](https://github.com/slurdge/goeland/commit/6ba56f5c5e479d123aa4c20ca62c42f634341d39))
+* Set the source in the entry when fetching ([92d1f83](https://github.com/slurdge/goeland/commit/92d1f83be7fb162c7b30345a89912682d5e8f538))
+
 ## [0.14.0](https://github.com/slurdge/goeland/compare/v0.13.0...v0.14.0) (2023-03-16)
 
 

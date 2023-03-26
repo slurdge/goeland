@@ -146,6 +146,7 @@ The available filters are as follows:
 in your config file.
 
 * includelink: Include the link of entries in the digest form
+* includesourcetitle: Include source titles of entries in the digest form
 * retrieve: Retrieves the full content from a goquery. E.g. you can use `retrieve(div.content)` to get the full excerpts of Next INpact's [LeBrief](https://www.nextinpact.com/lebrief/)
 * language: Keep only the specified languages (best effort detection), use like this: `language(en,de)`
 * untrack: Removes feedburner pixel tracking

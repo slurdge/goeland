@@ -155,13 +155,13 @@ func filterDigestGeneric(source *goeland.Source, level int, useFirstEntryTitle b
 	if useFirstEntryTitle && len(source.Entries) > 0 {
 		digest.Title = source.Entries[0].Title
 	}
-	previousSourceTitle := ""
+	var previousSource *goeland.Source
 	content := ""
 	for _, entry := range source.Entries {
-		if entry.IncludeSourceTitle && previousSourceTitle != entry.Source.Title  {
+		if entry.IncludeSourceTitle && previousSource != entry.Source  {
 			content += "<hr/>"
 			content += fmt.Sprintf(`<h%d><a href="%s">%s</a></h%d>`, level - 1, entry.Source.URL, entry.Source.Title, level - 1)
-			previousSourceTitle = entry.Source.Title
+			previousSource = entry.Source
 		}
 		if entry.IncludeLink {
 			content += fmt.Sprintf(`<h%d><a href="%s">%s</a></h%d>`, level, entry.URL, entry.Title, level)

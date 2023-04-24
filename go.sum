@@ -235,8 +235,8 @@ github.com/toorop/go-dkim v0.0.0-20201103131630-e1cd1a0a5208/go.mod h1:BzWtXXrXz
 github.com/unrolled/render v1.0.3/go.mod h1:gN9T0NhL4Bfbwu8ann7Ry/TGHYfosul+J0obPf6NBdM=
 github.com/vanng822/css v1.0.1 h1:10yiXc4e8NI8ldU6mSrWmSWMuyWgPr9DZ63RSlsgDw8=
 github.com/vanng822/css v1.0.1/go.mod h1:tcnB1voG49QhCrwq1W0w5hhGasvOg+VQp9i9H1rCM1w=
-github.com/vanng822/go-premailer v1.20.1 h1:2LTSIULXxNV5IOB5BSD3dlfOG95cq8qqExtRZMImTGA=
-github.com/vanng822/go-premailer v1.20.1/go.mod h1:RAxbRFp6M/B171gsKu8dsyq+Y5NGsUUvYfg+WQWusbE=
+github.com/vanng822/go-premailer v1.20.2 h1:vKs4VdtfXDqL7IXC2pkiBObc1bXM9bYH3Wa+wYw2DnI=
+github.com/vanng822/go-premailer v1.20.2/go.mod h1:RAxbRFp6M/B171gsKu8dsyq+Y5NGsUUvYfg+WQWusbE=
 github.com/vanng822/r2router v0.0.0-20150523112421-1023140a4f30/go.mod h1:1BVq8p2jVr55Ost2PkZWDrG86PiJ/0lxqcXoAcGxvWU=
 github.com/xhit/go-simple-mail/v2 v2.13.0 h1:OANWU9jHZrVfBkNkvLf8Ww0fexwpQVF/v/5f96fFTLI=
 github.com/xhit/go-simple-mail/v2 v2.13.0/go.mod h1:b7P5ygho6SYE+VIqpxA6QkYfv4teeyG4MKqB3utRu98=

@@ -7,7 +7,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.23
 	github.com/mmcdole/gofeed v1.2.1
 	github.com/robfig/cron/v3 v3.0.1
-	github.com/sirupsen/logrus v1.9.0
+	github.com/sirupsen/logrus v1.9.2
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.15.0

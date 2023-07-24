@@ -4,7 +4,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.1
 	github.com/abadojack/whatlanggo v1.0.1
 	github.com/buger/jsonparser v1.1.1
-	github.com/microcosm-cc/bluemonday v1.0.24
+	github.com/microcosm-cc/bluemonday v1.0.25
 	github.com/mmcdole/gofeed v1.2.1
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.9.3
@@ -15,7 +15,7 @@ require (
 	github.com/vanng822/go-premailer v1.20.2
 	github.com/xhit/go-simple-mail/v2 v2.13.0
 	go.etcd.io/bbolt v1.3.7
-	golang.org/x/text v0.10.0
+	golang.org/x/text v0.11.0
 	jaytaylor.com/html2text v0.0.0-20211013233858-90c08c5027d3
 )
 
@@ -45,8 +45,8 @@ require (
 	github.com/tdewolff/parse/v2 v2.6.6 // indirect
 	github.com/toorop/go-dkim v0.0.0-20201103131630-e1cd1a0a5208 // indirect
 	github.com/vanng822/css v1.0.1 // indirect
-	golang.org/x/net v0.10.0 // indirect
-	golang.org/x/sys v0.8.0 // indirect
+	golang.org/x/net v0.12.0 // indirect
+	golang.org/x/sys v0.10.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

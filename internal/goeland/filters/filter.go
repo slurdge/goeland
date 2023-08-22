@@ -162,12 +162,14 @@ func filterDigestGeneric(source *goeland.Source, level int, useFirstEntryTitle b
 			content += fmt.Sprintf(`<h%d><a href="%s">%s</a></h%d>`, level - 1, entry.Source.URL, entry.Source.Title, level - 1)
 			previousSource = entry.Source
 		}
+		content += `<div class="digest-entry">`
 		if entry.IncludeLink {
 			content += fmt.Sprintf(`<h%d><a href="%s">%s</a></h%d>`, level, entry.URL, entry.Title, level)
 		} else {
 			content += fmt.Sprintf("<h%d>%s</h%d>", level, entry.Title, level)
 		}
 		content += entry.Content
+		content += `</div>`
 	}
 	h := sha256.New()
 	h.Write([]byte(content))

@@ -50,13 +50,16 @@ jobs:
         -output "build/{{.Dir}}_{{.OS}}_{{.Arch}}" 
         -ldflags "-w -s -X github.com/slurdge/goeland/version.GitCommit=${{ env.GIT_COMMIT }} -X github.com/slurdge/goeland/version.BuildDate=${{ env.BUILD_DATE }} -X github.com/slurdge/goeland/internal/goeland/fetch.clientID=${IMGUR_CLIENT_ID}"
 
-    - name: Run UPX
-      uses: crazy-max/ghaction-upx@v3
-      with:
-        version: latest
-        files: |
-          ./build/*
-        args: -q --lzma --best
+# Commented out because
+# MacOS seems unsupported
+# False positive with Antivirus
+#    - name: Run UPX
+#      uses: crazy-max/ghaction-upx@v3
+#      with:
+#        version: latest
+#        files: |
+#          ./build/*
+#        args: -q --lzma --best
 
     - name: Release
       uses: softprops/action-gh-release@v1

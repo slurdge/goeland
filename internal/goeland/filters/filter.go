@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"math/rand"
+	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
@@ -195,10 +196,33 @@ func filterCombine(source *goeland.Source, params *filterParams) {
 	filterDigestGeneric(source, level, true)
 }
 
+func getBaseURL(URL string) (string, error) {
+	url, err := url.Parse(URL)
+	if err != nil {
+		return "", err
+	}
+	url.Path = ""
+	url.RawQuery = ""
+	url.Fragment = ""
+	return url.String(), nil
+}
+
 func filterRelativeLinks(source *goeland.Source, params *filterParams) {
-	re := regexp.MustCompile(`(src|href)\s*=('|")\/\/`)
+	re := regexp.MustCompile(`(src|href)\s*=\s*('|")\/\/`)
 	for i, entry := range source.Entries {
 		entry.Content = re.ReplaceAllString(entry.Content, "${1}=${2}https://")
+		source.Entries[i] = entry
+	}
+	baseURL, err := getBaseURL(source.URL)
+	if err != nil {
+		return
+	}
+	for !strings.HasSuffix(baseURL, "/") {
+		baseURL += "/"
+	}
+	re = regexp.MustCompile(`(src|href)\s*=\s*('|")\/`)
+	for i, entry := range source.Entries {
+		entry.Content = re.ReplaceAllString(entry.Content, "${1}=${2}"+baseURL)
 		source.Entries[i] = entry
 	}
 }

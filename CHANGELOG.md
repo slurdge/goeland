@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.16.0](https://github.com/slurdge/goeland/compare/v0.15.0...v0.16.0) (2023-10-27)
+
+
+### Features
+
+* better links filter for relative URLs ([8bfa732](https://github.com/slurdge/goeland/commit/8bfa7321a21e62dfaea52458a1308575fd1686e7))
+
+
+### Bug Fixes
+
+* disable UPX as it seems to produce more problems than it solves ([6ce1de4](https://github.com/slurdge/goeland/commit/6ce1de478861170f23c551e124a66d216f6366ab))
+
 ## [0.15.0](https://github.com/slurdge/goeland/compare/v0.14.0...v0.15.0) (2023-03-26)
 
 

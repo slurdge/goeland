@@ -8,7 +8,7 @@ require (
 	github.com/mmcdole/gofeed v1.2.1
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.9.3
-	github.com/spf13/cobra v1.7.0
+	github.com/spf13/cobra v1.8.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.17.0
 	github.com/tdewolff/minify/v2 v2.20.9

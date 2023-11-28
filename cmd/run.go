@@ -154,6 +154,7 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 	data := struct {
 		EntryTitle    string
 		EntryContent  string
+		EntryURL      string
 		IncludeHeader bool
 		IncludeTitle  bool
 		IncludeFooter bool
@@ -163,6 +164,7 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 	}{
 		EntryTitle:    html.EscapeString(entry.Title),
 		EntryContent:  entry.Content,
+		EntryURL:      entry.URL,
 		IncludeHeader: config.GetBool("email.include-header"),
 		IncludeTitle:  config.GetBool("email.include-title"),
 		IncludeFooter: config.GetBool("email.include-footer"),

@@ -10,6 +10,7 @@ The following variables can be used inside the template:
 |--------|-----|
 |EntryTitle| The title of the entry. If you have a digest, it will be "Digest for" |
 |EntryContent | The main body of the entry |
+|EntryURL | The URL of the entry |
 |IncludeHeader | Include the header logo |
 |IncludeTitle | Include the header title |
 |IncludeFooter| Include the footer (which can be overridden by config)|

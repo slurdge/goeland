@@ -5,6 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug run",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceRoot}/main.go",
+            "args": ["run", "--config" ,"config.yaml" ,"--loglevel", "debug"]
+        },
+        {
             "name": "Launch",
             "type": "go",
             "request": "launch",

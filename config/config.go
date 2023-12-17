@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"time"
 	"strings"
+	"time"
 
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -36,8 +36,8 @@ type Provider interface {
 // ReadDefaultConfig reads the configuration file
 func ReadDefaultConfig(appName string, configName string) {
 	viper.SetEnvPrefix(appName)
-    replacer := strings.NewReplacer(".", "_")
-    viper.SetEnvKeyReplacer(replacer)
+	replacer := strings.NewReplacer(".", "_")
+	viper.SetEnvKeyReplacer(replacer)
 	viper.AutomaticEnv()
 
 	// global defaults
@@ -65,6 +65,6 @@ func ReadDefaultConfig(appName string, configName string) {
 	}
 	err := viper.ReadInConfig()
 	if err != nil {
-		panic(fmt.Errorf("fatal error config file: %s", err))
+		panic(fmt.Errorf("fatal error in config file: %s", err))
 	}
 }

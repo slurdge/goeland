@@ -119,3 +119,5 @@ templates/
 goeland.db
 logos/*
 rss.md
+debug.json
+.vscode/launch.json

@@ -121,3 +121,4 @@ logos/*
 rss.md
 debug.json
 .vscode/launch.json
+simple_dump.py

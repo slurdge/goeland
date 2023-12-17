@@ -12,5 +12,4 @@ jobs:
     steps:
       - uses: google-github-actions/release-please-action@v4
         with:
-          package-name: release-please-action
           token: ${{ secrets.RELEASE_TOKEN }}

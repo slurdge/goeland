@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/slurdge/goeland/version"
+	"github.com/spf13/viper"
 )
 
 var userAgent string = "multiple:goeland:" + version.Version + " (commit id:" + version.GitCommit + ") (by /u/goelandrss)"
@@ -18,6 +19,10 @@ func GetHTTPRessourceGeneric(url string, client http.Client) (body []byte, err e
 	request, err = http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
+	}
+	config := viper.GetViper()
+	if config.GetString("user-agent") != "" {
+		userAgent = config.GetString("user-agent")
 	}
 	request.Header.Set("User-Agent", userAgent)
 	request.Header.Set("Accept", "*/*")

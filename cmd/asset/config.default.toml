@@ -6,6 +6,11 @@
 ## Do not output anything or send email after fecthing the sources
 #dry-run = false
 
+## User Agent
+## If you want to override the user agent, you can do it here
+## The default is "multiple:goeland" with a signature to make it compatible with reddit
+#user-agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/120.0"
+
 ## Do not sanitize input
 ## This is not sanitize (the default) any input.
 ## Use at your own risk as you will include everything from your sources, including scripts, etc.

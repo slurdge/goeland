@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.17.0](https://github.com/slurdge/goeland/compare/v0.16.0...v0.17.0) (2023-12-17)
+
+
+### Features
+
+* allow the user to set the user-agent ([1743092](https://github.com/slurdge/goeland/commit/17430921e2f632bf9dfddec07ece3a4cfd6a2b13))
+* upgrade release-please to v4 ([81ed4c8](https://github.com/slurdge/goeland/commit/81ed4c8a6def28208a6cd0b1a361132781569489))
+
 ## [0.16.0](https://github.com/slurdge/goeland/compare/v0.15.0...v0.16.0) (2023-10-27)
 
 

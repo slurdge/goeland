@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.18.0](https://github.com/slurdge/goeland/compare/v0.17.0...v0.18.0) (2023-12-18)
+
+
+### Features
+
+* add darwin/arm64 as a target ([c2ee684](https://github.com/slurdge/goeland/commit/c2ee6846125876d87f2280793416c373a35e8606))
+* make includeLink works even with single articles ([7bf3d6d](https://github.com/slurdge/goeland/commit/7bf3d6df51ede9f5d4897bf21f8bcfa158788f06))
+
 ## [0.17.0](https://github.com/slurdge/goeland/compare/v0.16.0...v0.17.0) (2023-12-17)
 
 

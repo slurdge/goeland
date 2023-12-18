@@ -58,7 +58,7 @@ jobs:
           BUILD_DATE=${{ steps.var.outputs.BUILD_DATE }}
           GIT_COMMIT=${{ steps.var.outputs.GIT_COMMIT }}
           IMGUR_CLIENT_ID=$${ secrets.IMGUR_CLIENT_ID }}
-        platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
+        platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7,darwin/amd64,darwin/arm64
         push: ${{ startsWith(github.ref, 'refs/tags/') }}
         tags: |
           ghcr.io/slurdge/goeland:latest

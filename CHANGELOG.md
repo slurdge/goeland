@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.1](https://github.com/slurdge/goeland/compare/v0.18.0...v0.18.1) (2023-12-18)
+
+
+### Bug Fixes
+
+* cannot build darwin docker images ([35c844c](https://github.com/slurdge/goeland/commit/35c844cf1444fe19ff13cf1963ac54d42e3dffe9))
+
 ## [0.18.0](https://github.com/slurdge/goeland/compare/v0.17.0...v0.18.0) (2023-12-18)
 
 

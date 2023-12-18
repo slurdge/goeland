@@ -39,8 +39,10 @@
             {{if .IncludeTitle}}
             <!-- The h1 is the main heading of the document and should come first. -->
             <!-- We can override the default styles inline. -->
-            <h1 style="font-size: 32px; font-weight: 800; line-height: 32px; margin: 48px 0; text-align: center; ">
+            <h1 style="font-size: 32px; font-weight: 800; line-height: 32px; margin: 48px 0; text-align: center;">
+                {{if .IncludeLink}}<a href="{{.EntryURL}}">{{end}}
                 {{.EntryTitle}}
+                {{if .IncludeLink}}</a>{{end}}
             </h1>
             {{end}}
         </header>

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.2](https://github.com/slurdge/goeland/compare/v0.18.1...v0.18.2) (2024-01-05)
+
+
+### Bug Fixes
+
+* imgur is not fecthing, probably missing client-id ([c7c1380](https://github.com/slurdge/goeland/commit/c7c13800b20726b343d0dcb3a19b5b79294b64b3))
+
 ## [0.18.1](https://github.com/slurdge/goeland/compare/v0.18.0...v0.18.1) (2023-12-18)
 
 

@@ -3,7 +3,7 @@ package fetch
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 
@@ -38,7 +38,7 @@ type imgurRoot struct {
 var clientID = ""
 
 func fetchImgurTag(source *goeland.Source, tag string, sort string) error {
-	url := "https://api.imgur.com/3/gallery/t/" + tag + "/" + sort + "/0/day"
+	url := "https://api.imgur.com/3/gallery/t/" + tag + "/" + sort + "/day/0"
 	client := http.Client{Timeout: time.Second * 3}
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
@@ -58,7 +58,7 @@ func fetchImgurTag(source *goeland.Source, tag string, sort string) error {
 		return err
 	}
 
-	data, err := ioutil.ReadAll(res.Body)
+	data, err := io.ReadAll(res.Body)
 	if err != nil {
 		return err
 	}

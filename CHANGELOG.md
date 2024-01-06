@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.3](https://github.com/slurdge/goeland/compare/v0.18.2...v0.18.3) (2024-01-06)
+
+
+### Bug Fixes
+
+* second try to fixup clientID missing ([5c778dc](https://github.com/slurdge/goeland/commit/5c778dc829778e9688de920ffa8c41e9339b08ed))
+
 ## [0.18.2](https://github.com/slurdge/goeland/compare/v0.18.1...v0.18.2) (2024-01-05)
 
 

@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/slurdge/goeland/internal/goeland"
+	"github.com/slurdge/goeland/log"
 	"github.com/spf13/viper"
 )
 
@@ -49,6 +50,10 @@ func fetchImgurTag(source *goeland.Source, tag string, sort string) error {
 	if clientID == "" {
 		config := viper.GetViper()
 		clientID = config.GetString("imgur-cid")
+	}
+
+	if clientID == "" {
+		log.Warnln("Imgur may fail: clientID is empty")
 	}
 
 	req.Header.Set("Authorization", "Client-ID "+clientID)

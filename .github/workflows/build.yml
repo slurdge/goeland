@@ -61,7 +61,7 @@ jobs:
 #        args: -q --lzma --best
 
     - name: Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       if: startsWith(github.ref, 'refs/tags/')
       with:
         append_body: true

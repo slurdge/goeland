@@ -61,6 +61,7 @@ var filters = map[string]filter{
 	"sanitize":    {"Sanitize the content of entries (to be used if --unsafe-no-sanitize-filter was passed)", filterSanitize},
 	"toc":         {"Create a table of content entry for all the entries (optional: title, will use the Title as a link)", filterToc},
 	"limitwords":  {"Limit the number of words in the entry. Use limitwords(number).", filterLimitWords},
+	"reskip":      {"Skip entries whose titles match a regular expression. Use reskip(regex).", filterRESkip},
 }
 
 // GetFiltersHelp returns a string that contains help for all filters
@@ -384,6 +385,30 @@ func filterLimitWords(source *goeland.Source, params *filterParams) {
 		}
 		source.Entries[i] = entry
 	}
+}
+
+func filterRESkip(source *goeland.Source, params *filterParams) {
+	args := params.args
+	if len(args) != 1 {
+		log.Errorf("reskip takes exactly one parameter; got %d", len(args))
+		return
+	}
+	re, err := regexp.Compile(args[0])
+	if err != nil {
+		log.Errorf("error compiling reskip regex: %v", err)
+		return
+	}
+
+	var current int
+	for _, entry := range source.Entries {
+		if re.Match([]byte(entry.Title)) {
+			log.Debugf("skipping entry with title '%s' due to regex match '%s'", entry.Title, args[0])
+			continue
+		}
+		source.Entries[current] = entry
+		current++
+	}
+	source.Entries = source.Entries[:current]
 }
 
 // FilterSource filters a source according to the config

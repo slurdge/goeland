@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.0](https://github.com/slurdge/goeland/compare/v0.18.3...v0.19.0) (2025-04-03)
+
+
+### Features
+
+* reskip filter ([36f0e71](https://github.com/slurdge/goeland/commit/36f0e71c45440d3560e279a503cb644804c203aa))
+
 ## [0.18.3](https://github.com/slurdge/goeland/compare/v0.18.2...v0.18.3) (2024-01-06)
 
 

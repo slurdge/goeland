@@ -1,7 +1,7 @@
 module github.com/slurdge/goeland
 
 require (
-	github.com/PuerkitoBio/goquery v1.9.1
+	github.com/PuerkitoBio/goquery v1.10.2
 	github.com/abadojack/whatlanggo v1.0.1
 	github.com/buger/jsonparser v1.1.1
 	github.com/microcosm-cc/bluemonday v1.0.27
@@ -12,7 +12,7 @@ require (
 	github.com/spf13/pflag v1.0.6
 	github.com/spf13/viper v1.20.1
 	github.com/tdewolff/minify/v2 v2.23.0
-	github.com/vanng822/go-premailer v1.20.2
+	github.com/vanng822/go-premailer v1.24.0
 	github.com/xhit/go-simple-mail/v2 v2.16.0
 	go.etcd.io/bbolt v1.3.9
 	golang.org/x/text v0.24.0
@@ -20,7 +20,7 @@ require (
 )
 
 require (
-	github.com/andybalholm/cascadia v1.3.2 // indirect
+	github.com/andybalholm/cascadia v1.3.3 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/go-test/deep v1.0.8 // indirect
@@ -46,7 +46,7 @@ require (
 	github.com/vanng822/css v1.0.1 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
-	golang.org/x/net v0.36.0 // indirect
+	golang.org/x/net v0.37.0 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

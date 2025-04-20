@@ -14,7 +14,7 @@ require (
 	github.com/tdewolff/minify/v2 v2.23.1
 	github.com/vanng822/go-premailer v1.24.0
 	github.com/xhit/go-simple-mail/v2 v2.16.0
-	go.etcd.io/bbolt v1.3.9
+	go.etcd.io/bbolt v1.4.0
 	golang.org/x/text v0.24.0
 	jaytaylor.com/html2text v0.0.0-20211013233858-90c08c5027d3
 )

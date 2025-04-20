@@ -1,7 +1,7 @@
 module github.com/slurdge/goeland
 
 require (
-	github.com/PuerkitoBio/goquery v1.10.2
+	github.com/PuerkitoBio/goquery v1.10.3
 	github.com/abadojack/whatlanggo v1.0.1
 	github.com/buger/jsonparser v1.1.1
 	github.com/microcosm-cc/bluemonday v1.0.27
@@ -46,8 +46,8 @@ require (
 	github.com/vanng822/css v1.0.1 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
-	golang.org/x/net v0.37.0 // indirect
-	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/net v0.39.0 // indirect
+	golang.org/x/sys v0.32.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 

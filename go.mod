@@ -11,7 +11,7 @@ require (
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/pflag v1.0.6
 	github.com/spf13/viper v1.20.1
-	github.com/tdewolff/minify/v2 v2.23.1
+	github.com/tdewolff/minify/v2 v2.23.3
 	github.com/vanng822/go-premailer v1.24.0
 	github.com/xhit/go-simple-mail/v2 v2.16.0
 	go.etcd.io/bbolt v1.4.0

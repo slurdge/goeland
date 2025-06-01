@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://github.com/slurdge/goeland/compare/v0.19.0...v0.20.0) (2025-06-01)
+
+
+### Features
+
+* allow to change the css (default, sakura, water) ([e5e5075](https://github.com/slurdge/goeland/commit/e5e507510e6328f03b23d59667623ee7757574c1))
+
 ## [0.19.0](https://github.com/slurdge/goeland/compare/v0.18.3...v0.19.0) (2025-04-03)
 
 

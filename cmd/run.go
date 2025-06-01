@@ -3,12 +3,11 @@ package cmd
 import (
 	"bytes"
 	"crypto/tls"
-	_ "embed" //needed for embedding files
+	"embed"
 	"encoding/base64"
 	"fmt"
 	"html"
 	"io"
-	"io/ioutil"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -38,6 +37,9 @@ var defaultEmailBytes []byte
 //go:embed asset/default.css
 var defaultCSS string
 
+//go:embed asset/*
+var asset embed.FS
+
 //go:embed asset/goeland@250w.png
 var logoBytes []byte
 
@@ -58,7 +60,7 @@ func createEmailTemplate(config config.Provider, pipe string) (*template.Templat
 	}
 	if len(templateFilename) > 0 {
 		var err error
-		emailBytes, err = ioutil.ReadFile(templateFilename)
+		emailBytes, err = os.ReadFile(templateFilename)
 		if err != nil {
 			return nil, err
 		}
@@ -86,13 +88,12 @@ func createEmailPool(config config.Provider) (*email.SMTPClient, error) {
 		if len(pass) > 0 {
 			log.Warn("Both password and password_file are set. Using password_file.")
 		}
-		passFileContent, err := ioutil.ReadFile(passFile)
+		passFileContent, err := os.ReadFile(passFile)
 		if err != nil {
 			return nil, fmt.Errorf("error while reading password file: %v", err)
 		}
 		pass = string(passFileContent)
 	}
-	//auth := smtp.PlainAuth("", user, pass, host)
 	server := email.NewSMTPClient()
 	authentications := map[string]email.AuthType{"none": email.AuthNone, "plain": email.AuthPlain, "login": email.AuthLogin, "crammd5": email.AuthCRAMMD5}
 	authentication, found := authentications[config.GetString("email.authentication")]
@@ -151,6 +152,21 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 	if footer == "" {
 		footer = footers[rand.Intn(len(footers))]
 	}
+	cssContent := defaultCSS
+	css := config.GetString("email.css")
+	var cssMapping = map[string]string{
+		"simple":      "simple.min.css",
+		"sakura":      "sakura.css",
+		"sakura-dark": "sakura-dark.css",
+		"water":       "water.min.css",
+	}
+	filename, ok := cssMapping[strings.ToLower(css)]
+	if ok {
+		data, _ := asset.ReadFile(fmt.Sprintf("asset/%s", filename))
+		cssContent = string(data)
+	} else {
+		log.Warnf("Unknown css : %s, using default...", css)
+	}
 	data := struct {
 		EntryTitle    string
 		EntryContent  string
@@ -172,7 +188,7 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 		IncludeLink:   entry.IncludeLink,
 		EntryFooter:   footer,
 		ContentID:     "cid:" + logoAttachmentName,
-		CSS:           defaultCSS,
+		CSS:           cssContent,
 	}
 	if destination == "htmlfile" {
 		data.ContentID = "data:image/png;base64," + base64.StdEncoding.EncodeToString(logoBytes)
@@ -240,7 +256,7 @@ func run(cmd *cobra.Command, args []string) {
 
 	logoFilename := config.GetString("email.logo")
 	if logoFilename != "internal:goeland.png" {
-		logoBytes, err = ioutil.ReadFile(logoFilename)
+		logoBytes, err = os.ReadFile(logoFilename)
 		if err != nil {
 			log.Fatalf("cannot read email logo file: %v", err)
 		}
@@ -362,6 +378,8 @@ func init() {
 	viper.BindPFlag("email.logo", runCmd.Flags().Lookup("logo"))
 	runCmd.Flags().String("footer", "", "Override the default footer")
 	viper.BindPFlag("email.footer", runCmd.Flags().Lookup("footer"))
+	runCmd.Flags().String("css", "default", "Override the embedded CSS (default, pico, sakura, sakura-dark)")
+	viper.BindPFlag("email.css", runCmd.Flags().Lookup("css"))
 	runCmd.Flags().Bool("unsafe-no-sanitize-filter", false, "Do not sanitize inputs. ⚠ Use at your own risk!")
 	viper.BindPFlag("unsafe-no-sanitize-filter", runCmd.Flags().Lookup("unsafe-no-sanitize-filter"))
 	bindFlags(runCmd, viper.GetViper())

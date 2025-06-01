@@ -7,6 +7,14 @@
             -webkit-text-size-adjust: 100%;
             -ms-text-size-adjust: 100%;
         }
+
+        h1 {
+            font-size: 32px; 
+            font-weight: 800; 
+            line-height: 32px; 
+            margin: 48px 0; 
+            text-align: center;
+        }
         
         table,
         td {
@@ -59,6 +67,18 @@
             width: 100% !important;
             overflow-wrap: break-word;
         }
+
+        footer {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 16px; 
+        }
+
+        footer p {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 16px;
+        }
         /* iOS BLUE LINKS */
         
         a[x-apple-data-detectors] {
@@ -101,6 +121,17 @@
         a:hover {
             text-decoration: none !important;
         }
+
+        div[role=article] {
+            font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; 
+            font-size: 18px; 
+            font-weight: 400; 
+            line-height: 28px; 
+            margin: 0 auto; 
+            max-width: 720px; 
+            padding: 40px 20px 40px 20px;
+        }
+
         /* These rules adjust styles for desktop devices, keeping the email responsive for users. */
         /* Some email clients don't properly apply media query-based styles, which is why we go mobile-first. */
         

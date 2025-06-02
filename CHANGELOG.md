@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.1](https://github.com/slurdge/goeland/compare/v0.20.0...v0.20.1) (2025-06-02)
+
+
+### Bug Fixes
+
+* [#237](https://github.com/slurdge/goeland/issues/237) deprecated option in minifier ([996552d](https://github.com/slurdge/goeland/commit/996552d8eece0410686b9a633bddd01de8efe246))
+
 ## [0.20.0](https://github.com/slurdge/goeland/compare/v0.19.0...v0.20.0) (2025-06-01)
 
 

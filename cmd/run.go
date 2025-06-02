@@ -46,7 +46,7 @@ var logoBytes []byte
 func createEmailTemplate(config config.Provider, pipe string) (*template.Template, error) {
 	minifier := minify.New()
 	minifier.Add("text/html", &mhtml.Minifier{
-		KeepConditionalComments: true,
+		KeepSpecialComments: true,
 	})
 
 	emailBytes := defaultEmailBytes
@@ -164,7 +164,7 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 	if ok {
 		data, _ := asset.ReadFile(fmt.Sprintf("asset/%s", filename))
 		cssContent = string(data)
-	} else {
+	} else if css != "" && css != "default" {
 		log.Warnf("Unknown css : %s, using default...", css)
 	}
 	data := struct {

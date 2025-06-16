@@ -12,10 +12,10 @@ require (
 	github.com/spf13/pflag v1.0.6
 	github.com/spf13/viper v1.20.1
 	github.com/tdewolff/minify/v2 v2.23.8
-	github.com/vanng822/go-premailer v1.24.0
+	github.com/vanng822/go-premailer v1.25.0
 	github.com/xhit/go-simple-mail/v2 v2.16.0
 	go.etcd.io/bbolt v1.4.0
-	golang.org/x/text v0.25.0
+	golang.org/x/text v0.26.0
 	jaytaylor.com/html2text v0.0.0-20211013233858-90c08c5027d3
 )
 
@@ -46,8 +46,8 @@ require (
 	github.com/vanng822/css v1.0.1 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
-	golang.org/x/net v0.39.0 // indirect
-	golang.org/x/sys v0.32.0 // indirect
+	golang.org/x/net v0.41.0 // indirect
+	golang.org/x/sys v0.33.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 

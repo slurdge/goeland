@@ -5,7 +5,7 @@
 
 ### Features
 
-* setup go 1.25 ([ffbd81b](https://github.com/slurdge/goeland/commit/ffbd81b6ba7d07dfcdb197515070d3cb47970b68))
+* update all dependencies
 * update go to 1.25 ([7915b24](https://github.com/slurdge/goeland/commit/7915b248ed61a45a68ab1c727f8c3495922059a5))
 
 ## [0.20.1](https://github.com/slurdge/goeland/compare/v0.20.0...v0.20.1) (2025-06-02)
@@ -319,5 +319,6 @@ v0.2.0
 
 v0.1.4
 ------
+
 
 First public version, with basic functionality and filters

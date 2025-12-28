@@ -43,6 +43,8 @@ var asset embed.FS
 //go:embed asset/goeland@250w.png
 var logoBytes []byte
 
+var overrideDestination string
+
 func createEmailTemplate(config config.Provider, pipe string) (*template.Template, error) {
 	minifier := minify.New()
 	minifier.Add("text/html", &mhtml.Minifier{
@@ -290,6 +292,10 @@ func run(cmd *cobra.Command, args []string) {
 			continue
 		}
 		destination := getSubString("pipes", pipe, "destination")
+		if overrideDestination != "" {
+			log.Infof("Overriding destination for pipe %s: %s -> %s", pipe, destination, overrideDestination)
+			destination = overrideDestination
+		}
 		switch destination {
 		case "email":
 			if pool == nil {
@@ -342,8 +348,7 @@ func run(cmd *cobra.Command, args []string) {
 				}
 				HTMLFile.Write([]byte(html))
 			}
-		case "console":
-		case "terminal":
+		case "console", "terminal":
 			fmt.Printf("**%s**\n", source.Title)
 			for _, entry := range source.Entries {
 				text, _ := html2text.FromString(entry.Content, html2text.Options{})
@@ -382,6 +387,7 @@ func init() {
 	viper.BindPFlag("email.css", runCmd.Flags().Lookup("css"))
 	runCmd.Flags().Bool("unsafe-no-sanitize-filter", false, "Do not sanitize inputs. ⚠ Use at your own risk!")
 	viper.BindPFlag("unsafe-no-sanitize-filter", runCmd.Flags().Lookup("unsafe-no-sanitize-filter"))
+	runCmd.Flags().StringVar(&overrideDestination, "destination", "", "Override the email destination for all pipes (email, htmlfile, terminal, null)")
 	bindFlags(runCmd, viper.GetViper())
 	rootCmd.AddCommand(runCmd)
 }

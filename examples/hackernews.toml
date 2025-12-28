@@ -1,0 +1,26 @@
+# Hacker News RSS feed example
+# Get top stories from Hacker News RSS feed
+
+loglevel = "info"
+dry-run = false
+database = "hackernews.db"
+
+[email]
+host = "smtp.example.com"
+port = 587
+username = "user@example.com"
+password = "password"
+
+[sources]
+
+[sources.hackernews]
+url = "https://news.ycombinator.com/rss"
+type = "feed"
+filters = ["first(10)", "links", "unseen", "digest(2)", "includelink"]
+
+[pipes.hackernews]
+source = "hackernews"
+destination = "email"
+email_to = ["tech-news@example.com"]
+email_from = "Hacker News Digest <hn@example.com>"
+email_title = "[Hacker News] Daily Top Stories Digest"

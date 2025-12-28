@@ -1,0 +1,39 @@
+# News Aggregator with Advanced Filtering
+# Comprehensive news digest with time-based and language filtering
+
+loglevel = "info"
+dry-run = false
+database = "news_aggregator.db"
+
+[email]
+host = "smtp.example.com"
+port = 587
+username = "user@example.com"
+password = "password"
+
+[sources]
+
+# BBC News - World
+[sources.bbc_world]
+url = "https://feeds.bbci.co.uk/news/world/rss.xml"
+type = "feed"
+filters = ["lasthours(12)", "language(en)", "unseen"]
+
+# Reuters - Technology
+[sources.reuters_tech]
+url = "https://www.reuters.com/news/technology/rss"
+type = "feed"
+filters = ["lasthours(12)", "language(en)", "unseen"]
+
+# Merge and process all news sources
+[sources.all_news]
+sources = ["bbc_world", "reuters_tech"]
+type = "merge"
+filters = ["combine(3)", "today", "includesourcetitle", "toc", "includelink"]
+
+[pipes.news_digest]
+source = "all_news"
+destination = "email"
+email_to = ["news-digest@example.com"]
+email_from = "Daily News Digest <news@example.com>"
+email_title = "[News Digest] {{.Date}} - {{.EntryCount}} Articles"

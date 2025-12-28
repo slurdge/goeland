@@ -1,0 +1,46 @@
+# Programming Blogs Digest
+# Curated programming content with content processing
+
+loglevel = "info"
+dry-run = false
+database = "programming.db"
+
+[email]
+host = "smtp.example.com"
+port = 587
+username = "user@example.com"
+password = "password"
+
+[replace.shorten]
+from = "Read more"
+to = "Continue reading"
+
+[sources]
+
+[sources.devto]
+url = "https://dev.to/feed"
+type = "feed"
+filters = ["first(3)", "language(en)", "limitwords(30)", "replace(shorten)", "unseen"]
+
+[sources.css_tricks]
+url = "https://css-tricks.com/feed/"
+type = "feed"
+filters = ["first(3)", "language(en)", "limitwords(30)", "unseen"]
+
+[sources.smashing_magazine]
+url = "https://www.smashingmagazine.com/feed/"
+type = "feed"
+filters = ["first(3)", "language(en)", "limitwords(30)", "unseen"]
+
+# Merge programming sources
+[sources.all_programming]
+sources = ["devto", "css_tricks", "smashing_magazine"]
+type = "merge"
+filters = ["combine(2)", "includesourcetitle", "embedimage(top)", "includelink"]
+
+[pipes.programming_digest]
+source = "all_programming"
+destination = "htmlfile"
+email_to = ["dev-team@example.com"]
+email_from = "Programming Digest <dev@example.com>"
+email_title = "[Programming] Weekly Digest - {{.EntryCount}} Articles"

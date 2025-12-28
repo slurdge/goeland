@@ -1,0 +1,45 @@
+# GitHub Releases Tracker
+# Track new releases from popular open source projects
+
+loglevel = "info"
+dry-run = false
+database = "github_releases.db"
+
+[email]
+host = "smtp.example.com"
+port = 587
+username = "user@example.com"
+password = "password"
+
+[sources]
+
+# Go programming language releases
+[sources.go_releases]
+url = "https://github.com/golang/go/releases.atom"
+type = "feed"
+filters = ["first(5)", "unseen", "links"]
+
+# Docker releases
+[sources.docker_releases]
+url = "https://github.com/moby/moby/releases.atom"
+type = "feed"
+filters = ["first(5)", "unseen", "links"]
+
+# Kubernetes releases
+[sources.kubernetes_releases]
+url = "https://github.com/kubernetes/kubernetes/releases.atom"
+type = "feed"
+filters = ["first(5)", "unseen", "links"]
+
+# Merge all GitHub release feeds
+[sources.all_releases]
+sources = ["go_releases", "docker_releases", "kubernetes_releases"]
+type = "merge"
+filters = ["combine(2)", "includesourcetitle", "includelink"]
+
+[pipes.releases_digest]
+source = "all_releases"
+destination = "htmlfile"
+email_to = ["devops-team@example.com"]
+email_from = "GitHub Releases <github@example.com>"
+email_title = "[GitHub] New Releases - {{.EntryCount}} Updates"

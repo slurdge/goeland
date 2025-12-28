@@ -120,7 +120,7 @@ Filters can have options. For example, to get the 3 newest post, you would do:
 filters = ["first(3)"]
 ```
 
-The available filters are as follows:
+The available filters are as follows, full documentation is in [filters.md](documentation/filters.md)
 
 * none: Removes all entries
 * all: Default, include all entries

@@ -1,0 +1,42 @@
+# Tech News Aggregator
+# Combines multiple tech news sources into a daily digest
+
+loglevel = "info"
+dry-run = false
+database = "tech_news.db"
+
+[email]
+host = "smtp.example.com"
+port = 587
+username = "user@example.com"
+password = "password"
+
+[sources]
+
+[sources.techcrunch]
+url = "https://techcrunch.com/feed/"
+type = "feed"
+filters = ["today", "links", "unseen"]
+
+[sources.verge]
+url = "https://www.theverge.com/rss/index.xml"
+type = "feed"
+filters = ["today", "links", "unseen"]
+
+[sources.ars_technica]
+url = "https://arstechnica.com/feed/"
+type = "feed"
+filters = ["today", "links", "unseen"]
+
+# Merge all tech sources
+[sources.all_tech]
+sources = ["techcrunch", "verge", "ars_technica"]
+type = "merge"
+filters = ["combine(3)", "includesourcetitle", "toc(title)", "includelink"]
+
+[pipes.tech_digest]
+source = "all_tech"
+destination = "email"
+email_to = ["tech-digest@example.com"]
+email_from = "Tech News Digest <tech@example.com>"
+email_title = "[Tech News] Daily Digest - {{.EntryCount}} Articles"

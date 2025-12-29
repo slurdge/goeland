@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.22.0](https://github.com/slurdge/goeland/compare/v0.21.0...v0.22.0) (2025-12-29)
+
+
+### Features
+
+* add override destination flag to run command line ([34870a0](https://github.com/slurdge/goeland/commit/34870a07a5b97aa540a6f1aebbdc78ea3a4837df))
+
+
+### Bug Fixes
+
+* Have a way to get the default email template. [#189](https://github.com/slurdge/goeland/issues/189) ([ed97a6f](https://github.com/slurdge/goeland/commit/ed97a6fb026cfb03b0cca18dc01e6438bd949380))
+
 ## [0.21.0](https://github.com/slurdge/goeland/compare/v0.20.1...v0.21.0) (2025-12-18)
 
 

@@ -11,7 +11,7 @@ require (
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/pflag v1.0.10
 	github.com/spf13/viper v1.21.0
-	github.com/tdewolff/minify/v2 v2.24.8
+	github.com/tdewolff/minify/v2 v2.24.9
 	github.com/vanng822/go-premailer v1.25.0
 	github.com/xhit/go-simple-mail/v2 v2.16.0
 	go.etcd.io/bbolt v1.4.3
@@ -41,7 +41,7 @@ require (
 	github.com/spf13/cast v1.10.0 // indirect
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
-	github.com/tdewolff/parse/v2 v2.8.5 // indirect
+	github.com/tdewolff/parse/v2 v2.8.8 // indirect
 	github.com/toorop/go-dkim v0.0.0-20201103131630-e1cd1a0a5208 // indirect
 	github.com/vanng822/css v1.0.1 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect

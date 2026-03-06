@@ -6,6 +6,7 @@
 ### Features
 
 * add override destination flag to run command line ([34870a0](https://github.com/slurdge/goeland/commit/34870a07a5b97aa540a6f1aebbdc78ea3a4837df))
+* Set base URL to support relative links from @Cyberbeni
 
 
 ### Bug Fixes
@@ -331,6 +332,7 @@ v0.2.0
 
 v0.1.4
 ------
+
 
 
 First public version, with basic functionality and filters

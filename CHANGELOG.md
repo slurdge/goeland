@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.1](https://github.com/slurdge/goeland/compare/v0.22.0...v0.22.1) (2026-03-07)
+
+
+### Bug Fixes
+
+* move to inbucket/html2text ([63530cb](https://github.com/slurdge/goeland/commit/63530cb23b2f34958aa2f0427fe54eb998e0f87b))
+
 ## [0.22.0](https://github.com/slurdge/goeland/compare/v0.21.0...v0.22.0) (2026-03-06)
 
 

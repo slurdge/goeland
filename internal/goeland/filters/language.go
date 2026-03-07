@@ -4,8 +4,8 @@ import (
 	"strings"
 
 	"github.com/abadojack/whatlanggo"
+	"github.com/inbucket/html2text"
 	"github.com/slurdge/goeland/internal/goeland"
-	"jaytaylor.com/html2text"
 )
 
 // StringInSlice tells if a string is in a slice of strings

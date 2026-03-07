@@ -15,6 +15,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/inbucket/html2text"
 	"github.com/slurdge/goeland/config"
 	"github.com/slurdge/goeland/internal/goeland"
 	"github.com/slurdge/goeland/internal/goeland/fetch"
@@ -26,7 +27,6 @@ import (
 	mhtml "github.com/tdewolff/minify/v2/html"
 	"github.com/vanng822/go-premailer/premailer"
 	email "github.com/xhit/go-simple-mail/v2"
-	"jaytaylor.com/html2text"
 )
 
 const logoAttachmentName = "logo.png"

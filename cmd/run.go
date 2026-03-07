@@ -72,8 +72,10 @@ func createEmailTemplate(config config.Provider, pipe string) (*template.Templat
 	if err != nil {
 		return nil, err
 	}
-
-	tpl := template.Must(template.New("email").Parse(string(minified)))
+	tpl, err := template.New("email").Parse(string(minified))
+	if err != nil {
+		return nil, fmt.Errorf("cannot parse email template: %v", err)
+	}
 	return tpl, nil
 }
 
@@ -94,7 +96,7 @@ func createEmailPool(config config.Provider) (*email.SMTPClient, error) {
 		if err != nil {
 			return nil, fmt.Errorf("error while reading password file: %v", err)
 		}
-		pass = string(passFileContent)
+		pass = strings.TrimSpace(string(passFileContent))
 	}
 	server := email.NewSMTPClient()
 	authentications := map[string]email.AuthType{"none": email.AuthNone, "plain": email.AuthPlain, "login": email.AuthLogin, "crammd5": email.AuthCRAMMD5}
@@ -145,8 +147,13 @@ func formatEmailSubject(source *goeland.Source, entry *goeland.Entry, templateSt
 	if strings.TrimSpace(templateString) == "" {
 		templateString = `{{.EntryTitle}}`
 	}
-	tpl := template.Must(template.New("email_title").Parse(templateString))
-	tpl.Execute(&output, data)
+	tpl, err := template.New("email_title").Parse(templateString)
+	if err != nil {
+		output.WriteString(entry.Title)
+	} else if err = tpl.Execute(&output, data); err != nil {
+		log.Errorf("cannot execute email title template: %v", err)
+		output.WriteString(entry.Title)
+	}
 	return output.String()
 }
 func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template.Template, destination string) string {
@@ -164,8 +171,12 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 	}
 	filename, ok := cssMapping[strings.ToLower(css)]
 	if ok {
-		data, _ := asset.ReadFile(fmt.Sprintf("asset/%s", filename))
-		cssContent = string(data)
+		data, err := asset.ReadFile(fmt.Sprintf("asset/%s", filename))
+		if err != nil {
+			log.Warnf("Error while loading css '%s': %v", css, err)
+		} else {
+			cssContent = string(data)
+		}
 	} else if css != "" && css != "default" {
 		log.Warnf("Unknown css : %s, using default...", css)
 	}
@@ -196,7 +207,9 @@ func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template
 		data.ContentID = "data:image/png;base64," + base64.StdEncoding.EncodeToString(logoBytes)
 	}
 	var output bytes.Buffer
-	tpl.Execute(&output, data)
+	if err := tpl.Execute(&output, data); err != nil {
+		log.Errorf("cannot execute email template: %v", err)
+	}
 
 	prem, err := premailer.NewPremailerFromString(output.String(), premailer.NewOptions())
 	if err != nil {
@@ -338,15 +351,21 @@ func run(cmd *cobra.Command, args []string) {
 		case "htmlfile":
 			for i, entry := range source.Entries {
 				html := formatHTMLEmail(&entry, config, tpl, destination)
-				var HTMLFile *os.File
 				err := os.MkdirAll("data", os.ModePerm)
 				if err != nil {
 					fatalErr(fmt.Errorf("error while creating the data directory to put the html file in: %v", err))
 				}
-				if HTMLFile, err = os.Create(fmt.Sprintf(filepath.Join("data", "%s - %d.html"), pipe, i)); err != nil {
+				filePath := filepath.Join("data", fmt.Sprintf("%s - %d.html", pipe, i))
+				htmlFile, err := os.Create(filePath)
+				if err != nil {
 					fatalErr(fmt.Errorf("error while writing html file: %v", err))
 				}
-				HTMLFile.Write([]byte(html))
+				if _, err := htmlFile.WriteString(html); err != nil {
+					fatalErr(fmt.Errorf("error while writing html file '%s': %v", filePath, err))
+				}
+				if err := htmlFile.Close(); err != nil {
+					fatalErr(fmt.Errorf("error while closing html file '%s': %v", filePath, err))
+				}
 			}
 		case "console", "terminal":
 			fmt.Printf("**%s**\n", source.Title)

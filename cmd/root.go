@@ -2,6 +2,7 @@ package cmd
 
 import (
 	_ "embed" //needed for embedding files
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -48,12 +49,20 @@ func Execute() {
 var defaultConfig []byte
 
 func createDefaultConfig(cfgFile string) {
-	if _, err := os.Stat(cfgFile); os.IsNotExist(err) {
-		var configFile *os.File
-		if configFile, err = os.Create(cfgFile); err != nil {
-			fatalErr(fmt.Errorf("cannot open config.toml for writing"))
-		}
-		configFile.Write(defaultConfig)
+	_, err := os.Stat(cfgFile)
+	if err == nil {
+		return
+	}
+	if !errors.Is(err, os.ErrNotExist) {
+		fatalErr(fmt.Errorf("cannot stat config file %s: %v", cfgFile, err))
+	}
+	configFile, err := os.Create(cfgFile)
+	if err != nil {
+		fatalErr(fmt.Errorf("cannot open config.toml for writing: %v", err))
+	}
+	defer configFile.Close()
+	if _, err = configFile.Write(defaultConfig); err != nil {
+		fatalErr(fmt.Errorf("cannot write config.toml: %v", err))
 	}
 }
 

@@ -47,7 +47,9 @@ func PurgeUnseen(config config.Provider, sourceName string, numOfDays int) error
 		numPurged := 0
 		for k, v := cursor.Seek(prefix); k != nil && bytes.HasPrefix(k, prefix); k, v = cursor.Next() {
 			date := new(time.Time)
-			date.UnmarshalText(v)
+			if err := date.UnmarshalText(v); err != nil {
+				continue
+			}
 			if date.Before(time.Now().AddDate(0, 0, -numOfDays)) {
 				numPurged++
 				cursor.Delete()
@@ -75,13 +77,16 @@ func filterUnSeen(source *goeland.Source, params *filterParams) {
 			return fmt.Errorf("create bucket: %v", err)
 		}
 		var current int
+		now, err := time.Now().MarshalText()
+		if err != nil {
+			log.Warnf("cannot marshal now timestamp: %v", err)
+			return err
+		}
 		for _, entry := range source.Entries {
 			key := []byte(source.Name + "/" + entry.UID)
 			value := bucket.Get(key)
-			if now, err := time.Now().MarshalText(); err == nil {
-				if err := bucket.Put(key, now); err != nil {
-					log.Debugf("error recording seen status for key: %s", string(key))
-				}
+			if err := bucket.Put(key, now); err != nil {
+				log.Debugf("error recording seen status for key: %s: %v", string(key), err)
 			}
 			if value != nil {
 				log.Debugf("already seen entry with key: %s", string(key))

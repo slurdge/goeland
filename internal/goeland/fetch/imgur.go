@@ -62,6 +62,10 @@ func fetchImgurTag(source *goeland.Source, tag string, sort string) error {
 	if err != nil {
 		return err
 	}
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusOK {
+		return fmt.Errorf("received error code %d", res.StatusCode)
+	}
 
 	data, err := io.ReadAll(res.Body)
 	if err != nil {

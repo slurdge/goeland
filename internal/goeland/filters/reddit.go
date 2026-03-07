@@ -22,7 +22,12 @@ func filterReddit(source *goeland.Source, params *filterParams) {
 
 	re := regexp.MustCompile(`\/comments\/([a-z0-9]+)\/`)
 	for i, entry := range source.Entries {
-		postID := re.FindStringSubmatch(entry.URL)[1]
+		matches := re.FindStringSubmatch(entry.URL)
+		if len(matches) < 2 {
+			log.Warningf("cannot parse reddit post ID from URL: %s", entry.URL)
+			continue
+		}
+		postID := matches[1]
 		if !viper.GetBool("unsafe-no-sanitize-filter") {
 			entry.Content = policy.Sanitize(entry.Content)
 		}

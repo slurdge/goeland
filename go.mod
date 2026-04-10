@@ -16,7 +16,7 @@ require (
 	github.com/vanng822/go-premailer v1.33.0
 	github.com/xhit/go-simple-mail/v2 v2.16.0
 	go.etcd.io/bbolt v1.4.3
-	golang.org/x/text v0.35.0
+	golang.org/x/text v0.36.0
 )
 
 require (

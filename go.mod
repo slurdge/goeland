@@ -3,7 +3,7 @@ module github.com/slurdge/goeland
 require (
 	github.com/PuerkitoBio/goquery v1.12.0
 	github.com/abadojack/whatlanggo v1.0.1
-	github.com/buger/jsonparser v1.1.1
+	github.com/buger/jsonparser v1.1.2
 	github.com/inbucket/html2text v1.0.0
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/mmcdole/gofeed v1.3.0

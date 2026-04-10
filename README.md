@@ -163,12 +163,18 @@ A pipe has the following structure:
 
 ```toml
 [pipes.hackernews]
+#Either put disabled = true or prefix pipes with disabled like this: disabled.pipes.hackernews
+disabled = false
 source = "hackernews"
 destination = "email"
-email_to = "example@example.com"
-email_from = "HackerNews <goeland@example.com>"
-email_title = "{{.EntryTitle}}"
-template = "/path/to/template.html" # optional
+email_from = "HackerNews <goeland@olympus.com>"
+email_replyto = "hera@olympus.com"
+email_to = ["zeus@olympus.com", "athena@olympus.com"]
+email_cc = ["apollo@olympus.com"]
+email_bcc = ["hades@olympus.com"]
+#Default: you can use EntryTitle, SourceTitle and SourceName in the template
+#email_title = "{{.EntryTitle}}"  # optional
+#template = "/path/to/template.html" # optional
 ```
 
 You can use EntryTitle, SourceTitle and SourceName in the email template. SourceTitle is the title of the RSS feed.

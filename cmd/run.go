@@ -323,6 +323,7 @@ func run(cmd *cobra.Command, args []string) {
 			for _, entry := range source.Entries {
 				message := email.NewMSG()
 				message.SetFrom(getSubString("pipes", pipe, "email_from"))
+				message.SetReplyTo(getSubString("pipes", pipe, "email_replyto"))
 				message.AddTo(config.GetStringSlice(fmt.Sprintf("pipes.%s.email_to", pipe))...)
 				message.AddCc(config.GetStringSlice(fmt.Sprintf("pipes.%s.email_cc", pipe))...)
 				message.AddBcc(config.GetStringSlice(fmt.Sprintf("pipes.%s.email_bcc", pipe))...)

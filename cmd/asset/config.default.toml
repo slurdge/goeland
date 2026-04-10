@@ -17,6 +17,10 @@
 ## You can always sanitize afterwards with the 'sanitize' filter.
 #unsafe-no-sanitize-filter = false
 
+## Locale
+## Use "en" or "fr"
+#locale = "en"
+
 ## Run all the pipes once at startup in daemon mode
 #run-at-startup = false
 
@@ -68,12 +72,14 @@ allow-insecure = false
 
 [pipes.hackernews]
 #Either put disabled = true or prefix pipes with disalbed like this: disabled.pipes.hackernews
-disabled = true
+disabled = false
 source = "hackernews"
 destination = "email"
+email_from = "HackerNews <goeland@olympus.com>"
+email_replyto = "hera@olympus.com"
 email_to = ["zeus@olympus.com", "athena@olympus.com"]
-email_cc = ["apollo@example.com"]
-email_bcc = ["hades@example.com"]
-email_from = "HackerNews <goeland@example.com>"
+email_cc = ["apollo@olympus.com"]
+email_bcc = ["hades@olympus.com"]
 #Default: you can use EntryTitle, SourceTitle and SourceName in the template
-#email_title = "{{.EntryTitle}}"
+#email_title = "{{.EntryTitle}}"  # optional
+#template = "/path/to/template.html" # optional

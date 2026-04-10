@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.0](https://github.com/slurdge/goeland/compare/v0.22.1...v0.23.0) (2026-04-10)
+
+
+### Features
+
+* add email_replyto  and clarify doc ([3cf3547](https://github.com/slurdge/goeland/commit/3cf354746616f03d31727808e4d4843b37e5b82c))
+
 ## [0.22.1](https://github.com/slurdge/goeland/compare/v0.22.0...v0.22.1) (2026-03-07)
 
 

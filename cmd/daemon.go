@@ -8,6 +8,7 @@ import (
 
 	"github.com/robfig/cron/v3"
 	"github.com/slurdge/goeland/log"
+	"github.com/slurdge/goeland/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -20,6 +21,7 @@ func runPipe(pipe string) {
 func daemon(cmd *cobra.Command, args []string) {
 	config := viper.GetViper()
 	pipes := config.GetStringMapString("pipes")
+	log.Infof("Starting %s %s", version.ProductName, version.Version)
 	runAtStartup := config.GetBool("run-at-startup")
 	if runAtStartup {
 		log.Infof("Running all the pipes once as requested")

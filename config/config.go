@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/slurdge/goeland/version"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
@@ -57,9 +58,9 @@ func ReadDefaultConfig(appName string, configName string) {
 	viper.SetDefault("locale", "en-US")
 
 	viper.SetConfigFile(configName)
-	viper.AddConfigPath("/etc/goeland")
-	viper.AddConfigPath("$HOME/.goeland")
-	viper.AddConfigPath("$XDG_CONFIG_HOME/goeland")
+	viper.AddConfigPath("/etc/" + version.ProductName)
+	viper.AddConfigPath("$HOME/." + version.ProductName)
+	viper.AddConfigPath("$XDG_CONFIG_HOME/" + version.ProductName)
 	viper.AddConfigPath(".")
 	if ex, err := os.Executable(); err == nil {
 		exPath := filepath.Dir(ex)

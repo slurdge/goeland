@@ -52,6 +52,7 @@ func ReadDefaultConfig(appName string, configName string) {
 	viper.SetDefault("email.include-footer", true)
 	viper.SetDefault("email.allow-insecure", false)
 	viper.SetDefault("email.authentication", "plain")
+	viper.SetDefault("email.plaintext-only", false)
 	viper.SetDefault("run-at-startup", false)
 	viper.SetDefault("locale", "en-US")
 

@@ -34,10 +34,12 @@
 #auto-purge = false
 
 [email]
+## Authentication
 host = "smtp.example.com"
 port = 587
 username = "user"
 password = "pass"
+
 ## Include header in email
 ## Put a nice goeland logo in emails
 #include-header = true
@@ -48,6 +50,9 @@ password = "pass"
 
 ## Include title in header
 #include-title = false
+
+## Exclude the HMTL version of the email
+#plaintext-only = false
 
 ## Email timeout in milliseconds
 #timeout-ms = 5000

@@ -343,7 +343,9 @@ func run(cmd *cobra.Command, args []string) {
 					text = "There was an error converting HTML content to text"
 				}
 				message.SetBody(email.TextPlain, text)
-				message.AddAlternative(email.TextHTML, html)
+				if !config.GetBool("email.plaintext-only") {
+					message.AddAlternative(email.TextHTML, html)
+				}
 				err = message.Send(pool)
 				if err != nil {
 					log.Errorf("error sending email: %v", err)

@@ -1,7 +1,8 @@
-package cmd
+package i18n
 
 import (
 	"fmt"
+	"math/rand"
 
 	"golang.org/x/text/language"
 )
@@ -9,7 +10,7 @@ import (
 const goelandURL = `<a href="https://www.github.com/slurdge/goeland">goeland</a>`
 
 var footersI8n = map[language.Tag][]string{
-	language.BritishEnglish: {
+	language.English: {
 		`Sent with ❤️ by %s`,
 		`Sent with 💖 by %s`,
 		`Sent with 💙 by %s`,
@@ -43,9 +44,9 @@ var footersI8n = map[language.Tag][]string{
 		`Envoyé avec 🥰 par %s`,
 		`Amené tot 🐣 par %s`,
 		`Envoyé rapidemment ⚡ par %s`,
-		`Envoyé avec a touch of 💐 par %s`,
-		`Envoyé avec a touch of 🌸 par %s`,
-		`Envoyé avec a touch of 🌼 par %s`,
+		`Envoyé avec une touche de 💐 par %s`,
+		`Envoyé avec une touche de 🌸 par %s`,
+		`Envoyé avec une touche de 🌼 par %s`,
 		`Dans votre 📧 depuis %s`,
 		`Vos 📰 de la part de %s`,
 		`Envoyé bravement ⚔️ par %s`,
@@ -64,10 +65,14 @@ var footersI8n = map[language.Tag][]string{
 	},
 }
 
-var footers []string
-
-func init() {
-	for _, footer := range footersI8n[language.BritishEnglish] {
-		footers = append(footers, fmt.Sprintf(footer, goelandURL))
+func LocalizedFooter() string {
+	locale := Language()
+	if locale == language.AmericanEnglish || locale == language.BritishEnglish {
+		locale = language.English
 	}
+	if _, ok := footersI8n[locale]; !ok {
+		locale = language.English
+	}
+	choices := footersI8n[locale]
+	return fmt.Sprintf(choices[rand.Intn(len(choices))], goelandURL)
 }

@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/slurdge/goeland/internal/goeland"
+	"github.com/slurdge/goeland/internal/goeland/i18n"
 	"github.com/slurdge/goeland/log"
 	"github.com/spf13/viper"
 )
@@ -91,7 +92,7 @@ func fetchImgurTag(source *goeland.Source, tag string, sort string) error {
 		entry.URL = item.Link
 		source.Entries = append(source.Entries, entry)
 	}
-	source.Title = fmt.Sprintf("Imgur pictures for tag #%s", tag)
+	source.Title = i18n.Tf("Imgur pictures for tag #%s", tag)
 	source.URL = fmt.Sprintf("https://imgur.com/t/%s", tag)
 	return nil
 }

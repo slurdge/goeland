@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"html"
 	"io"
-	"math/rand"
 	"os"
 	"path/filepath"
 	"strings"
@@ -20,6 +19,7 @@ import (
 	"github.com/slurdge/goeland/internal/goeland"
 	"github.com/slurdge/goeland/internal/goeland/fetch"
 	"github.com/slurdge/goeland/internal/goeland/filters"
+	"github.com/slurdge/goeland/internal/goeland/i18n"
 	"github.com/slurdge/goeland/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -159,7 +159,7 @@ func formatEmailSubject(source *goeland.Source, entry *goeland.Entry, templateSt
 func formatHTMLEmail(entry *goeland.Entry, config config.Provider, tpl *template.Template, destination string) string {
 	footer := strings.TrimSpace(config.GetString("email.footer"))
 	if footer == "" {
-		footer = footers[rand.Intn(len(footers))]
+		footer = i18n.LocalizedFooter()
 	}
 	cssContent := defaultCSS
 	css := config.GetString("email.css")

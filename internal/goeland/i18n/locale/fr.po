@@ -1,0 +1,13 @@
+msgid ""
+msgstr ""
+"Language: fr\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Digest for %s"
+msgstr "Abrégé de %s"
+
+msgid "Table of Content for %s"
+msgstr "Table des matières pour %s"
+
+msgid "Imgur pictures for tag #%s"
+msgstr "Images Imgur pour le tag #%s"

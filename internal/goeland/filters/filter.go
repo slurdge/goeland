@@ -14,10 +14,8 @@ import (
 
 	"github.com/slurdge/goeland/config"
 	"github.com/slurdge/goeland/internal/goeland"
-	_ "github.com/slurdge/goeland/internal/goeland/i18n" //needed for now as we do not properly do i8n
+	"github.com/slurdge/goeland/internal/goeland/i18n"
 	"github.com/slurdge/goeland/log"
-	"golang.org/x/text/language"
-	"golang.org/x/text/message"
 )
 
 type filter struct {
@@ -50,18 +48,18 @@ var filters = map[string]filter{
 		from="A string"
 		to="Another string"
 	  in your config file.`, filterReplace},
-	"includelink": {"Include the link of entries in the digest form", filterIncludeLink},
+	"includelink":        {"Include the link of entries in the digest form", filterIncludeLink},
 	"includesourcetitle": {"Include source titles of the entries in the digest form. Useful for merge sources", filterIncludeSourceTitle},
-	"language":    {"Keep only the specified languages (best effort detection), use like this: language(en,de)", filterLanguage},
-	"unseen":      {"Keep only unseen entry", filterUnSeen},
-	"lebrief":     {"Deprecated. Use retrieve(div.content) instead. Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
-	"retrieve":    {"Retrieves the full content from a goquery", filterRetrieveContent},
-	"untrack":     {"Removes feedburner pixel tracking", filterUntrack},
-	"reddit":      {"Better formatting for reddit rss", filterReddit},
-	"sanitize":    {"Sanitize the content of entries (to be used if --unsafe-no-sanitize-filter was passed)", filterSanitize},
-	"toc":         {"Create a table of content entry for all the entries (optional: title, will use the Title as a link)", filterToc},
-	"limitwords":  {"Limit the number of words in the entry. Use limitwords(number).", filterLimitWords},
-	"reskip":      {"Skip entries whose titles match a regular expression. Use reskip(regex).", filterRESkip},
+	"language":           {"Keep only the specified languages (best effort detection), use like this: language(en,de)", filterLanguage},
+	"unseen":             {"Keep only unseen entry", filterUnSeen},
+	"lebrief":            {"Deprecated. Use retrieve(div.content) instead. Retrieves the full excerpts for Next INpact's Lebrief", filterLeBrief},
+	"retrieve":           {"Retrieves the full content from a goquery", filterRetrieveContent},
+	"untrack":            {"Removes feedburner pixel tracking", filterUntrack},
+	"reddit":             {"Better formatting for reddit rss", filterReddit},
+	"sanitize":           {"Sanitize the content of entries (to be used if --unsafe-no-sanitize-filter was passed)", filterSanitize},
+	"toc":                {"Create a table of content entry for all the entries (optional: title, will use the Title as a link)", filterToc},
+	"limitwords":         {"Limit the number of words in the entry. Use limitwords(number).", filterLimitWords},
+	"reskip":             {"Skip entries whose titles match a regular expression. Use reskip(regex).", filterRESkip},
 }
 
 // GetFiltersHelp returns a string that contains help for all filters
@@ -152,16 +150,15 @@ func filterDigestGeneric(source *goeland.Source, level int, useFirstEntryTitle b
 		return
 	}
 	digest := goeland.Entry{}
-	i8n := message.NewPrinter(language.BritishEnglish)
-	digest.Title = i8n.Sprintf("Digest for %s", source.Title)
+	digest.Title = i18n.Tf("Digest for %s", source.Title)
 	if useFirstEntryTitle && len(source.Entries) > 0 {
 		digest.Title = source.Entries[0].Title
 	}
 	var previousSource *goeland.Source
 	content := ""
 	for _, entry := range source.Entries {
-		if entry.IncludeSourceTitle && previousSource != entry.Source  {
-			content += fmt.Sprintf(`<h%d><a href="%s">%s</a></h%d>`, level - 1, entry.Source.URL, entry.Source.Title, level - 1)
+		if entry.IncludeSourceTitle && previousSource != entry.Source {
+			content += fmt.Sprintf(`<h%d><a href="%s">%s</a></h%d>`, level-1, entry.Source.URL, entry.Source.Title, level-1)
 			previousSource = entry.Source
 		}
 		if entry.IncludeLink {
@@ -310,7 +307,7 @@ func filterToc(source *goeland.Source, params *filterParams) {
 	if len(args) > 0 && strings.ToLower(args[0]) == "title" {
 		toc.Title = fmt.Sprintf(`<a href="%s">%s</a>`, source.URL, source.Title)
 	} else {
-		toc.Title = fmt.Sprintf("Table of Content for %s", source.Title)
+		toc.Title = i18n.Tf("Table of Content for %s", source.Title)
 	}
 	content := "<ul>"
 	for _, entry := range source.Entries {

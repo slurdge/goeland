@@ -1,17 +1,48 @@
 package i18n
 
 import (
+	"embed"
+	"io/fs"
+
+	"github.com/slurdge/goeland/log"
+	"github.com/slurdge/goeland/version"
+	"github.com/vorlif/spreak"
+	"github.com/vorlif/spreak/localize"
 	"golang.org/x/text/language"
-	"golang.org/x/text/message"
 )
 
-func init() {
-	message.SetString(language.BritishEnglish, "Digest for %s", "Digest for %s")
-	message.SetString(language.AmericanEnglish, "Digest for %s", "Digest for %s")
-	message.SetString(language.French, "Digest for %s", "Abrégé de %s")
+//go:embed locale/*
+var localeFS embed.FS
 
-	message.SetString(language.BritishEnglish, "Imgur pictures for tag #%s", "Imgur pictures for tag #%s")
-	message.SetString(language.AmericanEnglish, "Imgur pictures for tag #%s", "Imgur pictures for tag #%s")
-	message.SetString(language.French, "Imgur pictures for tag #%s", "Images Imgur pour le tag#%s")
+var bundle *spreak.Bundle
+var localizer *spreak.Localizer
 
+func Init(locale string) {
+	var err error
+	subSystem, _ := fs.Sub(localeFS, "locale")
+	bundle, err = spreak.NewBundle(
+		spreak.WithSourceLanguage(language.English),
+		spreak.WithDefaultDomain(version.ProductName),
+		spreak.WithDomainFs(version.ProductName, subSystem),
+		spreak.WithLanguage(language.English, language.French),
+	)
+
+	if err != nil {
+		log.Debugf("Error creating language bundle for %v", locale)
+		bundle, _ = spreak.NewBundle()
+	}
+	localizer = spreak.NewLocalizer(bundle, locale)
+
+}
+
+func Language() language.Tag {
+	return localizer.Language()
+}
+
+func T(message localize.Singular) string {
+	return localizer.Get(message)
+}
+
+func Tf(message localize.Singular, args ...any) string {
+	return localizer.Getf(message, args...)
 }

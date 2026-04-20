@@ -8,7 +8,9 @@ import (
 	"strings"
 
 	"github.com/slurdge/goeland/config"
+	"github.com/slurdge/goeland/internal/goeland/i18n"
 	"github.com/slurdge/goeland/log"
+	"github.com/slurdge/goeland/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -27,7 +29,11 @@ The simple way to use it is to type goeland run, then customize the create confi
 To obtain a list of all the filter, type: goeland help run`,
 
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		//This is duplicated here for docker mode
 		viper.AutomaticEnv()
+		config := viper.GetViper()
+		locale := config.GetString("locale")
+		i18n.Init(locale)
 		return nil
 	},
 }
@@ -68,7 +74,7 @@ func createDefaultConfig(cfgFile string) {
 
 func initConfig() {
 	createDefaultConfig(cfgFile)
-	config.ReadDefaultConfig("goeland", cfgFile)
+	config.ReadDefaultConfig(version.ProductName, cfgFile)
 	log.SetDefaultLogger(log.NewLogger(viper.GetViper()))
 }
 
@@ -79,7 +85,7 @@ func bindFlags(cmd *cobra.Command, v *viper.Viper) {
 		// keys with underscores, e.g. --favorite-color to STING_FAVORITE_COLOR
 		if strings.Contains(f.Name, "-") {
 			envVarSuffix := strings.ToUpper(strings.ReplaceAll(f.Name, "-", "_"))
-			v.BindEnv(f.Name, fmt.Sprintf("%s_%s", "GOELAND", envVarSuffix))
+			v.BindEnv(f.Name, fmt.Sprintf("%s_%s", strings.ToUpper(version.ProductName), envVarSuffix))
 		}
 
 		// Apply the viper config value to the flag when the flag is not set and viper has a value
@@ -94,6 +100,8 @@ func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "config.toml", "config file (default is config.toml)")
 	rootCmd.PersistentFlags().String("loglevel", "none", "Log level")
+	rootCmd.PersistentFlags().String("locale", "en-US", "Locale for user facing strings")
 	viper.BindPFlag("loglevel", rootCmd.PersistentFlags().Lookup("loglevel"))
+	viper.BindPFlag("locale", rootCmd.PersistentFlags().Lookup("locale"))
 	bindFlags(rootCmd, viper.GetViper())
 }

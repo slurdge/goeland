@@ -14,6 +14,8 @@ var GitCommit string
 // ChangeLog returns the full changelog
 var ChangeLog string
 
+var ProductName = "goeland"
+
 // Version returns the main version number that is being run at the moment.
 // Given a version number MAJOR.MINOR.PATCH, increment the:
 //

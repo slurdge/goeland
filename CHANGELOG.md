@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.24.0](https://github.com/slurdge/goeland/compare/v0.23.0...v0.24.0) (2026-04-20)
+
+
+### Features
+
+* add a way to have plaintext only ([74302c2](https://github.com/slurdge/goeland/commit/74302c25c38544e064db865067649734ca26a507))
+* add i18n support (basic, only user visible strings) ([be2b1b7](https://github.com/slurdge/goeland/commit/be2b1b7cd3b4fcf298b0c5c10e2ca0ab657a5825))
+* add version info when starting daemon [#298](https://github.com/slurdge/goeland/issues/298) ([9641967](https://github.com/slurdge/goeland/commit/96419675e99acc91b4379f93ec0b748af7da9cf4))
+
+
+### Bug Fixes
+
+* add '-' -&gt; '_' to replacements. Fixes [#300](https://github.com/slurdge/goeland/issues/300) ([77c87fe](https://github.com/slurdge/goeland/commit/77c87fe210a57c488516de4d56a0e8ae442147c1))
+
 ## [0.23.0](https://github.com/slurdge/goeland/compare/v0.22.1...v0.23.0) (2026-04-10)
 
 

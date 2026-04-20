@@ -36,7 +36,7 @@ type Provider interface {
 // ReadDefaultConfig reads the configuration file
 func ReadDefaultConfig(appName string, configName string) {
 	viper.SetEnvPrefix(appName)
-	replacer := strings.NewReplacer(".", "_")
+	replacer := strings.NewReplacer(".", "_", "-", "_")
 	viper.SetEnvKeyReplacer(replacer)
 	viper.AutomaticEnv()
 

@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceRoot}/main.go",
-            "args": ["run", "--config" ,"config.yaml" ,"--loglevel", "debug"]
+            "args": ["run", "--config" ,"config.test.toml" ,"--loglevel", "debug", "--locale", "fr"]
         },
         {
             "name": "Launch",

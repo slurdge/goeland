@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.25.0](https://github.com/slurdge/goeland/compare/v0.24.0...v0.25.0) (2026-05-09)
+
+
+### Features
+
+* pin all actions ([179dc40](https://github.com/slurdge/goeland/commit/179dc40101f32005138fd9ef6d34679bb0bbf5ee))
+
 ## [0.24.0](https://github.com/slurdge/goeland/compare/v0.23.0...v0.24.0) (2026-04-20)
 
 

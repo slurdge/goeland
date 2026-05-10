@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/slurdge/goeland/internal/goeland"
+	"github.com/slurdge/goeland/internal/goeland/filters"
 	"github.com/slurdge/goeland/internal/goeland/i18n"
 	"github.com/slurdge/goeland/log"
 	"github.com/spf13/viper"
@@ -39,8 +40,12 @@ type imgurRoot struct {
 
 var clientID = ""
 
-func fetchImgurTag(source *goeland.Source, tag string, sort string) error {
-	url := "https://api.imgur.com/3/gallery/t/" + tag + "/" + sort + "/day/0"
+func fetchImgurTag(source *goeland.Source, tag string, sort string, window string) error {
+	if !filters.StringInSlice(sort, []string{"top", "viral", "time"}) {
+		sort = "top"
+	}
+	url := "https://api.imgur.com/3/gallery/t/" + tag + "/" + sort + "/" + window + "/0"
+
 	client := http.Client{Timeout: time.Second * 3}
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)

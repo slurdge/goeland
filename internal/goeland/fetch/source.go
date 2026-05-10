@@ -34,10 +34,8 @@ func FetchSource(config config.Provider, sourceName string, parents []string) (*
 	case "imgur":
 		tag := config.GetString(fmt.Sprintf("sources.%s.tag", sourceName))
 		sort := config.GetString(fmt.Sprintf("sources.%s.sort", sourceName))
-		if !filters.StringInSlice(sort, []string{"top", "viral", "time"}) {
-			sort = "top"
-		}
-		err = fetchImgurTag(source, tag, sort)
+		window := config.GetString(fmt.Sprintf("sources.%s.window", sourceName))
+		err = fetchImgurTag(source, tag, sort, window)
 		if err != nil {
 			log.Errorf("Cannot retrieve imgur tag: %s error: %v", tag, err)
 			return source, err

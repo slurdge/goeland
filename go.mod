@@ -14,9 +14,10 @@ require (
 	github.com/spf13/viper v1.21.0
 	github.com/tdewolff/minify/v2 v2.24.12
 	github.com/vanng822/go-premailer v1.33.0
+	github.com/vorlif/spreak v1.0.0
 	github.com/xhit/go-simple-mail/v2 v2.16.0
 	go.etcd.io/bbolt v1.4.3
-	golang.org/x/text v0.36.0
+	golang.org/x/text v0.37.0
 )
 
 require (
@@ -50,7 +51,6 @@ require (
 	github.com/tdewolff/parse/v2 v2.8.11 // indirect
 	github.com/toorop/go-dkim v0.0.0-20201103131630-e1cd1a0a5208 // indirect
 	github.com/vanng822/css v1.0.1 // indirect
-	github.com/vorlif/spreak v1.0.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/net v0.52.0 // indirect
 	golang.org/x/sys v0.42.0 // indirect

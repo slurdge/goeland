@@ -109,8 +109,8 @@ github.com/toorop/go-dkim v0.0.0-20201103131630-e1cd1a0a5208 h1:PM5hJF7HVfNWmCjM
 github.com/toorop/go-dkim v0.0.0-20201103131630-e1cd1a0a5208/go.mod h1:BzWtXXrXzZUvMacR0oF/fbDDgUPO8L36tDMmRAf14ns=
 github.com/vanng822/css v1.0.1 h1:10yiXc4e8NI8ldU6mSrWmSWMuyWgPr9DZ63RSlsgDw8=
 github.com/vanng822/css v1.0.1/go.mod h1:tcnB1voG49QhCrwq1W0w5hhGasvOg+VQp9i9H1rCM1w=
-github.com/vanng822/go-premailer v1.33.0 h1:nglIpKn/7e3kIAwYByiH5xpauFur7RwAucqyZ59hcic=
-github.com/vanng822/go-premailer v1.33.0/go.mod h1:LGYI7ym6FQ7KcHN16LiQRF+tlan7qwhP1KEhpTINFpo=
+github.com/vanng822/go-premailer v1.34.0 h1:CW7RUnjCfXrkuCbgC2wi/Cub7IwKslJWD/OkIBlcQUk=
+github.com/vanng822/go-premailer v1.34.0/go.mod h1:LGYI7ym6FQ7KcHN16LiQRF+tlan7qwhP1KEhpTINFpo=
 github.com/vorlif/spreak v1.0.0 h1:SUaD/p+cWcGgLAdHi73cTmBBejpPpztlgM5I4kPSewY=
 github.com/vorlif/spreak v1.0.0/go.mod h1:oJ0AuinQV2XPy8WkdkbGejGDHQ3dCoB9brQMj5dsEyc=
 github.com/xhit/go-simple-mail/v2 v2.16.0 h1:ouGy/Ww4kuaqu2E2UrDw7SvLaziWTB60ICLkIkNVccA=

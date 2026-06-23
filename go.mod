@@ -16,7 +16,7 @@ require (
 	github.com/vanng822/go-premailer v1.34.0
 	github.com/vorlif/spreak v1.0.0
 	github.com/xhit/go-simple-mail/v2 v2.16.0
-	go.etcd.io/bbolt v1.4.3
+	go.etcd.io/bbolt v1.5.0
 	golang.org/x/text v0.38.0
 )
 
@@ -53,7 +53,7 @@ require (
 	github.com/vanng822/css v1.0.1 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/net v0.52.0 // indirect
-	golang.org/x/sys v0.43.0 // indirect
+	golang.org/x/sys v0.45.0 // indirect
 )
 
 go 1.25.0

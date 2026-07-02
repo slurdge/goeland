@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.25.0](https://github.com/slurdge/goeland/compare/v0.24.0...v0.25.0) (2026-07-02)
+
+
+### Features
+
+* add a sleep interval for rate limiting [#315](https://github.com/slurdge/goeland/issues/315) ([3494afc](https://github.com/slurdge/goeland/commit/3494afc42a9781c807109ce5343153fc196ced0c))
+* add window to imgur source ([fec340a](https://github.com/slurdge/goeland/commit/fec340acfb335fae801ccc197d37a5b57b1d046f))
+* pin all actions ([179dc40](https://github.com/slurdge/goeland/commit/179dc40101f32005138fd9ef6d34679bb0bbf5ee))
+
+
+### Bug Fixes
+
+* prevent leaking local access resources with fetch & others ([06ea0ff](https://github.com/slurdge/goeland/commit/06ea0ffa790aedc7c326afb48940f209b43f789f))
+
 ## [0.24.0](https://github.com/slurdge/goeland/compare/v0.23.0...v0.24.0) (2026-04-20)
 
 

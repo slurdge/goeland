@@ -3,12 +3,26 @@ package fetch
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/slurdge/goeland/config"
 	"github.com/slurdge/goeland/internal/goeland"
 	"github.com/slurdge/goeland/internal/goeland/filters"
 	"github.com/slurdge/goeland/log"
 )
+
+var lastFetchTime time.Time
+
+func sleepIfNeeded(interval time.Duration) {
+	if interval > 0 && !lastFetchTime.IsZero() {
+		remaining := interval - time.Since(lastFetchTime)
+		if remaining > 0 {
+			log.Infof("Sleeping %v between sources...", remaining)
+			time.Sleep(remaining)
+		}
+	}
+	lastFetchTime = time.Now()
+}
 
 // FetchSource retrieves a source from either a feed, imgur or other sub-sources
 func FetchSource(config config.Provider, sourceName string, parents []string) (*goeland.Source, error) {
@@ -19,6 +33,7 @@ func FetchSource(config config.Provider, sourceName string, parents []string) (*
 		return nil, fmt.Errorf("source: %s. there seems to be a cycle in your configuration. Make sure no 'merge' source is referencing itself", sourceName)
 	}
 	sourceType := config.GetString(fmt.Sprintf("sources.%s.type", sourceName))
+	sleepInterval := config.GetDuration("sleep-interval")
 	log.Infof("Fetching source: %s of type %s", sourceName, sourceType)
 	source := new(goeland.Source)
 	var err error
@@ -26,6 +41,7 @@ func FetchSource(config config.Provider, sourceName string, parents []string) (*
 	case "feed":
 		url := config.GetString(fmt.Sprintf("sources.%s.url", sourceName))
 		allowInsecure := config.GetBool(fmt.Sprintf("sources.%s.allow-insecure", sourceName))
+		sleepIfNeeded(sleepInterval)
 		err = fetchFeed(source, url, !strings.HasPrefix(url, "http"), allowInsecure)
 		if err != nil {
 			log.Errorf("Cannot retrieve feed: %s error: %v", url, err)
@@ -35,6 +51,7 @@ func FetchSource(config config.Provider, sourceName string, parents []string) (*
 		tag := config.GetString(fmt.Sprintf("sources.%s.tag", sourceName))
 		sort := config.GetString(fmt.Sprintf("sources.%s.sort", sourceName))
 		window := config.GetString(fmt.Sprintf("sources.%s.window", sourceName))
+		sleepIfNeeded(sleepInterval)
 		err = fetchImgurTag(source, tag, sort, window)
 		if err != nil {
 			log.Errorf("Cannot retrieve imgur tag: %s error: %v", tag, err)

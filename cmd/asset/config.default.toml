@@ -33,6 +33,11 @@
 ## Automatically run the purge command after the run command
 #auto-purge = false
 
+## Sleep interval
+## Wait between each source fetch to avoid rate limiting from servers.
+## Uses Go duration format: e.g. "500ms", "3s", "1m30s". Set to "0s" to disable.
+#sleep-interval = "0s"
+
 [email]
 ## Authentication
 host = "smtp.example.com"

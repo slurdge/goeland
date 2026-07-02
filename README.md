@@ -206,6 +206,16 @@ include-footer = true
 You can create your own template, see [relevant documentation](documentation/templates.md).
 The pipe template takes precedence over the main template defined in the `[email]` section.
 
+### Rate limiting
+
+Some servers restrict how frequently they accept requests. You can add a global `sleep-interval` to wait between each source fetch:
+
+```toml
+sleep-interval = "3s"
+```
+
+The value uses Go's duration format: `"500ms"`, `"3s"`, `"1m30s"`, etc. The default is `"0s"` (no delay).
+
 ## Examples
 
 This will bring you 6 puppies to your inbox.

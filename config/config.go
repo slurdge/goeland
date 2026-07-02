@@ -56,6 +56,7 @@ func ReadDefaultConfig(appName string, configName string) {
 	viper.SetDefault("email.plaintext-only", false)
 	viper.SetDefault("run-at-startup", false)
 	viper.SetDefault("locale", "en-US")
+	viper.SetDefault("sleep-interval", "0s")
 
 	viper.SetConfigFile(configName)
 	viper.AddConfigPath("/etc/" + version.ProductName)

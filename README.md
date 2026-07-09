@@ -6,19 +6,45 @@
 ![version](https://img.shields.io/github/go-mod/go-version/slurdge/goeland)
 ![GitHub](https://img.shields.io/github/license/slurdge/goeland)
 ![Image license](https://img.shields.io/badge/Images-CC%20BY--SA%204.0-blueviolet)
-
-[![Build Status](https://github.com/slurdge/goeland/actions/workflows/build.yml/badge.svg)](https://github.com/slurdge/goeland/actions/workflows/build.yml)[![Docker images](https://github.com/slurdge/goeland/actions/workflows/docker.yml/badge.svg)](https://github.com/slurdge/goeland/actions/workflows/docker.yml)
+[![Build Status](https://github.com/slurdge/goeland/actions/workflows/build.yml/badge.svg)](https://github.com/slurdge/goeland/actions/workflows/build.yml)
+[![Docker images](https://github.com/slurdge/goeland/actions/workflows/docker.yml/badge.svg)](https://github.com/slurdge/goeland/actions/workflows/docker.yml)
 ![CodeQL](https://github.com/slurdge/goeland/actions/workflows/codeql-analysis.yml/badge.svg)
 
-An RSS to email, à la rss2email, written in Go.
+> Turn any RSS/Atom feed into a beautiful email digest — self-hosted, no cloud required.
 
 Support this project by giving it a ⭐️ and sharing it.
 
+## Features
+
+- **Beautiful HTML emails** — responsive template for mobile, tablet, desktop, and webmail clients
+- **Full-text extraction** — fetch and embed complete article content, not just summaries
+- **20+ composable filters** — `unseen`, `today`, `retrieve`, `digest`, `language`, `reskip`, and more
+- **Built-in scheduler** — per-pipe cron scheduling in daemon mode, no external cron needed
+- **Multiple source types** — RSS/Atom/JSON feeds, Imgur tags, and merged/combined sources
+- **Docker-native** — single container, one config file, ready to self-host
+- **Zero cloud dependency** — your feeds, your server, your inbox
+
+## Contents
+
+- [About](#about)
+- [Status](#status)
+- [Installation](#installation)
+- [Docker](#docker)
+- [Usage](#usage)
+  - [Sources](#sources)
+  - [Filtering](#filtering)
+  - [Pipes](#pipes)
+  - [Scheduling](#scheduling)
+  - [Email](#email)
+  - [Rate limiting](#rate-limiting)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [Roadmap](#roadmap)
+
 ## About
 
-Goeland excels at creating beautiful emails from RSS feeds, tailored for daily or weekly digest.
-
-It includes a number of filters (see below) that can transform the RSS content along the way. It can also consume other sources, such as Imgur tags.
+Goeland excels at creating beautiful emails from RSS feeds, tailored for daily or weekly digests.
+It includes a rich set of composable filters that transform feed content along the way, and can also consume other sources such as Imgur tags.
 
 Goeland transforms this...
 
@@ -49,17 +75,13 @@ into this
 
 ![email](documentation/screenshots/phoronix_mixed.png)
 
-Goeland has a size-fits-all default template that works well with mobile, tablet, desktop and webmail clients.
-
-Goeland can extract full text from most article sources, enabling a ready to consume email.
-
 ## Status
 
 Goeland is used in production with many email clients, and has sent over thousands of emails. It is considered stable.
 
 ## Installation
 
-Grab the latest binary release from the [release page](https://github.com/slurdge/goeland/releases/latest/).
+Grab the latest binary from the [release page](https://github.com/slurdge/goeland/releases/latest/).
 Binaries are available for the following platforms:
 
 * linux/386
@@ -76,17 +98,39 @@ Just put it in a folder where you have write permissions and run it first with :
 goeland run
 ```
 
-If you are interested for another platform to be supported, please open a PR or submit a feature request.
+If you need support for another platform, please open a PR or submit a feature request.
+
+## Docker
+
+Images are published to both Docker Hub and GHCR for `linux/amd64`, `arm64`, `arm/v6`, and `arm/v7`:
+
+```bash
+docker run -v ./config.toml:/data/config.toml slurdge/goeland
+# or
+docker run -v ./config.toml:/data/config.toml ghcr.io/slurdge/goeland
+```
+
+The default command is `daemon` — the container runs continuously and dispatches pipes on their configured cron schedules. Mount the database file to persist the `unseen` filter state across restarts:
+
+```yaml
+# docker-compose.yml
+services:
+  goeland:
+    image: ghcr.io/slurdge/goeland
+    volumes:
+      - ./config.toml:/data/config.toml
+      - ./goeland.db:/data/goeland.db
+    restart: unless-stopped
+```
 
 ## Usage
 
-On first run, if it doesn't exist yet, goeland will create a `config.toml` with the default values. You need to adjust the `[email]` section with your SMTP server details.
-The config values can also be set with environment variables (e.g. `GOELAND_EMAIL_PASSWORD_FILE=/path/to/pass`).
+On first run, goeland creates a `config.toml` with default values if one does not exist. Adjust the `[email]` section with your SMTP details.
+All config values can also be set via environment variables (e.g. `GOELAND_EMAIL_PASSWORD_FILE=/path/to/pass`).
 
 ### Sources
 
-Afterwards, fill the `[sources]` and `[pipes]` sections.
-Source are identified by their name after the `[source.]` field:
+Define sources in the `[sources]` section. Each source is identified by its key name:
 
 ```toml
 [sources.hackernews]
@@ -105,65 +149,61 @@ The different source types are:
 
 ### Filtering
 
-One powerful aspect of goeland is filtering. Instead of sending the content of the RSS directly to the email system, it can transform it in a number of ways in order to make it easier to read, process, etc.
-
-Any number of filters can be defined, **the order is important**. For example, the following:
+Filters are the heart of goeland. They are composable and **order matters** — applied left to right.
 
 ```toml
 filters = ["unseen", "retrieve", "digest"]
 ```
 
-Will first keep only previously `unseen` entries, then make it nicer with the `retrieve` filter, and, at last, will put them all together with `digest`. This will create only one email with a SourceTitle as the title of the RSS feed.
+This keeps only previously unseen entries, fetches their full content, then combines them into a single digest email.
 
-Filters can have options. For example, to get the 3 newest post, you would do:
+#### Filter reference
+
+| Filter | Description | Args |
+|--------|-------------|------|
+| `all` | Include all entries (default) | — |
+| `none` | Remove all entries | — |
+| `first` | Keep the first N entries | N (default 1) |
+| `last` | Keep the last N entries | N (default 1) |
+| `reverse` | Reverse the order of entries | — |
+| `random` | Keep N random entries | N (default 1) |
+| `unseen` | Keep only entries not previously seen (tracked in `goeland.db`) | — |
+| `today` | Keep only entries published today | — |
+| `lasthours` | Keep only entries from the last N hours | N (default 24) |
+| `digest` | Combine all entries into a single digest email | heading level (default 2) |
+| `combine` | Like `digest`, but uses the first entry's title as the subject | heading level (default 2) |
+| `links` | Fix protocol-relative links (`//`) to `https://` | — |
+| `embedimage` | Embed image from entry attachment | `top`, `bottom`, `left`, or `right` (default `top`) |
+| `replace` | Replace a string using a named config block | config key |
+| `includelink` | Make entry titles into links in digest form | — |
+| `includesourcetitle` | Show source title per entry in digest form | — |
+| `retrieve` | Fetch full article content using a CSS selector | CSS selector |
+| `language` | Keep only entries in specified languages (best-effort detection) | ISO 639-1 codes, e.g. `en,de` |
+| `untrack` | Remove FeedBurner tracking pixels | — |
+| `reddit` | Better formatting for Reddit RSS feeds | — |
+| `sanitize` | Sanitize HTML (use after `--unsafe-no-sanitize-filter`) | — |
+| `toc` | Prepend a table of contents entry | `title` (optional, links TOC title to source) |
+| `limitwords` | Truncate entry content to N words | N |
+| `reskip` | Skip entries whose titles match a regular expression | regex |
+
+Full documentation with examples: [filters.md](documentation/filters.md)
+
+The `replace` filter requires a companion config block:
+
 ```toml
-filters = ["first(3)"]
-```
+filters = ["replace(myreplace)"]
 
-The available filters are as follows, full documentation is in [filters.md](documentation/filters.md)
-
-* none: Removes all entries
-* all: Default, include all entries
-* first: Keep only the first (usually newest) entries (default 1)
-* last: Keep only the last (usually oldest) entries (default 1)
-* reverse: Reverse the order of the entries
-* random: Keep 1 or more random entries (default 5)
-* unseen: Keep only unseen entry. Entries that have been seen will be put in a `goeland.db` file. Use the `purge` command to remove seen entries
-* today: Keep only the entries of the day
-* lasthours: Keep only the entries that are from the X last hours (default 24)
-* digest: Make a digest of all entries (optional heading level, default 2)
-* combine: Combine all the entries into one source and use the first entry title as source title. Useful for merged sources
-* links: Rewrite relative links src="// and href="// to have an https:// prefix
-* embedimage: Embed a picture if the entry has an attachment with a type of picture (optional position: top|bottom|left|right, default top)
-* replace: Replace a string with another. Use with an argument like this: replace(myreplace) and define
-
-```toml
 [replace.myreplace]
-        from="A string"
-        to="Another string"
+from = "A string"
+to = "Another string"
 ```
-
-in your config file.
-
-* includelink: Include the link of entries in the digest form
-* includesourcetitle: Include source titles of entries in the digest form
-* retrieve: Retrieves the full content from a goquery. E.g. you can use `retrieve(div.content)` to get the full excerpts of Next INpact's [LeBrief](https://www.nextinpact.com/lebrief/)
-* language: Keep only the specified languages (best effort detection), use like this: `language(en,de)`
-* untrack: Removes feedburner pixel tracking
-* reddit: Better formatting for reddit rss
-* sanitize: Sanitize the content of entries (to be used if --unsafe-no-sanitize-filter was passed)
-* toc: Create a special table of content entry containing the titles of all entries. Use `toc(title)` to use the Title as a link
-* limitwords: Limit the number of words in the entry, use like this:  `limitwords(32)`
 
 ### Pipes
 
-After defining some sources, you can send them to a pipe. One source can be sent to multiple pipes, but a pipe can only have one source. If you need to combine sources together, use the above special `merge`.
-
-A pipe has the following structure:
+A pipe connects a source to a destination. One source can feed multiple pipes, but each pipe has exactly one source. Use the `merge` source type to combine multiple feeds.
 
 ```toml
 [pipes.hackernews]
-#Either put disabled = true or prefix pipes with disabled like this: disabled.pipes.hackernews
 disabled = false
 source = "hackernews"
 destination = "email"
@@ -177,24 +217,46 @@ email_bcc = ["hades@olympus.com"]
 #template = "/path/to/template.html" # optional
 ```
 
-You can use EntryTitle, SourceTitle and SourceName in the email template. SourceTitle is the title of the RSS feed.
+Set `destination = "terminal"` for debugging or to pipe output to another system.
 
-For debugging purposes, or in order to pipe to other systems, you can set the destination to `terminal`.
+To disable a pipe without removing it, set `disabled = true` or rename the section to `[disabled.pipes.hackernews]`.
+
+### Scheduling
+
+In daemon mode (`goeland daemon`), each pipe runs on its own cron schedule:
+
+```toml
+[pipes.hackernews]
+source = "hackernews"
+destination = "email"
+email_to = ["you@example.com"]
+cron = "0 7 * * *"    # every day at 7 am
+```
+
+Standard cron syntax and Go duration shortcuts are both supported:
+
+| Expression | Meaning |
+|------------|---------|
+| `"0 7 * * 1"` | Every Monday at 7 am |
+| `"@daily"` | Once a day at midnight |
+| `"@every 6h"` | Every 6 hours |
+
+Set `run-at-startup = true` in the top-level config to run all pipes once immediately on startup — useful for Docker deployments.
+
+Use `goeland purge` (or `auto-purge = true`) to periodically clean up the `unseen` database.
 
 ### Email
-
-In the email section you need to specify your outgoing mail server. You can specify both `encryption` and `allow-insecure` to connect to self-hosted servers. You can also specify `authentication` to select the appropriate option for your server (the options available are `"none"`, `"plain"`, `"login"` and `"crammd5"`; if unspecified it defaults to `"plain"`; see [`go-simple-mail`](https://pkg.go.dev/github.com/xhit/go-simple-mail/v2#AuthType)'s documentation for details).
 
 ```toml
 [email]
 host = "smtp.example.com"
-port = 25
-username = "default"
+port = 587
+username = "user"
 password = "p4ssw0rd"
 # password_file = /run/password/goeland_smtp_pass
 encryption = "tls"
 allow-insecure = false
-authentication = "plain"
+authentication = "plain"    # none | plain | login | crammd5
 #Email customization
 include-header = true
 include-footer = true
@@ -203,35 +265,58 @@ include-footer = true
 #template = /path/to/template.html
 ```
 
-You can create your own template, see [relevant documentation](documentation/templates.md).
-The pipe template takes precedence over the main template defined in the `[email]` section.
+`authentication` defaults to `"plain"`. See [`go-simple-mail`](https://pkg.go.dev/github.com/xhit/go-simple-mail/v2#AuthType) for details on each option.
+
+You can provide a custom HTML email template — see [templates.md](documentation/templates.md). A pipe-level `template` takes precedence over the one in `[email]`.
 
 ### Rate limiting
 
-Some servers restrict how frequently they accept requests. You can add a global `sleep-interval` to wait between each source fetch:
+Some servers restrict request frequency. Add a global `sleep-interval` to wait between source fetches:
 
 ```toml
 sleep-interval = "3s"
 ```
 
-The value uses Go's duration format: `"500ms"`, `"3s"`, `"1m30s"`, etc. The default is `"0s"` (no delay).
+Uses Go's duration format: `"500ms"`, `"3s"`, `"1m30s"`. Defaults to `"0s"` (no delay).
 
 ## Examples
 
-This will bring you 6 puppies to your inbox.
+### Daily HackerNews digest
 
 ```toml
-loglevel = "info"
-dry-run = false
+[sources.hackernews]
+url = "https://hnrss.org/newest"
+type = "feed"
+filters = ["unseen", "today", "digest"]
 
-[email]
-host = "smtp.sendgrid.net"
-port = 587
-username = "apikey"
-password = "<sendgridapikey>"
+[pipes.hackernews]
+source = "hackernews"
+destination = "email"
+email_to = ["you@example.com"]
+email_from = "HackerNews <goeland@example.com>"
+cron = "@daily"
+```
 
-[sources]
+### Latest posts from a subreddit
 
+```toml
+[sources.reddit]
+url = "https://www.reddit.com/r/selfhosted/top.rss"
+type = "feed"
+filters = ["unseen", "includelink", "digest"]
+
+[pipes.reddit]
+source = "reddit"
+destination = "email"
+email_to = ["you@example.com"]
+email_from = "Reddit <goeland@example.com>"
+```
+
+### Puppies in your inbox
+
+Merge an RSS bridge and Imgur into one daily delivery:
+
+```toml
 [sources.insta]
 url = "https://rssbridge.example.com/?action=display&bridge=Instagram&context=Hashtag&h=puppy&media_type=picture&direct_links=on&format=MRss"
 type = "feed"
@@ -247,67 +332,34 @@ type = "merge"
 sources = ["insta", "imgur"]
 filters = ["combine"]
 
-[pipes]
-
 [pipes.puppies]
 source = "puppies"
 destination = "email"
 email_to = ["puppylover@example.com"]
 email_from = "DailyPuppy <goeland@example.com>"
+cron = "@daily"
 ```
 
-This will give you the latest article on a specific subreddit:
+![Six puppies, delivered.](documentation/screenshots/puppies.png)
+
+You can send to multiple recipients by listing them:
 
 ```toml
-loglevel = "none"
-dry-run = false
-database = "goeland.db"
-
-[email]
-host = "example.com"
-port = 25
-username = "username"
-password = "password"
-
-[sources]
-
-[sources.reddit]
-url = "https://www.reddit.com/r/selfhosted/top.rss"
-type = "feed"
-filters = ["unseen", "includelink", "digest"]
-
-[pipes.reddit]
-source = "reddit"
-destination = "email"
-email_to = ["example@example.com"]
-email_from = "Reddit <reddit@example.com>"
-```
-
-It is possible to send an email to multiple addresses, just put them in a list:
-
-```toml
-[pipes.reddit]
-source = "reddit"
-destination = "email"
 email_to = ["bob@example.com", "alice@gmail.com", "charles@yahoo.com"]
-email_from = "Reddit <reddit@example.com>"
 ```
 
-See also the `examples/` folder.
+See the [`examples/`](examples/) folder for more ready-to-use configurations.
 
 ## Contributing
 
-Feel free to open issues or PR for bugs and suggestions for more filters and source types.
+Feel free to open issues or PRs for bugs, new filters, and new source types. If you encounter a problematic feed, please open an issue with the feed content attached.
 
-If you encounter a problematic feed, please open an issue with the content of the feed attached.
+## Roadmap
 
-## Future
+Things that could be nice to have:
 
-Here is a list of things that could be nice
-
-* image inliner
-* embedded scripting language for filters&manipulation
-* remove tags for instagram
-* footer text
-* use enclosure of the feed as header image
-* <https://github.com/go-shiori/go-readability>
+- Image inliner
+- Embedded scripting language for filters & manipulation
+- Remove tags for Instagram sources
+- Use feed enclosure as header image
+- [`go-readability`](https://github.com/go-shiori/go-readability) integration

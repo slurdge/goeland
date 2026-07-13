@@ -136,7 +136,8 @@ func filterLastHour(source *goeland.Source, params *filterParams) {
 func filterToday(source *goeland.Source, params *filterParams) {
 	var current int
 	for _, entry := range source.Entries {
-		if entry.Date.Day() != time.Now().Day() {
+		now := time.Now()
+		if entry.Date.Year() != now.Year() || entry.Date.YearDay() != now.YearDay() {
 			continue
 		}
 		source.Entries[current] = entry

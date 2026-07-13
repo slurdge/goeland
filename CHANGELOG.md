@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.26.0](https://github.com/slurdge/goeland/compare/v0.25.0...v0.26.0) (2026-07-13)
+
+
+### Features
+
+* improve README ([070db36](https://github.com/slurdge/goeland/commit/070db36cf39576efaac6c4621f95895cb05d7c92))
+
+
+### Bug Fixes
+
+* today filter now actually filters on the actual date rounded to a day, not the day of the month [#330](https://github.com/slurdge/goeland/issues/330) ([6222b3b](https://github.com/slurdge/goeland/commit/6222b3b1fab49805d17f199c7d91fb7cdd71e8c1))
+
 ## [0.25.0](https://github.com/slurdge/goeland/compare/v0.24.0...v0.25.0) (2026-07-02)
 
 

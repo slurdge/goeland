@@ -12,7 +12,7 @@ require (
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/pflag v1.0.10
 	github.com/spf13/viper v1.21.0
-	github.com/tdewolff/minify/v2 v2.24.13
+	github.com/tdewolff/minify/v2 v2.24.14
 	github.com/vanng822/go-premailer v1.34.0
 	github.com/vorlif/spreak v1.0.0
 	github.com/xhit/go-simple-mail/v2 v2.16.0
@@ -25,7 +25,7 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/clipperhouse/uax29/v2 v2.2.0 // indirect
 	github.com/fatih/color v1.18.0 // indirect
-	github.com/fsnotify/fsnotify v1.9.0 // indirect
+	github.com/fsnotify/fsnotify v1.10.1 // indirect
 	github.com/go-test/deep v1.0.8 // indirect
 	github.com/go-viper/mapstructure/v2 v2.4.0 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
@@ -48,12 +48,12 @@ require (
 	github.com/spf13/cast v1.10.0 // indirect
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
-	github.com/tdewolff/parse/v2 v2.8.12 // indirect
+	github.com/tdewolff/parse/v2 v2.8.14 // indirect
 	github.com/toorop/go-dkim v0.0.0-20201103131630-e1cd1a0a5208 // indirect
 	github.com/vanng822/css v1.0.1 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/net v0.55.0 // indirect
-	golang.org/x/sys v0.45.0 // indirect
+	golang.org/x/sys v0.47.0 // indirect
 )
 
 go 1.25.0

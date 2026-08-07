@@ -94,6 +94,8 @@ allow-insecure = false
 #type = "miniflux"
 #url = "https://miniflux.example.org/v1/entries?status=unread&order=published_at&direction=desc&limit=50"
 #filters = ["unseen", "includelink", "digest"]
+## Optional: override the global miniflux-api-token for this source
+#api-token = ""
 
 [pipes]
 

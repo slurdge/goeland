@@ -26,6 +26,7 @@ type minifluxResponse struct {
 
 type minifluxEntry struct {
 	ID          int64               `json:"id"`
+	Hash        string              `json:"hash"`
 	Title       string              `json:"title"`
 	URL         string              `json:"url"`
 	Content     string              `json:"content"`
@@ -49,16 +50,14 @@ type minifluxEnclosure struct {
 	MimeType string `json:"mime_type"`
 }
 
-func fetchMiniflux(source *goeland.Source, url string, allowInsecure bool) error {
+func fetchMiniflux(source *goeland.Source, url string, apiToken string, allowInsecure bool) error {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return err
 	}
 
-	config := viper.GetViper()
-	apiToken := config.GetString("miniflux-api-token")
 	if apiToken == "" {
-		log.Warnln("Miniflux may fail: miniflux-api-token is empty")
+		log.Warnln("Miniflux may fail: no api token given (set miniflux-api-token or the source's api-token)")
 	}
 	req.Header.Set("X-Auth-Token", apiToken)
 
@@ -95,7 +94,11 @@ func fetchMiniflux(source *goeland.Source, url string, allowInsecure bool) error
 		if !viper.GetBool("unsafe-no-sanitize-filter") {
 			entry.Content = policy.Sanitize(entry.Content)
 		}
-		entry.UID = fmt.Sprintf("miniflux-%d", minifluxEntry.ID)
+		// the hash survives feed re-creations and instance migrations, unlike the numeric id
+		entry.UID = "miniflux-" + minifluxEntry.Hash
+		if minifluxEntry.Hash == "" {
+			entry.UID = fmt.Sprintf("miniflux-%d", minifluxEntry.ID)
+		}
 		entry.Date = minifluxEntry.PublishedAt
 		entry.URL = minifluxEntry.URL
 		for _, enclosure := range minifluxEntry.Enclosures {

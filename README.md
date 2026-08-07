@@ -158,6 +158,8 @@ First create an API key in Miniflux under **Settings → API Keys** and add it a
 miniflux-api-token = "your-api-key"
 ```
 
+If you use several Miniflux instances, set `api-token` inside a source block to override the global token for that source.
+
 The source `url` is a Miniflux **API** URL, not a web UI URL. Translating from what you see in your browser is mechanical: insert `/v1`, pluralize `feed`/`category`, and express everything else as query parameters.
 
 | What you want | Web UI URL looks like | API `url` to use in goeland |

@@ -34,6 +34,8 @@ password = "password"
 type = "miniflux"
 url = "https://miniflux.example.org/v1/feeds/275/entries?status=unread&order=published_at&direction=desc&limit=50"
 filters = ["unseen", "includelink", "digest"]
+# Sources on another instance can override the global token:
+# api-token = "another-api-token"
 
 # A whole category: category number 22
 [sources.tech]

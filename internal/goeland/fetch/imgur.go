@@ -95,6 +95,7 @@ func fetchImgurTag(source *goeland.Source, tag string, sort string, window strin
 		entry.UID = item.ID
 		entry.Date = time.Unix(item.DateTime, 0)
 		entry.URL = item.Link
+		entry.Source = source
 		source.Entries = append(source.Entries, entry)
 	}
 	source.Title = i18n.Tf("Imgur pictures for tag #%s", tag)

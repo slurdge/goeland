@@ -61,7 +61,7 @@ func FetchSource(config config.Provider, sourceName string, parents []string) (*
 		url := config.GetString(fmt.Sprintf("sources.%s.url", sourceName))
 		allowInsecure := config.GetBool(fmt.Sprintf("sources.%s.allow-insecure", sourceName))
 		sleepIfNeeded(sleepInterval)
-		err = fecthMiniFlux(source, url, allowInsecure)
+		err = fetchMiniflux(source, url, allowInsecure)
 		if err != nil {
 			log.Errorf("Cannot retrieve miniflux at url: %s error: %v", url, err)
 			return source, err

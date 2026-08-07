@@ -1,0 +1,62 @@
+# Miniflux example
+# Turn entries from your (self-hosted) Miniflux instance into email digests.
+# API reference: https://miniflux.app/docs/api.html
+#
+# The source url is a Miniflux API url, not a web UI url. From the web UI:
+#   insert /v1, pluralize feed/category, and put the rest in query parameters.
+#   /feed/275/entries      -> /v1/feeds/275/entries
+#   /category/22/entries   -> /v1/categories/22/entries
+#   /search?q=keyword      -> /v1/entries?search=keyword
+#   /unread                -> /v1/entries?status=unread
+#   /starred               -> /v1/entries?starred=true
+#
+# goeland only reads from Miniflux: entries are never marked as read there,
+# so use the "unseen" filter to avoid receiving the same entries twice.
+
+loglevel = "info"
+dry-run = false
+database = "miniflux.db"
+
+# Create an API key in Miniflux under Settings > API Keys.
+# Can also be set with the GOELAND_MINIFLUX_API_TOKEN environment variable.
+miniflux-api-token = "your-api-token"
+
+[email]
+host = "smtp.example.com"
+port = 587
+username = "user@example.com"
+password = "password"
+
+[sources]
+
+# A single feed: feed number 275, unread entries only, newest first
+[sources.linux-news]
+type = "miniflux"
+url = "https://miniflux.example.org/v1/feeds/275/entries?status=unread&order=published_at&direction=desc&limit=50"
+filters = ["unseen", "includelink", "digest"]
+
+# A whole category: category number 22
+[sources.tech]
+type = "miniflux"
+url = "https://miniflux.example.org/v1/categories/22/entries?status=unread&order=published_at&direction=desc&limit=50"
+filters = ["unseen", "includesourcetitle", "includelink", "digest"]
+
+# A full-text search across all feeds. URL-encode the query:
+# spaces become '+', quotes '%22'; supports OR and -term exclusion.
+[sources.solar]
+type = "miniflux"
+url = "https://miniflux.example.org/v1/entries?search=solar+OR+%22renewable+energy%22+-nuclear&order=published_at&direction=desc&limit=50"
+filters = ["unseen", "embedimage", "includelink", "digest"]
+
+# If your instance uses a self-signed certificate, add:
+# allow-insecure = true
+
+[pipes.tech]
+source = "tech"
+destination = "email"
+email_from = "HackerNews <goeland@olympus.com>"
+email_replyto = "hera@olympus.com"
+email_to = ["zeus@olympus.com", "athena@olympus.com"]
+email_cc = ["apollo@olympus.com"]
+email_title = "Tech category digest"
+cron = "@daily"

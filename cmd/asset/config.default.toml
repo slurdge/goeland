@@ -3,7 +3,7 @@
 #loglevel = "none"
 
 ## Dry run
-## Do not output anything or send email after fecthing the sources
+## Do not output anything or send email after fetching the sources
 #dry-run = false
 
 ## User Agent
@@ -37,6 +37,12 @@
 ## Wait between each source fetch to avoid rate limiting from servers.
 ## Uses Go duration format: e.g. "500ms", "3s", "1m30s". Set to "0s" to disable.
 #sleep-interval = "0s"
+
+## Miniflux API token
+## Required for sources with type = "miniflux".
+## Create an API key in your Miniflux instance under Settings > API Keys.
+## Can also be set with the GOELAND_MINIFLUX_API_TOKEN environment variable.
+#miniflux-api-token = ""
 
 [email]
 ## Authentication
@@ -77,6 +83,17 @@ type = "feed"
 filters = ["all", "today"]
 # Allow invalid certificates
 allow-insecure = false
+
+## Miniflux source example (requires miniflux-api-token above)
+## The url is a Miniflux API url. Quick cheat sheet:
+##   a feed:     https://miniflux.example.org/v1/feeds/275/entries
+##   a category: https://miniflux.example.org/v1/categories/22/entries
+##   a search:   https://miniflux.example.org/v1/entries?search=keyword
+## See the README for details.
+#[sources.miniflux]
+#type = "miniflux"
+#url = "https://miniflux.example.org/v1/entries?status=unread&order=published_at&direction=desc&limit=50"
+#filters = ["unseen", "includelink", "digest"]
 
 [pipes]
 

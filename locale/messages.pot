@@ -31,3 +31,7 @@ msgstr ""
 #, go-format
 msgid "Table of Content for %s"
 msgstr ""
+
+#: ../internal/goeland/fetch/miniflux.go:121
+msgid "Miniflux entries"
+msgstr ""

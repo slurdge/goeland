@@ -11,3 +11,6 @@ msgstr "Table des matières pour %s"
 
 msgid "Imgur pictures for tag #%s"
 msgstr "Images Imgur pour le tag #%s"
+
+msgid "Miniflux entries"
+msgstr "Entrées Miniflux"

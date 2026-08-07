@@ -20,7 +20,7 @@ Support this project by giving it a ⭐️ and sharing it.
 - **Full-text extraction** — fetch and embed complete article content, not just summaries
 - **20+ composable filters** — `unseen`, `today`, `retrieve`, `digest`, `language`, `reskip`, and more
 - **Built-in scheduler** — per-pipe cron scheduling in daemon mode, no external cron needed
-- **Multiple source types** — RSS/Atom/JSON feeds, Imgur tags, and merged/combined sources
+- **Multiple source types** — RSS/Atom/JSON feeds, Imgur tags, [Miniflux](https://miniflux.app) instances, and merged/combined sources
 - **Docker-native** — single container, one config file, ready to self-host
 - **Zero cloud dependency** — your feeds, your server, your inbox
 
@@ -144,8 +144,53 @@ You can then use `'hackernews'` in the following pipes.
 The different source types are:
 
 * `"feed"`: RSS, Atom or JSON feed (all supported formats can be found [here](https://github.com/mmcdole/gofeed#supported-feed-types)). Fill in the `url` field.
-* `"imgur"`: Return most recent results for a tag. Fill in the the `tag` field.
+* `"imgur"`: Return most recent results for a tag. Fill in the `tag` field.
+* `"miniflux"`: Fetch entries from a [Miniflux](https://miniflux.app) instance through its REST API. Fill in the `url` field with an API URL — see [Miniflux](#miniflux) below.
 * `"merge"`: Will merge two or more sources together. Fill in the `sources` field with a list of sources: `sources = ["source1", "source2"]`. Especially useful to merge different sources on the same topic. Don't forget to `digest` or `combine` it later.
+
+#### Miniflux
+
+The `miniflux` source type reads entries straight from a (usually self-hosted) [Miniflux](https://miniflux.app) instance using its [REST API](https://miniflux.app/docs/api.html). Any feed, category, search, or starred list you already curate in Miniflux can become an email digest.
+
+First create an API key in Miniflux under **Settings → API Keys** and add it at the top level of your goeland config (or set the `GOELAND_MINIFLUX_API_TOKEN` environment variable):
+
+```toml
+miniflux-api-token = "your-api-key"
+```
+
+The source `url` is a Miniflux **API** URL, not a web UI URL. Translating from what you see in your browser is mechanical: insert `/v1`, pluralize `feed`/`category`, and express everything else as query parameters.
+
+| What you want | Web UI URL looks like | API `url` to use in goeland |
+|---------------|-----------------------|-----------------------------|
+| A single feed | `.../feed/275/entries` | `https://miniflux.example.org/v1/feeds/275/entries` |
+| A whole category | `.../category/22/entries` | `https://miniflux.example.org/v1/categories/22/entries` |
+| A search | `.../search?q=solar+power` | `https://miniflux.example.org/v1/entries?search=solar+power` |
+| Unread entries | `.../unread` | `https://miniflux.example.org/v1/entries?status=unread` |
+| Starred entries | `.../starred` | `https://miniflux.example.org/v1/entries?starred=true` |
+
+All three entry endpoints (`/v1/entries`, `/v1/feeds/{id}/entries`, `/v1/categories/{id}/entries`) accept the same query parameters, combined with `&`:
+
+* `status=unread` — only unread entries (also `read`, `removed`; repeat the parameter for several statuses)
+* `limit=50` — recommended, otherwise the server may return every matching entry
+* `order=published_at&direction=desc` — newest first
+* `search=...` — full-text search, URL-encoded: spaces become `+`, quotes `%22`. Supports `%22exact phrases%22`, `OR`, and `-term` exclusion
+* `starred=true`, `category_id=22`, `published_after=<unix timestamp>`, and more — see the [API reference](https://miniflux.app/docs/api.html)
+
+For example, a search across all your feeds:
+
+```toml
+[sources.puppies]
+type = "miniflux"
+url = "https://miniflux.example.org/v1/entries?search=cute+puppy&order=published_at&direction=desc"
+filters = ["unseen", "includelink", "embedimage", "digest"]
+```
+
+Two things to keep in mind:
+
+* goeland only **reads** from Miniflux — entries are never marked as read, so a `status=unread` query returns the same entries on every run. Add the `unseen` filter to deduplicate between runs.
+* If your instance uses a self-signed certificate, set `allow-insecure = true` on the source.
+
+A complete configuration is available in [`examples/miniflux.toml`](examples/miniflux.toml).
 
 ### Filtering
 

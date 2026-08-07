@@ -1,107 +1,72 @@
 package fetch
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"html"
 	"io"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/slurdge/goeland/internal/goeland"
+	"github.com/slurdge/goeland/internal/goeland/i18n"
 	"github.com/slurdge/goeland/log"
 	"github.com/spf13/viper"
 )
 
-type MinifluxApiResponse struct {
+// search queries can take a while on large instances
+const minifluxTimeout = time.Second * 10
+
+type minifluxResponse struct {
 	Total   int             `json:"total"`
-	Entries []MinifluxEntry `json:"entries"`
+	Entries []minifluxEntry `json:"entries"`
 }
 
-type MinifluxEntry struct {
-	ID          int                 `json:"id"`
-	UserID      int                 `json:"user_id"`
-	FeedID      int                 `json:"feed_id"`
+type minifluxEntry struct {
+	ID          int64               `json:"id"`
 	Title       string              `json:"title"`
 	URL         string              `json:"url"`
-	CommentsURL string              `json:"comments_url"`
-	Author      string              `json:"author"`
 	Content     string              `json:"content"`
-	Hash        string              `json:"hash"`
 	PublishedAt time.Time           `json:"published_at"`
-	CreatedAt   time.Time           `json:"created_at"`
-	Status      string              `json:"status"`
-	ShareCode   string              `json:"share_code"`
-	Starred     bool                `json:"starred"`
-	ReadingTime int                 `json:"reading_time"`
-	Enclosures  []MiniFluxEnclosure `json:"enclosures"`
-	Feed        MiniFluxFeed        `json:"feed"`
+	Enclosures  []minifluxEnclosure `json:"enclosures"`
+	Feed        minifluxFeed        `json:"feed"`
 }
 
-type MiniFluxFeed struct {
-	ID                  int              `json:"id"`
-	UserID              int              `json:"user_id"`
-	Title               string           `json:"title"`
-	SiteURL             string           `json:"site_url"`
-	FeedURL             string           `json:"feed_url"`
-	CheckedAt           time.Time        `json:"checked_at"`
-	EtagHeader          string           `json:"etag_header"`
-	LastModifiedHeader  string           `json:"last_modified_header"`
-	ParsingErrorMessage string           `json:"parsing_error_message"`
-	ParsingErrorCount   int              `json:"parsing_error_count"`
-	ScraperRules        string           `json:"scraper_rules"`
-	RewriteRules        string           `json:"rewrite_rules"`
-	Crawler             bool             `json:"crawler"`
-	BlocklistRules      string           `json:"blocklist_rules"`
-	KeeplistRules       string           `json:"keeplist_rules"`
-	UserAgent           string           `json:"user_agent"`
-	Username            string           `json:"username"`
-	Password            string           `json:"password"`
-	Disabled            bool             `json:"disabled"`
-	IgnoreHTTPCache     bool             `json:"ignore_http_cache"`
-	FetchViaProxy       bool             `json:"fetch_via_proxy"`
-	Category            MiniFluxCategory `json:"category"`
-	Icon                MiniFluxIcon     `json:"icon"`
+type minifluxFeed struct {
+	Title    string           `json:"title"`
+	SiteURL  string           `json:"site_url"`
+	Category minifluxCategory `json:"category"`
 }
 
-type MiniFluxEnclosure struct {
-	ID               int    `json:"id"`
-	UserID           int    `json:"user_id"`
-	EntryID          int    `json:"entry_id"`
-	URL              string `json:"url"`
-	MimeType         string `json:"mime_type"`
-	Size             int64  `json:"size"`
-	MediaProgression int    `json:"media_progression"`
+type minifluxCategory struct {
+	Title string `json:"title"`
 }
 
-type MiniFluxCategory struct {
-	ID     int    `json:"id"`
-	UserID int    `json:"user_id"`
-	Title  string `json:"title"`
+type minifluxEnclosure struct {
+	URL      string `json:"url"`
+	MimeType string `json:"mime_type"`
 }
 
-type MiniFluxIcon struct {
-	FeedID int `json:"feed_id"`
-	IconID int `json:"icon_id"`
-}
-
-func fecthMiniFlux(source *goeland.Source, url string, allowInsecure bool) error {
-
+func fetchMiniflux(source *goeland.Source, url string, allowInsecure bool) error {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return err
 	}
 
-	client := http.Client{Timeout: time.Second * 3}
-
 	config := viper.GetViper()
-	minifluxApiToken := config.GetString("miniflux-api-token")
-
-	if minifluxApiToken == "" {
+	apiToken := config.GetString("miniflux-api-token")
+	if apiToken == "" {
 		log.Warnln("Miniflux may fail: miniflux-api-token is empty")
 	}
+	req.Header.Set("X-Auth-Token", apiToken)
 
-	req.Header.Set("X-Auth-Token", minifluxApiToken)
+	client := http.Client{Timeout: minifluxTimeout}
+	if allowInsecure {
+		log.Warningf("ignoring certificate security for url: %s\n", url)
+		client.Transport = &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
+	}
 
 	res, err := client.Do(req)
 	if err != nil {
@@ -115,25 +80,48 @@ func fecthMiniFlux(source *goeland.Source, url string, allowInsecure bool) error
 	if err != nil {
 		return err
 	}
-	miniflux := new(MinifluxApiResponse)
+	miniflux := new(minifluxResponse)
 	if err := json.Unmarshal(data, miniflux); err != nil {
 		return err
 	}
+	if miniflux.Total > len(miniflux.Entries) {
+		log.Warningf("miniflux returned %d out of %d matching entries, increase the 'limit' query parameter of url: %s", len(miniflux.Entries), miniflux.Total, url)
+	}
 	for _, minifluxEntry := range miniflux.Entries {
-		log.Debugf("%v", minifluxEntry)
 		entry := goeland.Entry{}
 		entry.Source = source
-		entry.Title = minifluxEntry.Title
+		entry.Title = html.UnescapeString(policy.Sanitize(minifluxEntry.Title))
 		entry.Content = minifluxEntry.Content
-		entry.UID = fmt.Sprintf("miniflux-%i", minifluxEntry.ID)
+		if !viper.GetBool("unsafe-no-sanitize-filter") {
+			entry.Content = policy.Sanitize(entry.Content)
+		}
+		entry.UID = fmt.Sprintf("miniflux-%d", minifluxEntry.ID)
 		entry.Date = minifluxEntry.PublishedAt
 		entry.URL = minifluxEntry.URL
 		for _, enclosure := range minifluxEntry.Enclosures {
 			if strings.HasPrefix(enclosure.MimeType, "image") {
 				entry.ImageURL = enclosure.URL
+				break
 			}
 		}
 		source.Entries = append(source.Entries, entry)
+	}
+
+	// single feed or category urls carry a better title than the generic one
+	if len(miniflux.Entries) > 0 {
+		first := miniflux.Entries[0]
+		if strings.Contains(req.URL.Path, "/v1/feeds/") {
+			source.Title = first.Feed.Title
+			source.URL = first.Feed.SiteURL
+		} else if strings.Contains(req.URL.Path, "/v1/categories/") {
+			source.Title = first.Feed.Category.Title
+		}
+	}
+	if source.Title == "" {
+		source.Title = i18n.T("Miniflux entries")
+	}
+	if source.URL == "" {
+		source.URL = url
 	}
 
 	return nil

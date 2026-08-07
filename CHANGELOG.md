@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.27.0](https://github.com/slurdge/goeland/compare/v0.26.0...v0.27.0) (2026-08-07)
+
+
+### Features
+
+* add miniflux support ([2045158](https://github.com/slurdge/goeland/commit/2045158bd64a9845bb7a8395498494c8ebf1f308))
+* improve support for miniflux ([e3ae824](https://github.com/slurdge/goeland/commit/e3ae824ddbc5e09b70f99dfcefbf551ae02f8170))
+
+
+### Bug Fixes
+
+* imgur wans't referencing it's own source ([eb6972e](https://github.com/slurdge/goeland/commit/eb6972e91436a727c4fd05cf3a1df795a9d255ee))
+
 ## [0.26.0](https://github.com/slurdge/goeland/compare/v0.25.0...v0.26.0) (2026-07-13)
 
 

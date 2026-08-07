@@ -57,6 +57,15 @@ func FetchSource(config config.Provider, sourceName string, parents []string) (*
 			log.Errorf("Cannot retrieve imgur tag: %s error: %v", tag, err)
 			return source, err
 		}
+	case "miniflux":
+		url := config.GetString(fmt.Sprintf("sources.%s.url", sourceName))
+		allowInsecure := config.GetBool(fmt.Sprintf("sources.%s.allow-insecure", sourceName))
+		sleepIfNeeded(sleepInterval)
+		err = fecthMiniFlux(source, url, allowInsecure)
+		if err != nil {
+			log.Errorf("Cannot retrieve miniflux at url: %s error: %v", url, err)
+			return source, err
+		}
 	case "merge":
 		subSourceNames := config.GetStringSlice(fmt.Sprintf("sources.%s.sources", sourceName))
 		for _, subSourceName := range subSourceNames {

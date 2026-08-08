@@ -36,6 +36,7 @@ func FetchSource(config config.Provider, sourceName string, parents []string) (*
 	sleepInterval := config.GetDuration("sleep-interval")
 	log.Infof("Fetching source: %s of type %s", sourceName, sourceType)
 	source := new(goeland.Source)
+	source.Name = sourceName
 	var err error
 	switch sourceType {
 	case "feed":
@@ -61,11 +62,13 @@ func FetchSource(config config.Provider, sourceName string, parents []string) (*
 		url := config.GetString(fmt.Sprintf("sources.%s.url", sourceName))
 		allowInsecure := config.GetBool(fmt.Sprintf("sources.%s.allow-insecure", sourceName))
 		apiToken := config.GetString(fmt.Sprintf("sources.%s.api-token", sourceName))
+		markAsRead := config.GetBool(fmt.Sprintf("sources.%s.mark-as-read", sourceName))
+		dryRun := config.GetBool("dry-run")
 		if apiToken == "" {
 			apiToken = config.GetString("miniflux-api-token")
 		}
 		sleepIfNeeded(sleepInterval)
-		err = fetchMiniflux(source, url, apiToken, allowInsecure)
+		err = fetchMiniflux(source, url, apiToken, allowInsecure, markAsRead, dryRun)
 		if err != nil {
 			log.Errorf("Cannot retrieve miniflux at url: %s error: %v", url, err)
 			return source, err
@@ -84,7 +87,6 @@ func FetchSource(config config.Provider, sourceName string, parents []string) (*
 	default:
 		return nil, fmt.Errorf("cannot understand source type: %s", sourceType)
 	}
-	source.Name = sourceName
 	filters.FilterSource(source, config)
 	log.Debugf("%v", source)
 	return source, nil

@@ -10,8 +10,11 @@
 #   /unread                -> /v1/entries?status=unread
 #   /starred               -> /v1/entries?starred=true
 #
-# goeland only reads from Miniflux: entries are never marked as read there,
-# so use the "unseen" filter to avoid receiving the same entries twice.
+# By default goeland only reads from Miniflux: entries are never marked as
+# read there, so use the "unseen" filter to avoid receiving the same entries
+# twice. Alternatively, set "mark-as-read = true" on a source (see the
+# "podcasts" source below) to have goeland mark fetched entries as read in
+# Miniflux itself; it is skipped automatically during --dry-run.
 
 loglevel = "info"
 dry-run = false
@@ -49,6 +52,15 @@ filters = ["unseen", "includesourcetitle", "includelink", "digest"]
 type = "miniflux"
 url = "https://miniflux.example.org/v1/entries?search=solar+OR+%22renewable+energy%22+-nuclear&order=published_at&direction=desc&limit=50"
 filters = ["unseen", "embedimage", "includelink", "digest"]
+
+# A category of podcast feeds: instead of relying on the "unseen" filter,
+# have Miniflux itself stop returning these entries by marking them read
+# right after they're fetched.
+[sources.podcasts]
+type = "miniflux"
+url = "https://miniflux.example.org/v1/categories/9/entries?status=unread&order=published_at&direction=desc&limit=50"
+mark-as-read = true
+filters = ["includesourcetitle", "includelink", "digest"]
 
 # If your instance uses a self-signed certificate, add:
 # allow-insecure = true

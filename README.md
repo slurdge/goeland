@@ -189,8 +189,19 @@ filters = ["unseen", "includelink", "embedimage", "digest"]
 
 Two things to keep in mind:
 
-* goeland only **reads** from Miniflux — entries are never marked as read, so a `status=unread` query returns the same entries on every run. Add the `unseen` filter to deduplicate between runs.
+* By default goeland only **reads** from Miniflux — entries are never marked as read, so a `status=unread` query returns the same entries on every run.
+Add the `unseen` filter to deduplicate between runs, or set `mark-as-read = true` (see below) to have goeland mark fetched entries as read in Miniflux itself.
 * If your instance uses a self-signed certificate, set `allow-insecure = true` on the source.
+
+Set `mark-as-read = true` on a source to have goeland mark every entry it just fetched as read on the Miniflux instance, right after fetching:
+
+```toml
+[sources.puppies]
+type = "miniflux"
+url = "https://miniflux.example.org/v1/entries?status=unread&search=cute+puppy&order=published_at&direction=desc"
+mark-as-read = true
+filters = ["includelink", "embedimage", "digest"]
+```
 
 A complete configuration is available in [`examples/miniflux.toml`](examples/miniflux.toml).
 

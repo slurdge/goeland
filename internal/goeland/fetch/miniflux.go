@@ -1,6 +1,7 @@
 package fetch
 
 import (
+	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
@@ -50,22 +51,28 @@ type minifluxEnclosure struct {
 	MimeType string `json:"mime_type"`
 }
 
-func fetchMiniflux(source *goeland.Source, url string, apiToken string, allowInsecure bool) error {
-	req, err := http.NewRequest(http.MethodGet, url, nil)
-	if err != nil {
-		return err
-	}
+type minifluxEntries struct {
+	IDs    []int64 `json:"entry_ids"`
+	Status string  `json:"status"`
+}
+
+func fetchMiniflux(source *goeland.Source, url string, apiToken string, allowInsecure bool, markAsRead bool, dryRun bool) error {
 
 	if apiToken == "" {
 		log.Warnln("Miniflux may fail: no api token given (set miniflux-api-token or the source's api-token)")
 	}
-	req.Header.Set("X-Auth-Token", apiToken)
 
 	client := http.Client{Timeout: minifluxTimeout}
 	if allowInsecure {
 		log.Warningf("ignoring certificate security for url: %s\n", url)
 		client.Transport = &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
 	}
+
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("X-Auth-Token", apiToken)
 
 	res, err := client.Do(req)
 	if err != nil {
@@ -86,7 +93,8 @@ func fetchMiniflux(source *goeland.Source, url string, apiToken string, allowIns
 	if miniflux.Total > len(miniflux.Entries) {
 		log.Warningf("miniflux returned %d out of %d matching entries, increase the 'limit' query parameter of url: %s", len(miniflux.Entries), miniflux.Total, url)
 	}
-	for _, minifluxEntry := range miniflux.Entries {
+	ids := make([]int64, len(miniflux.Entries))
+	for index, minifluxEntry := range miniflux.Entries {
 		entry := goeland.Entry{}
 		entry.Source = source
 		entry.Title = html.UnescapeString(policy.Sanitize(minifluxEntry.Title))
@@ -108,6 +116,7 @@ func fetchMiniflux(source *goeland.Source, url string, apiToken string, allowIns
 			}
 		}
 		source.Entries = append(source.Entries, entry)
+		ids[index] = minifluxEntry.ID
 	}
 
 	// single feed or category urls carry a better title than the generic one
@@ -125,6 +134,39 @@ func fetchMiniflux(source *goeland.Source, url string, apiToken string, allowIns
 	}
 	if source.URL == "" {
 		source.URL = url
+	}
+
+	if markAsRead && len(ids) > 0 {
+		if dryRun {
+			log.Infof("Dry run: not marking %d entries read for source: %s", len(ids), source.Name)
+			return nil
+		}
+		log.Infof("Marking %d entries read for source: %s", len(ids), source.Name)
+		// We build the PUT url from the request URL by splitting on the "v1" as we don't have much to work with
+		base := strings.SplitN(url, "/v1/", 2)
+		if len(base) < 2 {
+			log.Infof("Cannot find the base URL for miniflux: %s, skipping mark-as-read", url)
+			return nil
+		}
+		markURL := fmt.Sprintf("%s/v1/entries", base[0])
+		payload := &minifluxEntries{IDs: ids, Status: "read"}
+		body, err := json.Marshal(payload)
+		if err != nil {
+			return err
+		}
+		req, err = http.NewRequest(http.MethodPut, markURL, bytes.NewBuffer(body))
+		if err != nil {
+			return err
+		}
+		req.Header.Set("X-Auth-Token", apiToken)
+		req.Header.Set("Content-Type", "application/json")
+		res, err = client.Do(req)
+		if err != nil {
+			return err
+		}
+		if res.StatusCode != http.StatusNoContent {
+			return fmt.Errorf("received non-204 status %d marking entries read for source: %s", res.StatusCode, source.Name)
+		}
 	}
 
 	return nil

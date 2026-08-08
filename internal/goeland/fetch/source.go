@@ -88,6 +88,6 @@ func FetchSource(config config.Provider, sourceName string, parents []string) (*
 		return nil, fmt.Errorf("cannot understand source type: %s", sourceType)
 	}
 	filters.FilterSource(source, config)
-	log.Debugf("%v", source)
+	log.Tracef("Final source %s: %+v", source.Name, source)
 	return source, nil
 }

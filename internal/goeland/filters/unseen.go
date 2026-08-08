@@ -89,7 +89,7 @@ func filterUnSeen(source *goeland.Source, params *filterParams) {
 				log.Debugf("error recording seen status for key: %s: %v", string(key), err)
 			}
 			if value != nil {
-				log.Debugf("already seen entry with key: %s", string(key))
+				log.Tracef("already seen entry with key: %s", string(key))
 				continue
 			}
 			source.Entries[current] = entry

@@ -409,9 +409,28 @@ func filterRESkip(source *goeland.Source, params *filterParams) {
 	source.Entries = source.Entries[:current]
 }
 
+// summarizeTitles returns a short, one-line summary of entry titles, capped
+// at max titles with each title truncated, for readable debug logging.
+func summarizeTitles(entries []goeland.Entry, max int) string {
+	const maxTitleLen = 60
+	titles := []string{}
+	for i, entry := range entries {
+		if i >= max {
+			titles = append(titles, fmt.Sprintf("… and %d more", len(entries)-max))
+			break
+		}
+		title := entry.Title
+		if utf8.RuneCountInString(title) > maxTitleLen {
+			title = string([]rune(title)[:maxTitleLen]) + "…"
+		}
+		titles = append(titles, title)
+	}
+	return strings.Join(titles, " | ")
+}
+
 // FilterSource filters a source according to the config
 func FilterSource(source *goeland.Source, config config.Provider) {
-	log.Infof("Retrieved %v feeds for source %v", len(source.Entries), source.Name)
+	log.Infof("Retrieved %d entries for source %s", len(source.Entries), source.Name)
 	filterNames := config.GetStringSlice(fmt.Sprintf("sources.%s.filters", source.Name))
 	for _, filterName := range filterNames {
 		filterShort := filterName
@@ -423,14 +442,21 @@ func FilterSource(source *goeland.Source, config config.Provider) {
 				args[i] = strings.TrimSpace(arg)
 			}
 		}
-		if filter, found := filters[filterShort]; found {
-			log.Debugf("Executing %s filter with args: %v", filterShort, args)
-			params := filterParams{args: args, config: config}
-			filter.filterFunc(source, &params)
-		} else {
-			log.Errorf("unknown filter: %s\n", filterName)
+		filter, found := filters[filterShort]
+		if !found {
+			log.Errorf("unknown filter: %s", filterName)
+			continue
 		}
-		log.Infof("After %s: %v feeds", filterName, len(source.Entries))
-		log.Debugf("After %s: %+v", filterName, source.Entries)
+		params := filterParams{args: args, config: config}
+		before := len(source.Entries)
+		start := time.Now()
+		filter.filterFunc(source, &params)
+		after := len(source.Entries)
+		log.Debugf("Filter %s(%s): %d -> %d entries in %s",
+			filterShort, strings.Join(args, ", "), before, after, time.Since(start).Round(time.Microsecond))
+		if after != before {
+			log.Debugf("Entries after %s: %s", filterShort, summarizeTitles(source.Entries, 10))
+		}
+		log.Tracef("Entries after %s: %+v", filterShort, source.Entries)
 	}
 }

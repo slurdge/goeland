@@ -337,6 +337,25 @@ sleep-interval = "3s"
 
 Uses Go's duration format: `"500ms"`, `"3s"`, `"1m30s"`. Defaults to `"0s"` (no delay).
 
+### Logging
+
+Logs go to stderr. Set the level with the top-level `loglevel` key, the `--loglevel` flag or the `GOELAND_LOGLEVEL` environment variable:
+
+```toml
+loglevel = "info"
+```
+
+| Level     | Shows |
+|-----------|-------|
+| `none`    | Nothing (default) |
+| `error`   | Errors only |
+| `warning` | Warnings and errors |
+| `info`    | Pipe execution, entry counts per source, files written |
+| `debug`   | One line per filter (entries in → out, duration), entry titles when a filter changes the count, each file written |
+| `trace`   | Everything above plus full entry dumps (including raw HTML content) after each filter |
+
+Set `json-logs = true` for JSON-formatted log lines, convenient for log collectors.
+
 ## Examples
 
 ### Daily HackerNews digest

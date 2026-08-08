@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.28.0](https://github.com/slurdge/goeland/compare/v0.27.0...v0.28.0) (2026-08-08)
+
+
+### Features
+
+* add html file output ([2fda832](https://github.com/slurdge/goeland/commit/2fda832c396daca69f947ea0635213c27f6dfbc0))
+* allow marking as read for miniflux ([ba71527](https://github.com/slurdge/goeland/commit/ba715270a854e8e3e8a1e1c8c85aba698ef4f023))
+* better logging/tracing. Only show RSS insides with trace level ([e562c94](https://github.com/slurdge/goeland/commit/e562c9406671e98344e03c259b25090124b2a1d6))
+
 ## [0.27.0](https://github.com/slurdge/goeland/compare/v0.26.0...v0.27.0) (2026-08-07)
 
 

@@ -9,7 +9,6 @@ import (
 	"html"
 	"io"
 	"os"
-	"path/filepath"
 	"strings"
 	"text/template"
 	"time"
@@ -352,33 +351,12 @@ func run(cmd *cobra.Command, args []string) {
 				}
 			}
 		case "htmlfile":
-			for i, entry := range source.Entries {
-				html := formatHTMLEmail(&entry, config, tpl, destination)
-				err := os.MkdirAll("data", os.ModePerm)
-				if err != nil {
-					fatalErr(fmt.Errorf("error while creating the data directory to put the html file in: %v", err))
-				}
-				filePath := filepath.Join("data", fmt.Sprintf("%s - %d.html", pipe, i))
-				htmlFile, err := os.Create(filePath)
-				if err != nil {
-					fatalErr(fmt.Errorf("error while writing html file: %v", err))
-				}
-				if _, err := htmlFile.WriteString(html); err != nil {
-					fatalErr(fmt.Errorf("error while writing html file '%s': %v", filePath, err))
-				}
-				if err := htmlFile.Close(); err != nil {
-					fatalErr(fmt.Errorf("error while closing html file '%s': %v", filePath, err))
-				}
-			}
+			writeHTMLFiles(config, pipe, source, tpl)
 		case "console", "terminal":
-			fmt.Printf("**%s**\n", source.Title)
-			for _, entry := range source.Entries {
-				text, _ := html2text.FromString(entry.Content, html2text.Options{})
-				fmt.Printf("*%s*\n%s\n%s\n", entry.Title, entry.Date, text)
-			}
+			printToConsole(source)
 		case "null", "none":
 		default:
-			log.Infof("unknown destination type: %s", destination)
+			log.Errorf("unknown destination type: %s", destination)
 		}
 	}
 	if config.GetBool("auto-purge") {

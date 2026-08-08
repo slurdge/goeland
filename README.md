@@ -34,6 +34,7 @@ Support this project by giving it a ⭐️ and sharing it.
   - [Sources](#sources)
   - [Filtering](#filtering)
   - [Pipes](#pipes)
+  - [HTML file output](#html-file-output)
   - [Scheduling](#scheduling)
   - [Email](#email)
   - [Rate limiting](#rate-limiting)
@@ -278,6 +279,24 @@ email_bcc = ["hades@olympus.com"]
 Set `destination = "terminal"` for debugging or to pipe output to another system.
 
 To disable a pipe without removing it, set `disabled = true` or rename the section to `[disabled.pipes.hackernews]`.
+
+### HTML file output
+
+Set `destination = "htmlfile"` to write each entry as a standalone HTML file that other tools can pick up. The output directory and filename are configurable, either globally in a `[htmlfile]` section or per pipe:
+
+```toml
+[htmlfile]
+path = "data"                                    # default output directory
+filename = "{{.Pipe}} - {{.EntryNumber}}.html"   # default filename template
+
+[pipes.hackernews]
+source = "hackernews"
+destination = "htmlfile"
+htmlfile_path = "/var/www/feeds"                          # optional, overrides htmlfile.path
+htmlfile_filename = "{{.SourceName}}-{{.EntryUID}}.html"  # optional, overrides htmlfile.filename
+```
+
+The filename is a Go template.
 
 ### Scheduling
 

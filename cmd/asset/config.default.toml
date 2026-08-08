@@ -1,5 +1,5 @@
 ## Log level
-## Either "none", "error", "debug", "info"
+## Either "none", "error", "warning", "info", "debug" or "trace"
 #loglevel = "none"
 
 ## Dry run
@@ -74,6 +74,14 @@ password = "pass"
 ## Template file
 #template = "/path/to/template.html"
 
+## HTML file output
+## Used by pipes with destination = "htmlfile". Each entry is written as a
+## standalone HTML file. The filename is a Go template; available fields:
+## Pipe, SourceName, SourceTitle, EntryNumber, EntryTitle, EntryUID, EntryDate, Today
+#[htmlfile]
+#path = "data"
+#filename = "{{.Pipe}} - {{.EntryNumber}}.html"
+
 [sources]
 
 [sources.hackernews]
@@ -112,3 +120,6 @@ email_bcc = ["hades@olympus.com"]
 #Default: you can use EntryTitle, SourceTitle and SourceName in the template
 #email_title = "{{.EntryTitle}}"  # optional
 #template = "/path/to/template.html" # optional
+#For destination = "htmlfile", these override the [htmlfile] section:
+#htmlfile_path = "data" # optional
+#htmlfile_filename = "{{.Pipe}} - {{.EntryNumber}}.html" # optional

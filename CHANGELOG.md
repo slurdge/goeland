@@ -5,6 +5,7 @@
 
 ### Bug Fixes
 
+* codeql should all be same tag ([113c907](https://github.com/slurdge/goeland/commit/113c9071587c097baa28204f963698d193577ee6))
 * name/bar -&gt; slurdge/goeland in workflow ([e3d5f07](https://github.com/slurdge/goeland/commit/e3d5f07a9f352d95b042e523f70db6cb6b54dfa3))
 
 ## [0.29.1](https://github.com/slurdge/goeland/compare/v0.29.0...v0.29.1) (2026-08-30)

@@ -6,7 +6,7 @@ require (
 	github.com/buger/jsonparser v1.6.1
 	github.com/inbucket/html2text v1.0.0
 	github.com/microcosm-cc/bluemonday v1.0.27
-	github.com/mmcdole/gofeed v1.4.0
+	github.com/mmcdole/gofeed v1.4.2
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.9.4
 	github.com/spf13/cobra v1.10.2

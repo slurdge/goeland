@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.29.1](https://github.com/slurdge/goeland/compare/v0.29.0...v0.29.1) (2026-08-30)
+
+
+### Bug Fixes
+
+* only build for linux (as it's based on alpine anyway) ([88edac6](https://github.com/slurdge/goeland/commit/88edac6774de5ea7fb1a6b383955ed4a9c4ac8ca))
+
 ## [0.29.0](https://github.com/slurdge/goeland/compare/v0.28.0...v0.29.0) (2026-08-30)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.29.2](https://github.com/slurdge/goeland/compare/v0.29.1...v0.29.2) (2026-08-30)
+
+
+### Bug Fixes
+
+* name/bar -&gt; slurdge/goeland in workflow ([e3d5f07](https://github.com/slurdge/goeland/commit/e3d5f07a9f352d95b042e523f70db6cb6b54dfa3))
+
 ## [0.29.1](https://github.com/slurdge/goeland/compare/v0.29.0...v0.29.1) (2026-08-30)
 
 

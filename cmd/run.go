@@ -20,6 +20,7 @@ import (
 	"github.com/slurdge/goeland/internal/goeland/filters"
 	"github.com/slurdge/goeland/internal/goeland/i18n"
 	"github.com/slurdge/goeland/log"
+	"github.com/slurdge/goeland/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/tdewolff/minify/v2"
@@ -321,6 +322,7 @@ func run(cmd *cobra.Command, args []string) {
 			}
 			for _, entry := range source.Entries {
 				message := email.NewMSG()
+				message.AddHeader("X-Mailer", version.ProductName)
 				message.SetFrom(getSubString("pipes", pipe, "email_from"))
 				message.SetReplyTo(getSubString("pipes", pipe, "email_replyto"))
 				message.AddTo(config.GetStringSlice(fmt.Sprintf("pipes.%s.email_to", pipe))...)

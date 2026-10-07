@@ -164,6 +164,7 @@ func fetchMiniflux(source *goeland.Source, url string, apiToken string, allowIns
 		if err != nil {
 			return err
 		}
+		defer res.Body.Close()
 		if res.StatusCode != http.StatusNoContent {
 			return fmt.Errorf("received non-204 status %d marking entries read for source: %s", res.StatusCode, source.Name)
 		}

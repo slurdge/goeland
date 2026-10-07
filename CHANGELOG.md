@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.30.0](https://github.com/slurdge/goeland/compare/v0.29.2...v0.30.0) (2026-10-07)
+
+
+### Features
+
+* add X-Mailer ([c8aabe2](https://github.com/slurdge/goeland/commit/c8aabe276fbddfd06ae64c1177dbf5c212528987))
+
+
+### Bug Fixes
+
+* close Miniflux mark-as-read response bodies ([5317185](https://github.com/slurdge/goeland/commit/53171857ee6bb22675da5e4f2f8422413bfe6468))
+* dependabot x graphql grouping ([e34ee8d](https://github.com/slurdge/goeland/commit/e34ee8d318e74c05f5b4cb013ddc167d28c523e3))
+* graphql version ([56376cb](https://github.com/slurdge/goeland/commit/56376cb92dedf904a662dc6df2c40c3db0cfa5dc))
+* update go to 1.26 ([f1cd63c](https://github.com/slurdge/goeland/commit/f1cd63c3de0f9334b9106f9a588d2b0bb6d4ac66))
+* update go version for codeql ([45b9eae](https://github.com/slurdge/goeland/commit/45b9eaecab6a2ffde0335c0625d312108ad9666b))
+
 ## [0.29.2](https://github.com/slurdge/goeland/compare/v0.29.1...v0.29.2) (2026-08-30)
 
 

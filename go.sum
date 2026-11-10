@@ -97,8 +97,8 @@ github.com/vanng822/go-premailer v1.36.0 h1:EG7KQkzjPqDbID4unZU62P6zWOVqjv7GszCD
 github.com/vanng822/go-premailer v1.36.0/go.mod h1:k6sEAVkOMxwN0STI7i/+FjRvHEMsmTtfCDDAyylOS4c=
 github.com/vorlif/spreak v1.0.0 h1:SUaD/p+cWcGgLAdHi73cTmBBejpPpztlgM5I4kPSewY=
 github.com/vorlif/spreak v1.0.0/go.mod h1:oJ0AuinQV2XPy8WkdkbGejGDHQ3dCoB9brQMj5dsEyc=
-github.com/xhit/go-simple-mail/v2 v2.16.0 h1:ouGy/Ww4kuaqu2E2UrDw7SvLaziWTB60ICLkIkNVccA=
-github.com/xhit/go-simple-mail/v2 v2.16.0/go.mod h1:b7P5ygho6SYE+VIqpxA6QkYfv4teeyG4MKqB3utRu98=
+github.com/xhit/go-simple-mail/v2 v2.17.0 h1:GwLZdu1zgJHYO8nZRiJIkkVU75sg1SZcXuLgMtZxpHU=
+github.com/xhit/go-simple-mail/v2 v2.17.0/go.mod h1:b7P5ygho6SYE+VIqpxA6QkYfv4teeyG4MKqB3utRu98=
 go.etcd.io/bbolt v1.5.0 h1:S7GAl7Fxv12yohbwFfIbQCGDWbQbtDGPET4P/bD4lxU=
 go.etcd.io/bbolt v1.5.0/go.mod h1:mkltfYE5aUHQxUct9N9V+Kp7aSjFqjgrhcXIS70Lrdk=
 go.yaml.in/yaml/v3 v3.0.4/go.mod h1:DhzuOOF2ATzADvBadXxruRBLzYTpT36CKvDb3+aBEFg=
